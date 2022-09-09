@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TBox&lt;T&gt;">
+    <Position X="4" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEIAAAEgAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LinkedList&lt;T&gt;">
+    <Position X="1.25" Y="0.75" Width="1.5" />
+    <Members>
+      <Method Name="~LinkedList" Hidden="true" />
+      <Method Name="size" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>IEQAAAAAABAAAIgAQIAIBAAAAAACAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>TBox.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_pHead" />
+      <Field Name="m_pTail" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="MStudent">
+    <Position X="6" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAAAAAgAAAABAAAAAAAIAAAAAAQAAAAAAAEAA=</HashCode>
+      <FileName>TBox.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

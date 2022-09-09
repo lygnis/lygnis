@@ -1,0 +1,30 @@
+// HLSL 쉐이더 코드
+// 버텍스 쉐이더(정점)란 버텍스버퍼에 있는 모든 정점을 1번씩 작업한다.
+// VS는 정점쉐이더 이름 (힘수이름)
+// 반드시 반환은 float4 로 해야한다.
+
+// POSITION(시멘틱: 의미구조)
+// 포지션을 플롯 3로 받아서 정점 버퍼의 정점 3개를 넘긴다 (ied)
+struct VS_in
+{
+	float3 p : POSITION;
+	float4 color : COLOR;
+};
+struct VS_out
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;		// COLOR1
+};
+
+
+VS_out VS(VS_in input)			// 구조체로 넘길땐 안써도 된다.
+{
+	// p.x,p.y,p.z, 1.0f
+	// 쉐이더에 넘기는건 사용자 정의로 넘긴다.
+	// 반드시 정점위치 반환은(SV_POSITION(레지스터)에다반환) 무조건 float4 해야한다.
+
+	VS_out output = (VS_out)0;
+	output.p = float4(input.p,1.0f);
+	output.c = input.color;
+	return output;				// p.x p.y p.z-> p 는 수의즐링 이라한다.
+}

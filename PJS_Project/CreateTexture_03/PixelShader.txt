@@ -1,0 +1,33 @@
+// 픽쉘마다 호출된다.
+//0		800
+//600	800,	삼각형이면 800*600 /2 만큼 호출된다.
+
+// 해당 픽셀의 컬러를 반환한다.
+// SV_Target 레지스터에 반환
+
+// SV_POSITION 버텍스쉐이더에서 받는다. 반환하는 장소는 SV_Target
+
+struct VS_in
+{
+	float4 p : SV_POSITION;
+	float4 color : COLOR0;
+};
+struct VS_out
+{
+	float4 p : SV_Target;
+	float4 c : SV_Target;		
+};
+
+
+//VS_out PS (VS_in input ) : SV_Target
+//{
+//	VS_out output;
+//	output.p = VS_in.p;
+//	output.c = VS_in.color;
+//	return output;
+//}
+
+float4 PS(float4 p : SV_POSITION, float4 c : COLOR0) : SV_Target
+{
+	return c;
+}
