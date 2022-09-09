@@ -2,15 +2,15 @@
 
 bool BObject::Init()
 {
-    return false;
+    return true;
 }
 
 bool BObject::Frame()
 {
-    return false;
+    return true;
 }
 
 bool BObject::Render()
 {
-    return false;
+    return true;
 }
