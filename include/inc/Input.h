@@ -7,7 +7,7 @@ enum KeyType
 	KEY_HOLD,
 	KEY_UP
 };
-class Input
+class Input : public SingleTone<Input>
 {
 public:
 	DWORD	m_dwKeyState[256];				// 키입력 값
@@ -21,3 +21,4 @@ public:
 	DWORD GetKey(DWORD _key);
 };
 
+#define I_Input Input::GetInstance() 

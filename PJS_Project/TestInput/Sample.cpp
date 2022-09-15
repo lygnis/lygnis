@@ -16,7 +16,11 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {
-    
+    m_iInput.Frame();
+    if (m_iInput.GetKey('W') == KeyType::KEY_PUSH)
+    {
+        int i = 0;
+    }
     return true;
 }
 bool Sample::Render()

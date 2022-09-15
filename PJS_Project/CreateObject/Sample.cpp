@@ -22,6 +22,10 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {
+    if (m_iInput.GetKey('W') == KEY_HOLD)
+    {
+        int i = 0;
+    }
     return true;
 }
 bool Sample::Render()

@@ -6,8 +6,8 @@ bool GameCore::CoreInit()
 	m_pDevice = new DxDevice;
 	m_pDevice->Init();
 	m_wWriter.Init();
-	m_tTimer.Init();
-	m_iInput.Init();
+	I_Timer.Init();
+	I_Input.Init();
 	m_pDevice->m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1), (void**)&m_pBackBuffer);
 	m_wWriter.Set(m_pBackBuffer);
 	return Init();
@@ -15,16 +15,16 @@ bool GameCore::CoreInit()
 
 bool GameCore::CoreFrame()
 {
-	m_tTimer.Frame();
-	m_iInput.Frame();
+	I_Timer.Frame();
+	I_Input.Frame();
 	return Frame();
 }
 bool GameCore::CoreRender()
 {
 	m_pDevice->PreRender();
 	Render();
-	m_tTimer.Render();
-	m_wWriter.m_szOutputText = m_tTimer.m_szTimeNFps;
+	I_Timer.Render();
+	m_wWriter.m_szOutputText = I_Timer.m_szTimeNFps;
 	m_wWriter.Render();
 	m_pDevice->PostRender();
 	return true;
@@ -34,8 +34,8 @@ bool GameCore::CoreRelease()
 	Release();
 	m_pDevice->Release();
 	m_wWriter.Release();
-	m_tTimer.Release();
-	m_iInput.Release();
+	I_Timer.Release();
+	I_Input.Release();
 	if (m_pBackBuffer)m_pBackBuffer->Release();
 	delete m_pDevice;
 	delete m_pWindow;

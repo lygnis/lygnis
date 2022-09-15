@@ -1,8 +1,10 @@
 #pragma once
 #include "TStd.h"
 #pragma comment(lib, "winmm.lib")
-class Timer
+class Timer : public SingleTone<Timer>
 {
+public:
+
 public:
 	float		 m_fDeltaTime;				// 시간 변위
 	float		 m_fGameTime;				// 플레이 타임
@@ -19,4 +21,6 @@ public:
 	bool Render();
 	bool Release();
 };
+
+#define I_Timer Timer::GetInstance()
 

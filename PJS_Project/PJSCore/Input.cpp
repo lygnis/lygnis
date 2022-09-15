@@ -1,49 +1,43 @@
 #include "Input.h"
-
-bool Input::Init()
+bool		Input::Init()
 {
-    ZeroMemory(&m_dwKeyState, sizeof(DWORD) * 256);
+    ZeroMemory(m_dwKeyState, sizeof(DWORD) * 256);
     return true;
 }
-
-bool Input::Frame()
+DWORD  Input::GetKey(DWORD dwKey)
 {
+    return m_dwKeyState[dwKey];
+}
+bool		Input::Frame()
+{
+    ::GetCursorPos(&m_pMpos); // 화면좌표
+    ::ScreenToClient(g_hWnd, &m_pMpos); // 클라이언트
 
-    ::GetCursorPos(&m_pMpos);
-    ::ScreenToClient(g_hWnd, &m_pMpos);
-    for (int i = 0; i < 256; i++)
+    for (int iKey = 0; iKey < 256; iKey++)
     {
-        SHORT sKey = ::GetAsyncKeyState(i);
-        if (sKey & 0x8000)
+        SHORT sKey = ::GetAsyncKeyState(iKey); // 비동기 키 상태 
+        if (sKey & 0x8000) // 1000 0000 0000 0000
         {
-            if (m_dwKeyState[i] == KEY_FREE || m_dwKeyState[i] == KEY_UP)
-                m_dwKeyState[i] = KEY_PUSH;
+            if (m_dwKeyState[iKey] == KEY_FREE || m_dwKeyState[iKey] == KEY_UP)
+                m_dwKeyState[iKey] = KEY_PUSH;
             else
-            {
-                m_dwKeyState[i] = KEY_HOLD;
-            }
-            if (m_dwKeyState[i] == KEY_PUSH || m_dwKeyState[i] == KEY_HOLD)
-                m_dwKeyState[i] = KEY_UP;
+                m_dwKeyState[iKey] = KEY_HOLD;
+        }
+        else
+        {
+            if (m_dwKeyState[iKey] == KEY_PUSH || m_dwKeyState[iKey] == KEY_HOLD)
+                m_dwKeyState[iKey] = KEY_UP;
             else
-            {
-                m_dwKeyState[i] = KEY_FREE;
-            }
+                m_dwKeyState[iKey] = KEY_FREE;
         }
     }
     return true;
 }
-
-bool Input::Render()
+bool		Input::Render()
 {
     return true;
 }
-
-bool Input::Release()
+bool		Input::Release()
 {
     return true;
-}
-
-DWORD Input::GetKey(DWORD _key)
-{
-    return m_dwKeyState[_key];
 }
