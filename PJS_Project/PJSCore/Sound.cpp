@@ -82,6 +82,7 @@ bool Sound::Init()
 {
 	// 1. systemCreate함수를 생성
 	FMOD::System_Create(&m_pSystem);
+
 	// 생성한 시스템 초기화하기 32개의 사운드를 받을 수 있다.
 	m_pSystem->init(32, FMOD_INIT_NORMAL, 0);
 

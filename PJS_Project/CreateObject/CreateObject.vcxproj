@@ -145,12 +145,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BObject.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="FirePos.h" />
     <ClInclude Include="Object2D.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BObject.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="FirePos.cpp" />
     <ClCompile Include="Object2D.cpp" />
     <ClCompile Include="Sample.cpp" />

@@ -9,11 +9,11 @@ bool GameCore::Init()
 	/*if (false == m_pObject->Create(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext, L"D:/C_PRJ/data/popup_normal.bmp", L"D:/C_PRJ/shader/DefaultShader.txt"))
 		return false;*/
 	m_pMap = new BaseObject;
-	m_pMap->Create(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext, L"D:/C_PRJ/data/1KGCABK.bmp", L"D:/C_PRJ/shader/DefaultShader.txt");
+	m_pMap->Create(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext, L"D:/Git_PJS_C/data/1KGCABK.bmp", L"D:/Git_PJS_C/shader/DefaultShader.txt");
 	m_pUser = new DynamicObj;
-	m_pUser->Create(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext, L"D:/C_PRJ/data/bitmap1.bmp", L"D:/C_PRJ/shader/DefaultShader.txt");
+	m_pUser->Create(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext, L"D:/Git_PJS_C/data/Fortress.png", L"D:/Git_PJS_C/shader/DefaultShader.txt");
 	m_pUser->m_fSpeed = 300.0f;
-	m_pUser->SetRect({ 90,1,42,60 });
+	m_pUser->SetRect({ 40,148,32,32 });
 	m_pUser->SetPosition({ g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f });
 	m_wWrite.Init();
 	m_pDevice->m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1), (void**)&m_pBackBuffer);

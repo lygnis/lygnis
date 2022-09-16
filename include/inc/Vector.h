@@ -21,6 +21,7 @@ struct Rect
 		ySize = h;
 		x1 = x0 + xSize;
 		y1 = y0 + ySize;
+
 	}
 };
 struct Pos2

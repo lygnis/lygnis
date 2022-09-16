@@ -7,10 +7,11 @@ public:
 	POINT m_ptImageSize;
 	Rect m_rtInit;
 	Rect m_rtUV;
+	Vector2D m_vCenterPoint;
 	Vector2D m_vPosition;
 	Vector2D m_vDir;
 	float	 m_fSpeed;
-private:
+public:
 	Vector2D m_vDrawPos;
 	Vector2D m_vDrawSize;
 public:

@@ -1,6 +1,8 @@
 #pragma once
 #include "DxDevice.h"
 #include "Vector.h"
+#include "Timer.h"
+#include "Input.h"
 #include "WICTextureLoader.h"
 #include "DDSTextureLoader.h" 
 #pragma comment(lib, "DirectXTK.lib")
