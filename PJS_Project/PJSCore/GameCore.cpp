@@ -31,7 +31,6 @@ bool GameCore::CoreRender()
 }
 bool GameCore::CoreRelease()
 {
-	Release();
 	m_pDevice->Release();
 	m_wWriter.Release();
 	I_Timer.Release();
@@ -39,6 +38,8 @@ bool GameCore::CoreRelease()
 	if (m_pBackBuffer)m_pBackBuffer->Release();
 	delete m_pDevice;
 	delete m_pWindow;
+
+	Release();
 	return true;
 }
 
@@ -61,10 +62,10 @@ bool GameCore::Run()
 		}
 		else
 		{
+			CoreRelease();
 			return false;
 		}
 	}
-	CoreRelease();
 	return true;
 }
 

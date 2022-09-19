@@ -1,5 +1,5 @@
 #pragma once
-#include "DxDevice.h"
+#include "TStd.h"
 #include "Vector.h"
 #include "Timer.h"
 #include "Input.h"

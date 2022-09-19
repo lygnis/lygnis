@@ -27,8 +27,8 @@ bool BObject::Render()
 
 bool BObject::Release()
 {
-    if (m_p3dDevice)m_p3dDevice->Release();
-    if (m_pImmediateContext)m_pImmediateContext->Release();
+   /* if (m_p3dDevice)m_p3dDevice->Release();
+    if (m_pImmediateContext)m_pImmediateContext->Release();*/
     if (m_pVertexBuffer)m_pVertexBuffer->Release();
     if (m_pIndexBuffer)m_pIndexBuffer->Release();
     if (m_pVertexLayout)m_pVertexLayout->Release();
@@ -196,9 +196,9 @@ void BObject::CreateVertexData()
     m_pVertexList[3].color = { 1.0f, 1.0f, 1.0f,1.0f };
 
     m_pVertexList[0].texture = { 0.0f, 0.0f };
-    m_pVertexList[1].texture = { 0.5f, 0.0f };
-    m_pVertexList[2].texture = { 0.0f, 0.5f };
-    m_pVertexList[3].texture = { 0.5f, 0.5f };
+    m_pVertexList[1].texture = { 1.0f, 0.0f };
+    m_pVertexList[2].texture = { 0.0f, 1.0f };
+    m_pVertexList[3].texture = { 1.0f, 1.0f };
 }
 
 void BObject::CreateIndexData()

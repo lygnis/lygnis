@@ -36,6 +36,8 @@ void Object2D::SetPosition(Vector2D _pos)
     UpdateVertexBuffer();
 }
 
+
+
 void Object2D::UpdateVertexBuffer()
 {
     m_pVertexList[0].position = { m_vDrawPos.x, m_vDrawPos.y, 0.0f };

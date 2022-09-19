@@ -2,7 +2,6 @@
 #include "GameCore.h"
 #include "Sound.h"
 #include"SoundManager.h"
-
 class Sample : public GameCore
 {
 public:

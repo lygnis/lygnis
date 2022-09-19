@@ -101,7 +101,7 @@ bool Sound::Render()
 bool Sound::Release()
 {
 	if (m_pSound)m_pSound->release();
-	if (m_pSystem)m_pSystem->close();
-	if (m_pSystem)m_pSystem->release();
+	//if (m_pSystem)m_pSystem->close();
+	//if (m_pSystem)m_pSystem->release();
 	return true;
 }

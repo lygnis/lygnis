@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e08cc12b-4047-4375-8553-a0db9e472255}</ProjectGuid>
-    <RootNamespace>CreateObject</RootNamespace>
+    <ProjectGuid>{0f101401-e395-41a3-90b3-0309f390c6c5}</ProjectGuid>
+    <RootNamespace>TestRig</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\output\Debug\CreateObject</OutDir>
-    <IntDir>..\..\..\output\Debug\CreateObject</IntDir>
+    <OutDir>..\..\..\output\Debug\TestRig</OutDir>
+    <IntDir>..\..\..\output\Debug\TestRig</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Git_PJS_C\include\dxtk\Inc;D:\Git_PJS_C\include\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Git_PJS_C\include\inc;D:\Git_PJS_C\include\inc\sinc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,23 +144,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BObject.h" />
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="FirePos.h" />
-    <ClInclude Include="Object2D.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BObject.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="FirePos.cpp" />
-    <ClCompile Include="Object2D.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="DefaultShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

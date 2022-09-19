@@ -96,8 +96,10 @@ bool SoundManager::Release()
 		if (pData) pData->Release();
 		delete pData;
 	}
+	//_CrtDumpMemoryLeaks();
 	m_pSystem->close();
 	m_pSystem->release();
+	//_CrtDumpMemoryLeaks();
 	m_List.clear();
 	return true;
 }

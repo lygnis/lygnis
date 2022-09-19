@@ -7,7 +7,14 @@
 #include <string>
 #include <codecvt>
 #include <atlconv.h> 
-
+#pragma comment (lib, "d3d11.lib")
+#pragma comment (lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#include <d3dcompiler.h>
+#include <d3d11.h>
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 extern HWND g_hWnd;
 extern RECT g_rtClient;

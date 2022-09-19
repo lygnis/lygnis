@@ -1,16 +1,10 @@
 #pragma once
-#include "Object2D.h"
-class Bullet;
-class FirePos : public Object2D
+#include "Vector.h"
+#include "TStd.h"
+#include "Bullet.h"
+class FirePos 
 {
 public:
-	bool Frame() override;
-	bool Fire();
-public:
-	float m_fFireCoolTime = 2.0f;
-	float m_fCurrTime;
-	//Bullet* m_bBullet;
-public:
-	std::vector<Bullet*>	m_pBulletList;
+	Bullet* MakeBullet(ID3D11Device* _p3dDevice, ID3D11DeviceContext* _pImmediateContext, Vector2D _firePos);
 };
 
