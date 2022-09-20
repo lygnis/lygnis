@@ -38,6 +38,7 @@ bool DxDevice::PreRender()
     float color[4] = { 1.0f, 1.0f, 1.0f,1.0f };
     m_pImmediateContext->ClearRenderTargetView(m_pRTV, color);      // 지우고 렌더타겟뷰(백버퍼)를 출력한다.
     // 프리렌더는 클리어 까지만
+
 	return true;
 }
 

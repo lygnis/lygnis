@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e08cc12b-4047-4375-8553-a0db9e472255}</ProjectGuid>
-    <RootNamespace>CreateObject</RootNamespace>
+    <ProjectGuid>{cbc70c5b-a916-47ae-8fda-89562dcba5f5}</ProjectGuid>
+    <RootNamespace>CreateCamera_01</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\output\Debug\CreateObject</OutDir>
-    <IntDir>..\..\..\output\Debug\CreateObject</IntDir>
+    <OutDir>..\..\..\output\Debug\CreateCamera</OutDir>
+    <IntDir>..\..\..\output\Debug\CreateCamera</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -151,6 +151,8 @@
     <ClInclude Include="Object2D.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BObject.cpp" />
@@ -160,9 +162,15 @@
     <ClCompile Include="Object2D.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefaultShader.txt" />
+    <Text Include="Sprite.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Spriteinfo.prn" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

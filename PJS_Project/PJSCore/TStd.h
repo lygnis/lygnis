@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <tchar.h>
 #include <string>
 #include <codecvt>
 #include <atlconv.h> 
@@ -12,9 +13,10 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #include <d3dcompiler.h>
 #include <d3d11.h>
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+#include <fstream>
 
 extern HWND g_hWnd;
 extern RECT g_rtClient;

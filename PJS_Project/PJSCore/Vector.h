@@ -12,6 +12,8 @@ struct Rect
 	float ySize;
 	float x1;
 	float y1;
+	float cx;
+	float cy;
 	Rect() {};
 	Rect(float _x, float _y, float w, float h)
 	{
@@ -21,7 +23,8 @@ struct Rect
 		ySize = h;
 		x1 = x0 + xSize;
 		y1 = y0 + ySize;
-
+		cx = (x0 + xSize) / 2;
+		cy = (y0 + ySize) / 2;
 	}
 };
 struct Pos2

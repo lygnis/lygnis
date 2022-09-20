@@ -1,6 +1,7 @@
 #include "Sample.h"
 #include "Player.h"
 #include "Bullet.h"
+
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
     Sample game;
@@ -13,8 +14,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
 bool Sample::Init()
 {
-
     bool hr;
+    
+    DataLoad(L"Sprite.txt");                                            // 텍스트 스프라이트 데이터를 읽는다.
     DxState::SetState(m_pDevice->m_p3dDevice);
     hr = SetMapObject();
     hr = SetPlayer();
@@ -25,6 +27,7 @@ bool Sample::Init()
 bool Sample::Frame()
 {
     m_bPlayer->Frame();
+
     return true;
 }
 bool Sample::Render()
@@ -47,6 +50,39 @@ bool Sample::Release()
     return true;
 }
 
+bool Sample::DataLoad(const TCHAR* _fileLoad)
+{
+    
+
+    //FILE* fp_src;
+    //int u = true;
+    ////u = fopen(&fp_src, _fileLoad, _T("rt"));
+    //if (fp_src == NULL) return false;
+    //_fgetts(pBuffer, sizeof(pBuffer)*256, fp_src);
+    //OutputDebugString(pBuffer);
+    //u = _stscanf_s(pBuffer, _T("%s%d%s"), pTemp, (unsigned int)_countof(pTemp), &iNumSprite);
+    //m_rtSpriteList.resize(iNumSprite);
+
+    //for (int iCnt = 0; iCnt < iNumSprite; iCnt++)
+    //{
+    //    int iNumFrame = 0;
+    //    _fgetts(pBuffer, _countof(pBuffer), fp_src);
+    //    _stscanf_s(pBuffer, _T("%s %d"), pTemp, (unsigned int)_countof(pTemp), &iNumFrame);
+    //    //m_rtSpriteList[iCnt].resize(iNumFrame);
+
+    //    Rect rt;
+    //    for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
+    //    {
+    //        _fgetts(pBuffer, _countof(pBuffer), fp_src);
+    //        _stscanf_s(pBuffer, _T("%s %d %d %d %d"), pTemp, (unsigned int)_countof(pTemp),
+    //            &rt.x0, &rt.y0, &rt.xSize, &rt.ySize);
+    //        m_rtSpriteList[iCnt].push_back(rt);
+    //    }
+    //}
+    //fclose(fp_src);
+    return true;
+}
+
 bool Sample::SetPlayer()
 {
     bool hr;
@@ -54,9 +90,10 @@ bool Sample::SetPlayer()
     hr = m_bPlayer->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
     if (hr == false) { return false; }
     m_bPlayer->Init();
-    hr = m_bPlayer->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/Fortress.png");
+    hr = m_bPlayer->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/TankIdle.png");
     if (hr == false) { return false; }
-    m_bPlayer->SetRect({ 40,148,32,32 });
+    Rect rt = m_rtSpriteList[0][0];
+    m_bPlayer->SetRect(rt);
     m_bPlayer->SetPosition({ g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f });
     return true;
 }
