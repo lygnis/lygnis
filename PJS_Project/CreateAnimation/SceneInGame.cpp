@@ -1,34 +1,18 @@
-#include "Sample.h"
-#include "Player.h"
-#include "Bullet.h"
-#include "SpriteManager.h"
+#include "SceneInGame.h"
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
+bool SceneInGame::Init()
 {
-    Sample game;
-    game.SetWindow(hInstance, L"TestDeviceCore", 800, 600);
-    game.Run();
-    //_CrtDumpMemoryLeaks();
-
-    return 1;
-}
-
-bool Sample::Init()
-{
-    bool hr;
-    I_Sprite.SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
+    I_Sprite.SetDevice(m_pd3dDevice, m_pImmediateContext);
     I_Sprite.Load(L"Sprite.txt");
-
-    DxState::SetState(m_pDevice->m_p3dDevice);
-    hr = SetMapObject();
-    hr = SetPlayer();
-    if (hr == false) { return false; }
-   
+    I_Sprite.Load(L"Spriteinfo.prn");
+    SetPlayer();
+    SetMap();
     return true;
 }
-bool Sample::Frame()
+
+bool SceneInGame::Frame()
 {
-    m_bPlayer->Frame();
+    m_pPlayer->Frame();
     m_fCurrTime += I_Timer.m_fDeltaTime;
     if (I_Input.GetKey('V') == KEY_HOLD)
     {
@@ -38,7 +22,6 @@ bool Sample::Frame()
             m_fCurrTime = 0;
         }
     }
-
     for (auto iter = m_pEffecList.begin();
         iter != m_pEffecList.end(); )
     {
@@ -53,11 +36,11 @@ bool Sample::Frame()
     }
     return true;
 }
-bool Sample::Render()
+
+bool SceneInGame::Render()
 {
-    m_pDevice->m_pImmediateContext->PSSetSamplers(0, 1, &DxState::g_pDefaultSS);
-    m_object->Render();
-    m_bPlayer->Render();
+    m_pMapObject->Render();
+    m_pPlayer->Render();
     for (auto pEffect : m_pEffecList)
     {
         pEffect->m_pSprite->SetRect(pEffect->m_tRect);
@@ -67,45 +50,46 @@ bool Sample::Render()
     return true;
 }
 
-bool Sample::Release()
+bool SceneInGame::Release()
 {
-    DxState::Release();
-    m_object->Release();
-    m_bPlayer->Release();
-    m_bPlayer->m_pBulletList.clear();
-    delete m_object;
-    delete m_bPlayer;
-    
+    m_pPlayer->Release();
+    m_pMapObject->Release();
+    delete m_pPlayer;
+    delete m_pMapObject;
+    for (auto data : m_pEffecList)
+    {
+        delete data;
+    }
+    m_pEffecList.clear();
     return true;
 }
 
-
-bool Sample::SetPlayer()
-{
-    bool hr;
-    m_bPlayer = new Player;
-    hr = m_bPlayer->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
-    if (hr == false) { return false; }
-    m_bPlayer->Init();
-    hr = m_bPlayer->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/TankIdle.png");
-    if (hr == false) { return false; }
-    m_bPlayer->SetRect({ 91,72,50,45 });
-    m_bPlayer->SetPosition({ g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f });
-    return true;
-}
-
-bool Sample::SetMapObject()
+bool SceneInGame::SetPlayer()
 {
     bool hr;
-    m_object = new BObject;
-    hr = m_object->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
+    m_pPlayer = new Player;
+    hr = m_pPlayer->SetDevice(m_pd3dDevice, m_pImmediateContext);
     if (hr == false) { return false; }
-    hr = m_object->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/1KGCABK.bmp");
+    m_pPlayer->Init();
+    hr = m_pPlayer->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/TankIdle.png");
+    if (hr == false) { return false; }
+    m_pPlayer->SetRect({ 91,72,50,45 });
+    m_pPlayer->SetPosition({ g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f });
+    return true;
+}
+
+bool SceneInGame::SetMap()
+{
+    bool hr;
+    m_pMapObject = new MapObject;
+    hr = m_pMapObject->SetDevice(m_pd3dDevice, m_pImmediateContext);
+    if (hr == false) { return false; }
+    hr = m_pMapObject->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/backGround.png");
     if (hr == false) { return false; }
     return true;
 }
 
-bool Sample::AddEffect()
+bool SceneInGame::AddEffect()
 {
     Efeect* pEffect = new Efeect;
     pEffect->m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
@@ -114,7 +98,7 @@ bool Sample::AddEffect()
     pEffect->m_tRect = rt;
     pEffect->m_iIndex = 0;
     pEffect->m_fLifeTime = 1.0f;
-    pEffect->m_vPos = { 400,300};
+    pEffect->m_vPos = { 400,300 };
     pEffect->m_fStep = pEffect->m_fLifeTime / pEffect->m_pSprite->m_uvArray.size();
     pEffect->m_iMaxIndex = pEffect->m_pSprite->m_uvArray.size();
 

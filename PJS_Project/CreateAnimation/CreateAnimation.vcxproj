@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{cbc70c5b-a916-47ae-8fda-89562dcba5f5}</ProjectGuid>
-    <RootNamespace>CreateCamera_01</RootNamespace>
+    <ProjectGuid>{af8ae729-8dfe-4295-8504-16121f5e924c}</ProjectGuid>
+    <RootNamespace>CreateAnimation</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\output\Debug\CreateCamera</OutDir>
-    <IntDir>..\..\..\output\Debug\CreateCamera</IntDir>
+    <OutDir>..\..\..\output\Debug\CreateAnimation</OutDir>
+    <IntDir>..\..\..\output\Debug\CreateAnimation</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -149,9 +149,13 @@
     <ClInclude Include="DxState.h" />
     <ClInclude Include="Efeect.h" />
     <ClInclude Include="FirePos.h" />
+    <ClInclude Include="MapObject.h" />
     <ClInclude Include="Object2D.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneInGame.h" />
+    <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
   </ItemGroup>
@@ -161,9 +165,13 @@
     <ClCompile Include="DxState.cpp" />
     <ClCompile Include="Efeect.cpp" />
     <ClCompile Include="FirePos.cpp" />
+    <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="Object2D.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneInGame.cpp" />
+    <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
   </ItemGroup>

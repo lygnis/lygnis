@@ -14,7 +14,7 @@ private:
 	std::vector<W_STR>	fileList;							// 텍스트 파일 리스트
 public:
 	bool		GameDataLoad(const TCHAR* _fileName);
-	bool		Load(std::wstring _name);
+	bool		Load(const WCHAR* _txtName);
 	bool		SetDevice(ID3D11Device* _p3dDeivce, ID3D11DeviceContext* _pImmendiateContext);
 	Sprite*		Find(std::wstring name);
 	bool		Release();

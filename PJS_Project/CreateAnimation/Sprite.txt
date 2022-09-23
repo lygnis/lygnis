@@ -1,4 +1,4 @@
-12
+6
 rtExplosion
 0	1 142 41 40 
 1	43 142 38 42 
@@ -12,7 +12,6 @@ rtExplosion
 9	321 142 27 25
 10	349 142 24 23
 11	374 142 22 18
-END
 rtBomb_9 
 0	161 85 11 12
 1	173 85 22 20
@@ -30,15 +29,15 @@ rtClash_6
 3 219 62 18 19
 4 238 62 14 13
 5 253 62 11 10
-rtUserLeft 3
+rtUserLeft_3
 0 1 1 28 60
 1 29 1 27 60
 2 56 1 36 60
-rtUserRight 3
+rtUserRight_3
 0 219 62 18 19
 1 238 62 14 13
 2 253 62 11 10
-rtUserFrontBack 2
+rtUserFrontBack_2
 0 219 62 18 19
 1 219 62 18 19
 END

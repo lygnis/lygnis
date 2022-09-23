@@ -14,10 +14,9 @@ void Sprite::SetPosition(Vector2D _pos)
 	UpdateVertexBuffer();
 }
 
-HRESULT Sprite::Load(ID3D11Device* _p3dDevice, ID3D11DeviceContext* _pImmediateContext, std::wstring _name)
+HRESULT Sprite::Load(std::wstring _name)
 {
 	bool hr;
-	hr = SetDevice(_p3dDevice, _pImmediateContext);
 	hr = Create(L"D:/Git_PJS_C/shader/DefaultShader.txt", L"D:/Git_PJS_C/data/bitmap1.bmp");
 	if (FAILED(hr))
 		return hr;
