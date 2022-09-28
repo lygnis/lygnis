@@ -34,7 +34,7 @@ void Object2D::SetPosition(Vector2D _pos)
     m_vDrawPos.y = -((m_rtCollision.y0 / g_rtClient.bottom) * 2.0f - 1.0f);
     m_vDrawSize.x = (m_rtInit.xSize / g_rtClient.right) * 2;
     m_vDrawSize.y = (m_rtInit.ySize / g_rtClient.bottom) * 2;
-    UpdateVertexBuffer();
+    //UpdateVertexBuffer();
 
     m_vCenterPoint.x = (m_vPosition.x + m_vPosition.x + m_rtInit.xSize) / 2;
     m_vCenterPoint.y = (m_vPosition.y + m_vPosition.y + m_rtInit.ySize) / 2;

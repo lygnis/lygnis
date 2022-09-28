@@ -14,10 +14,10 @@ void Sprite::SetPosition(Vector2D _pos)
 	UpdateVertexBuffer();
 }
 
-HRESULT Sprite::Load(std::wstring _name)
+HRESULT Sprite::Load(const WCHAR* _fileName)
 {
 	bool hr;
-	hr = Create(L"D:/Git_PJS_C/shader/DefaultShader.txt", L"D:/Git_PJS_C/data/bitmap1.bmp");
+	hr = Create(L"../../shader/DefaultShader.txt", _fileName);
 	if (FAILED(hr))
 		return hr;
 	return hr;

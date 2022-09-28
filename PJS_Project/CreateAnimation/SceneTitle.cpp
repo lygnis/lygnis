@@ -6,7 +6,7 @@ bool SceneTitle::Init()
 	m_pTitleMap = new BObject;
 	hr = m_pTitleMap->SetDevice(m_pd3dDevice, m_pImmediateContext);
 	if (hr == false) { return false; }
-	hr = m_pTitleMap->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/1KGCABK.bmp");
+	hr = m_pTitleMap->Create(L"../../shader/DefaultShader.txt", L"D:/Git_PJS_C/data/1KGCABK.bmp");
 	if (hr == false) { return false; }
 	return true;
 }

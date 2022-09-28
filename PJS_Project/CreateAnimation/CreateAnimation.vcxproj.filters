@@ -119,6 +119,6 @@
     <Text Include="Sprite.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Spriteinfo.prn" />
+    <None Include="tankState.prn" />
   </ItemGroup>
 </Project>

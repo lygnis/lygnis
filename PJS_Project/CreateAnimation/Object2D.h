@@ -16,7 +16,7 @@ public:
 	float	 m_fSpeed;
 	float	 m_fMass;
 	W_STR					m_szName;					// 오브젝트 이름
-	UINT					m_Iindex;					// 오브젝트 인덱스
+	//UINT					m_Iindex;					// 오브젝트 인덱스
 public:
 	RECT_ARRAY				m_uvArray;					// 오브젝트 좌표 모음 배열 (텍스트 좌표 파일 보관)
 public:

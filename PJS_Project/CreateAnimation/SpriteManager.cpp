@@ -2,6 +2,8 @@
 #include "Player.h"
 bool SpriteManager::GameDataLoad(const TCHAR* _fileName)
 {
+    std::vector<W_STR> NameList;
+    std::vector<RECT_ARRAY> SpriteList;
     TCHAR pBuffer[256] = { 0 };
     TCHAR pTemp[256] = { 0 };
     std::ifstream read;
@@ -9,7 +11,7 @@ bool SpriteManager::GameDataLoad(const TCHAR* _fileName)
     float nums[5];
     float maxCount = 0;
     read >> maxCount;
-    m_rtSpriteList.resize(maxCount);
+    SpriteList.resize(maxCount);
     std::string trash;
     int iIndex = -1;
     while (true)
@@ -24,10 +26,14 @@ bool SpriteManager::GameDataLoad(const TCHAR* _fileName)
             read.clear();
             read >> trash;
             if (trash == "END")
+            {
+                m_rtNameList.insert(std::make_pair(_fileName, NameList));
+                m_rtSpriteList.insert(std::make_pair(_fileName, SpriteList));
                 break;
+            }
             else
             {
-                m_rtNameList.push_back(to_mw(trash));
+                NameList.push_back(to_mw(trash));
                 iIndex++;
             }
             continue;
@@ -39,36 +45,36 @@ bool SpriteManager::GameDataLoad(const TCHAR* _fileName)
 
         Rect rt;
         rt = { nums[1], nums[2], nums[3], nums[4] };
-        m_rtSpriteList[iIndex].push_back(rt);
+        SpriteList[iIndex].push_back(rt);
     }
     read.close();
     return true;
 }
 
-bool SpriteManager::Load(const WCHAR* _txtName)
+bool SpriteManager::Load(const WCHAR* _txtName, const WCHAR* _fileName)
 {
-    m_rtSpriteList.clear();
-    m_rtNameList.clear();
     if (GameDataLoad(_txtName) == false)
     {
         return false;                           // 파일 데이터를 로드하지 못하면 
     }
-    fileList.push_back(_txtName);
+    //fileList.push_back(_txtName);
 
     HRESULT hr;
-    for (int iSp = 0; iSp < m_rtSpriteList.size(); iSp++)
+    for (int iSp = 0; iSp < m_rtNameList.find(_txtName)->second.size(); iSp++)
     {
         // 중복제거
-        auto data = Find(m_rtNameList[iSp]);
+        auto nameiter = m_rtNameList.find(_txtName);
+        auto data = Find(nameiter->second[iSp]);
         if (data != nullptr)
             continue;                                       // 스프라이트 리스트에서 이름을 찾는다 만약 이름이 같은게 있으면 continue;
         Sprite* pNewData = new Sprite;
-        pNewData->m_szName = m_rtNameList[iSp];             // 새로운 스프라이트를 생성한다. 새로운 스프라이트 이름은 현재 이름리스트
-        pNewData->m_uvArray = m_rtSpriteList[iSp];
+        pNewData->m_szName = nameiter->second[iSp];          // 새로운 스프라이트를 생성한다. 새로운 스프라이트 이름은 현재 이름리스트
+        auto spriteiter = m_rtSpriteList.find(_txtName);
+        pNewData->m_uvArray = spriteiter->second[iSp];
         if (pNewData)
         {
             hr = pNewData->SetDevice(m_p3dDeivce, m_pImmendiateContext);
-            hr = pNewData->Load(_txtName);
+            hr = pNewData->Load(_fileName);
             if (SUCCEEDED(hr))
             {
                 m_List.insert(std::make_pair(pNewData->m_szName, pNewData));
@@ -104,7 +110,7 @@ bool SpriteManager::Release()
         if (pData)pData->Release();
         delete pData;
     }
-    fileList.clear();
+    //fileList.clear();
     m_rtSpriteList.clear();
     m_rtNameList.clear();
     m_List.clear();

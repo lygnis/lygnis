@@ -14,7 +14,6 @@ bool Efeect::Updata()
     }
     Rect rt = m_pSprite->m_uvArray[m_iIndex];
     m_tRect = rt;
-    Vector2D temp = { 0,1 };
     //ector2D vAdd = temp * 300.0f * I_Timer.m_fDeltaTime;
     //m_vPos = m_vPos + vAdd;
     m_rtCollision.x0 = m_vPos.x;

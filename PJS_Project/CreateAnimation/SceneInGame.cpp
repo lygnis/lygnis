@@ -3,8 +3,8 @@
 bool SceneInGame::Init()
 {
     I_Sprite.SetDevice(m_pd3dDevice, m_pImmediateContext);
-    I_Sprite.Load(L"Sprite.txt");
-    I_Sprite.Load(L"Spriteinfo.prn");
+    I_Sprite.Load(L"Sprite.txt", L"../../data/bitmap1.bmp");
+    I_Sprite.Load(L"tankState.prn", L"../../data/TankState.png");
     SetPlayer();
     SetMap();
     return true;
@@ -41,6 +41,7 @@ bool SceneInGame::Render()
 {
     m_pMapObject->Render();
     m_pPlayer->Render();
+    //m_pPlayer->m_pSprite->Render();
     for (auto pEffect : m_pEffecList)
     {
         pEffect->m_pSprite->SetRect(pEffect->m_tRect);
@@ -68,13 +69,9 @@ bool SceneInGame::SetPlayer()
 {
     bool hr;
     m_pPlayer = new Player;
-    hr = m_pPlayer->SetDevice(m_pd3dDevice, m_pImmediateContext);
-    if (hr == false) { return false; }
     m_pPlayer->Init();
-    hr = m_pPlayer->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/TankIdle.png");
-    if (hr == false) { return false; }
-    m_pPlayer->SetRect({ 91,72,50,45 });
-    m_pPlayer->SetPosition({ g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f });
+    hr = m_pPlayer->SetDevice(m_pd3dDevice, m_pImmediateContext);
+    if (hr == false) { return false; }  
     return true;
 }
 
@@ -84,7 +81,7 @@ bool SceneInGame::SetMap()
     m_pMapObject = new MapObject;
     hr = m_pMapObject->SetDevice(m_pd3dDevice, m_pImmediateContext);
     if (hr == false) { return false; }
-    hr = m_pMapObject->Create(L"D:/Git_PJS_C/PJS_Project/CreateObject/DefaultShader.txt", L"D:/Git_PJS_C/data/backGround.png");
+    hr = m_pMapObject->Create(L"../../shader/DefaultShader.txt", L"D:/Git_PJS_C/data/backGround.png");
     if (hr == false) { return false; }
     return true;
 }

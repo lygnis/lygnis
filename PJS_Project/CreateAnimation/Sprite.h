@@ -12,6 +12,6 @@ public:
 	Rect					m_rtCollision;
 public:
 	void SetPosition(Vector2D _pos);
-	HRESULT Load(std::wstring _name);
+	HRESULT Load(const WCHAR* _filName);
 };
 
