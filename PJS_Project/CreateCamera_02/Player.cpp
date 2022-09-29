@@ -3,13 +3,17 @@
 bool Player::Init()
 {
 	m_fSpeed = 100.0f;
-	m_vPosition = { g_rtClient.right / 2.0f, g_rtClient.bottom - 100.0f };
+	m_vPosition = { g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
 	TankMove();
 	//TankIdle();
 	return true;
 }
 bool Player::Frame()
 {
+	m_vCameraPos = m_vPosition;
+	m_pSprite->SetCameraSize({ 400,300 });
+	m_pSprite->SetCameraPos(m_vCameraPos);
+	m_pSprite->SetPosition(m_vPosition, m_vCameraPos);
 	AnimState();
 	Update();
 	FireUpdate(m_bFire);
@@ -246,7 +250,7 @@ PlayerState Player::TankIdle()
 		m_fStep = 1.0f / m_iMaxIndex;
 		SetRect(rt);
 		m_pSprite->SetRect(m_rtInit);
-		m_pSprite->SetPosition(m_vPosition);
+		m_pSprite->SetPosition(m_vPosition );
 	}
 	return IDLE;
 }

@@ -81,7 +81,7 @@ bool SceneInGame::SetMap()
     m_pMapObject = new MapObject;
     hr = m_pMapObject->SetDevice(m_pd3dDevice, m_pImmediateContext);
     if (hr == false) { return false; }
-    hr = m_pMapObject->Create(L"../../shader/DefaultShader.txt", L"D:/Git_PJS_C/data/backGround.png");
+    hr = m_pMapObject->Create(L"../../shader/DefaultShader.txt", L"../../data/backGround.png");
     if (hr == false) { return false; }
     return true;
 }
