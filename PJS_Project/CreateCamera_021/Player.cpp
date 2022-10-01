@@ -3,7 +3,7 @@
 bool Player::Init()
 {
 	m_fSpeed = 100.0f;
-	m_vPosition = { 1600,500 };//{ g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
+	m_vPosition = { 1600,300 };//{ g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
 	TankMove();
 	m_vCameraPos = m_vPosition;
 	//TankIdle();
@@ -13,20 +13,9 @@ bool Player::Frame()
 {
 	if (m_pBulletList.empty()&&m_pEffectList.empty())
 	{
-		if (I_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
-		{
-			m_vCurrCameraPos.y += 100 *I_Timer.m_fDeltaTime;
-			if (m_vPosition.y > m_vPosition.y)
-			{
-				m_vCurrCameraPos.y = m_vPosition.y;
-			}
-		}
-		else
-		{
-			m_vCurrCameraPos = m_vPosition;
-			m_vCurrCameraPos.y = m_vPosition.y - 200.0f;
-			m_vCameraPos = m_vCurrCameraPos;
-		}
+		m_vCurrCameraPos = m_vPosition;
+		m_vCurrCameraPos.y = m_vPosition.y -100;
+		m_vCameraPos = m_vCurrCameraPos;
 	}
 	m_pSprite->SetCameraSize({ 800,600 });
 	m_pSprite->SetCameraPos(m_vCurrCameraPos);
@@ -41,17 +30,24 @@ bool Player::Frame()
 		std::list<Bullet*>::iterator iter;
 		for (iter = m_pBulletList.begin(); iter!=m_pBulletList.end();iter++)
 		{
-			m_vCurrCameraPos = (*iter)->m_vPosition;
-			m_vCameraPos = m_vCurrCameraPos;
+			m_fChangeCameraTime += I_Timer.m_fDeltaTime;
+			if (m_fChangeCameraTime >= 1.0f)
+			{
+				m_vCurrCameraPos = (*iter)->m_vPosition;
+				m_vCameraPos = m_vCurrCameraPos;
+				m_fChangeCameraTime = 0;
+			}
 			(*iter)->m_vCameraPos = m_pSprite->m_vCameraPos;
 			(*iter)->m_vViewSize = m_pSprite->m_vViewSize;
-			if (!(*iter)->Frame())
+			(*iter)->Frame();
+			if(!m_bCollsionCheck)
 			{
 				AddEffect((*iter)->m_vFirePoint);
 				(*iter)->Release();
 				delete (*iter);
 				m_pBulletList.erase(iter);
 				m_bEffect = true;
+				m_bCollsionCheck = true;
 				return true;
 			}
 		}
@@ -119,13 +115,13 @@ bool Player::Move()
 	if (m_fEnergy >= 0)
 	{
 		Vector2D _vPos = m_vPosition;
-		if (I_Input.GetKey('W') == KEY_HOLD)
-		{
-			_vPos.y += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-			//m_fEnergy -= I_Timer.m_fDeltaTime;
-			m_iState = NONE;
-			m_fIdleTime = 0;
-		}
+		//if (I_Input.GetKey('W') == KEY_HOLD)
+		//{
+		//	_vPos.y += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+		//	//m_fEnergy -= I_Timer.m_fDeltaTime;
+		//	m_iState = NONE;
+		//	m_fIdleTime = 0;
+		//}
 		if (I_Input.GetKey('A') == KEY_HOLD)
 		{
 			_vPos.x += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
@@ -133,13 +129,13 @@ bool Player::Move()
 			m_iState = NONE;
 			m_fIdleTime = 0;
 		}
-		if (I_Input.GetKey('S') == KEY_HOLD)
-		{
-			_vPos.y += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-			//m_fEnergy -= I_Timer.m_fDeltaTime;
-			m_iState = NONE;
-			m_fIdleTime = 0;
-		}
+		//if (I_Input.GetKey('S') == KEY_HOLD)
+		//{
+		//	_vPos.y += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+		//	//m_fEnergy -= I_Timer.m_fDeltaTime;
+		//	m_iState = NONE;
+		//	m_fIdleTime = 0;
+		//}
 		if (I_Input.GetKey('D') == KEY_HOLD)
 		{
 			_vPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
@@ -304,13 +300,10 @@ PlayerState Player::TankFire()
 		m_pSprite = I_Sprite.GetPtr(L"tankFire");
 		Rect rt = m_pSprite->m_uvArray[0];
 		SetRect(rt);
+
 		m_iIndex = 0;
 		m_iMaxIndex = m_pSprite->m_uvArray.size();
 		m_fStep = 1.3f / m_iMaxIndex;
-
-
-
-
 		m_pSprite->SetRect(m_rtInit);
 		m_pSprite->SetPosition(m_vCurrCameraPos, m_vCameraPos);
 	}
@@ -348,6 +341,7 @@ PlayerState Player::TankMove()
 	SetRect(rt);
 	m_pSprite->SetRect(m_rtInit);
 	m_pSprite->SetPosition(m_vCurrCameraPos, m_vCameraPos);
+	m_pSprite->m_rtCollision;
 	return NONE;
 }
 

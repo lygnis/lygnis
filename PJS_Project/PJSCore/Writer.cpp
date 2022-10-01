@@ -10,7 +10,7 @@ bool Writer::Init()
 	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), (IUnknown**)&m_pDWriterFactory);
 	if (FAILED(hr))	return false;
 	// ÆùÆ® ÃÊ±âÈ­
-	hr = m_pDWriterFactory->CreateTextFormat(L"°íµñ", NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30, L"ko-kr", &m_TextFormat);
+	hr = m_pDWriterFactory->CreateTextFormat(L"°íµñ", NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 15, L"ko-kr", &m_TextFormat);
 	if (FAILED(hr))	return false;
 
 	return true;
@@ -21,7 +21,7 @@ bool Writer::Frame()
 }
 bool Writer::Render()
 {
-	Draw(0, 0, m_szOutputText, { 0,0,0,1 });
+	Draw(1, 1, m_szOutputText, { 1,1,1,1 });
 	return true;
 }
 bool Writer::Release()

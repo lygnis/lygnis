@@ -19,8 +19,18 @@ bool Timer::Frame()
 		m_iFPS = m_iFPScount;
 		m_iFPScount = 0;
 		m_fFpsTime -= 1.0f;
+
+
 	}
 	m_fBeforTime = m_fElapseTime;
+
+
+#ifdef _DEBUG
+	if (m_fDeltaTime >= 1.0f / 60.f)
+	{
+		m_fDeltaTime = 1.f / 60.f;
+	}
+#endif // !DEBUG
 
 	return true;
 }

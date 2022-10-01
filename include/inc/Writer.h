@@ -6,7 +6,7 @@
 #include<d2d1helper.h>
 #include<dwrite.h>
 
-class Writer
+class Writer : public SingleTone<Writer>
 {
 public:
 
@@ -25,7 +25,8 @@ public:
 	bool Release();
 public:
 	bool Set(IDXGISurface* _dxgiSurface);					// 백버퍼를 받아오는 함수
-private:
+public:
 	bool Draw(float x, float y, std::wstring _text, D2D1_COLOR_F color);	// 출력함수
 };
 
+#define I_Wirte Writer::GetInstance()

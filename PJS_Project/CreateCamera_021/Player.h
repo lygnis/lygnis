@@ -27,6 +27,7 @@ private:
 	float					m_fEnergy = 5.0f;
 	PlayerState				m_iState = NONE;
 	bool					m_bFire = false;
+	bool					m_fChangeCameraTime;
 public:
 	Sprite*					m_pSprite = nullptr;
 	UINT m_iIndex = 0;
@@ -34,7 +35,7 @@ public:
 	float m_fEffectTimer = 0.0f;
 	float m_fStep = 1.0f;
 	Vector2D				m_vCurrCameraPos;
-
+	bool					m_bCollsionCheck;
 public:
 	std::list<Bullet*>		m_pBulletList;
 	std::list<Efeect*>		m_pEffectList;

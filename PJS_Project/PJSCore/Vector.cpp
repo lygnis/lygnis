@@ -348,3 +348,4 @@ float Vector4D::Angle(Vector4D& _vec)
 	float fDegree = RadToDegree(fRadian);
 	return fDegree;
 }
+

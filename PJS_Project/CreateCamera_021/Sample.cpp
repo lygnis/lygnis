@@ -5,11 +5,15 @@
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
+    //_CrtSetBreakAlloc(215);
+    
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     Sample game;
     game.SetWindow(hInstance, L"TestDeviceCore", 800, 600);
     game.Run();
-    _CrtDumpMemoryLeaks();
+    //_CrtDumpMemoryLeaks();
 
+    int  a = 0;
     return 1;
 }
 

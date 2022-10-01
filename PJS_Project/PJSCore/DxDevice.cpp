@@ -72,7 +72,7 @@ HRESULT DxDevice::CreateDevice()
     IDXGIAdapter* pAdapter = nullptr;                           // Nullptr로 설정 (그래픽카드 인터페이스)
     D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;      // 하드웨어 성능을 무엇으로 할거냐 (GPU처리로 한다.) 만약 GPU가 지원을 안하면 CPU사용인데 속도 감소
     HMODULE Software = NULL;                                    // DX말고 다른 엔진의 모듈을 사용하겠다
-    UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+    UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;              // 플래그로 write 설정 매우중요
     D3D_FEATURE_LEVEL pFeatureLevels[] =
     {
         D3D_FEATURE_LEVEL_11_0,

@@ -12,6 +12,7 @@ public:
 	Writer				m_wWriter;
 	Timer				m_tTimer;
 	Input				m_iInput;
+	float				m_fTemp;
 private:
 	bool				m_bGameRun = true;
 	IDXGISurface1*		m_pBackBuffer;

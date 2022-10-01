@@ -14,6 +14,7 @@ struct Rect
 	float y1;
 	float cx;
 	float cy;
+	//bool operator == (Rect& _rect);
 	Rect() {};
 	Rect(float _x, float _y, float w, float h)
 	{
@@ -27,6 +28,15 @@ struct Rect
 		cy = (y0 + ySize) / 2;
 	}
 };
+//bool Rect::operator==(Rect& _rect)
+//{
+//	if (fabs(x0 - _rect.x0) <= 0.001 && fabs(xSize - ySize) <= 0.001)
+//	{
+//		return true;
+//	}
+//	return false;
+//}
+
 struct Pos2
 {
 	union

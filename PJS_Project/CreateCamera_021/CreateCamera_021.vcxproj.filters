@@ -15,80 +15,62 @@
     <Filter Include="소스 파일\Object">
       <UniqueIdentifier>{2f9dfcfa-f258-44ff-a3bd-fab078c72674}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\헤더 파일">
+    <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="소스 파일\헤더 파일\Scene">
+    <Filter Include="헤더 파일\Scene">
       <UniqueIdentifier>{855e7d27-38bf-45b6-8d38-6439bec8b7a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\헤더 파일\Object">
+    <Filter Include="헤더 파일\Object">
       <UniqueIdentifier>{4b9ffdfd-6032-42e1-9c7c-0491874d543a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DxState.h">
-      <Filter>소스 파일\헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SpriteManager.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Efeect.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SceneTitle.h">
-      <Filter>소스 파일\헤더 파일\Scene</Filter>
+      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>소스 파일\헤더 파일\Scene</Filter>
+      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneInGame.h">
-      <Filter>소스 파일\헤더 파일\Scene</Filter>
+      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="FirePos.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="Object2D.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="BObject.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="MapObject.h">
-      <Filter>소스 파일\헤더 파일\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>소스 파일\헤더 파일</Filter>
+    <ClInclude Include="Coordinate.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sample.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DxState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Efeect.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
@@ -116,7 +98,22 @@
     <ClCompile Include="MapObject.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="DxState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Efeect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Coordinate.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
