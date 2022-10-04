@@ -24,4 +24,24 @@ void Interface::ScreenToNDC()
     m_vDrawSize.y = (m_rtInit.ySize / g_rtClient.bottom) * 2;
 }
 
+void Interface::SetActive(bool _Set)
+{
+    if (!_Set)
+    {
+        m_pVertexList[0].color = { 1,1,1,0 };
+        m_pVertexList[1].color = { 1,1,1,0 };
+        m_pVertexList[2].color = { 1,1,1,0 };
+        m_pVertexList[3].color = { 1,1,1,0 };
+        m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, NULL, NULL, &m_pVertexList.at(0), 0, 0);
+    }
+    else
+    {
+        m_pVertexList[0].color = { 1,1,1,1 };
+        m_pVertexList[1].color = { 1,1,1,1 };
+        m_pVertexList[2].color = { 1,1,1,1 };
+        m_pVertexList[3].color = { 1,1,1,1 };
+        m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, NULL, NULL, &m_pVertexList.at(0), 0, 0);
+    }
+}
+
 

@@ -25,15 +25,15 @@
     <Filter Include="헤더 파일\Object">
       <UniqueIdentifier>{4b9ffdfd-6032-42e1-9c7c-0491874d543a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\lib">
+      <UniqueIdentifier>{e0ff24f3-ae86-4783-a888-c8281413b3ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\lib">
+      <UniqueIdentifier>{5b848c7f-44e2-4098-bd45-fade751cc308}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DxState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Efeect.h">
@@ -66,14 +66,26 @@
     <ClInclude Include="MapObject.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Coordinate.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Interface.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinate.h">
+      <Filter>헤더 파일\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="DxState.h">
+      <Filter>헤더 파일\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>헤더 파일\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>헤더 파일\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBalloon.h">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemBox.h">
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,26 +116,32 @@
     <ClCompile Include="MapObject.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
-    <ClCompile Include="DxState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Efeect.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteManager.cpp">
+    <ClCompile Include="Interface.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Coordinate.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\lib</Filter>
     </ClCompile>
-    <ClCompile Include="Interface.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="DxState.cpp">
+      <Filter>소스 파일\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>소스 파일\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>소스 파일\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBalloon.cpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemBox.cpp">
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

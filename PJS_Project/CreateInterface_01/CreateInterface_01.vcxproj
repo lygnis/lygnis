@@ -150,8 +150,10 @@
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DxState.h" />
     <ClInclude Include="Efeect.h" />
+    <ClInclude Include="EnemyBalloon.h" />
     <ClInclude Include="FirePos.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="ItemBox.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="Object2D.h" />
     <ClInclude Include="Player.h" />
@@ -168,8 +170,10 @@
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="DxState.cpp" />
     <ClCompile Include="Efeect.cpp" />
+    <ClCompile Include="EnemyBalloon.cpp" />
     <ClCompile Include="FirePos.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="ItemBox.cpp" />
     <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="Object2D.cpp" />
     <ClCompile Include="Player.cpp" />

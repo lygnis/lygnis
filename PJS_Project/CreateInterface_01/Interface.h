@@ -20,6 +20,7 @@ public:
 	bool Frame() override;
 	void SetPosition(Vector2D _pos) override;
 	void ScreenToNDC()override;
+	void SetActive(bool _Set);
 };
 class Button : public Interface
 {

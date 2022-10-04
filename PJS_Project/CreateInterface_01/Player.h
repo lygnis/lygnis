@@ -28,6 +28,7 @@ private:
 	PlayerState				m_iState = NONE;
 	bool					m_bFire = false;
 	bool					m_fChangeCameraTime;
+	Vector2D				m_vSecondCamera;
 public:
 	Sprite*					m_pSprite = nullptr;
 	UINT					m_iIndex = 0;
@@ -38,6 +39,7 @@ public:
 	bool					m_bCollsionCheck = true;
 	float					m_fFireGage;
 	float					m_fMoveEnergyGage;
+	int						m_iMissileCount;
 public:
 	std::list<Bullet*>		m_pBulletList;
 	std::list<Efeect*>		m_pEffectList;
@@ -47,6 +49,7 @@ public:
 	bool Render();
 	bool Release();
 public:
+	bool SecondMove();
 	bool Move();
 	bool Fire();
 	bool AddEffect(Vector2D _pos);

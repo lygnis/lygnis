@@ -2,8 +2,9 @@
 
 bool Player::Init()
 {
-	m_fSpeed = 60.0f;
-	m_vPosition = { 1600,300 };//{ g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
+	m_fSpeed = 360.0f;
+	m_vPosition = { 3000,1450.f };//{ g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
+	//m_vSecondCamera = m_vPosition;
 	TankMove();
 	m_vCameraPos = m_vPosition;
 	//TankIdle();
@@ -13,9 +14,13 @@ bool Player::Frame()
 {
 	if (m_pBulletList.empty()&&m_pEffectList.empty())
 	{
-		m_vCurrCameraPos = m_vPosition;
-		m_vCurrCameraPos.y = m_vPosition.y -100;
-		m_vCameraPos = m_vCurrCameraPos;
+			m_vCurrCameraPos = m_vPosition;
+			m_vCurrCameraPos.y = m_vPosition.y - 100;
+			m_vCameraPos = m_vCurrCameraPos;	
+	}
+	if (I_Input.GetKey('G') == KEY_UP)
+	{
+		m_iMissileCount++;
 	}
 	m_pSprite->SetCameraSize({ 800,600 });
 	m_pSprite->SetCameraPos(m_vCurrCameraPos);
@@ -23,7 +28,6 @@ bool Player::Frame()
 	Update();
 	FireUpdate(m_bFire);
 	Move();
-	
 	Fire();
 	if (!m_pBulletList.empty())
 	{
@@ -90,7 +94,7 @@ bool Player::Render()
 	{
 		pEffect->m_pSprite->SetRect(pEffect->m_tRect);
 		pEffect->m_pSprite->SetCameraSize(m_pSprite->m_vViewSize);
-		pEffect->m_pSprite->SetPosition(pEffect->m_vPos, m_pSprite->m_vCameraPos);
+		pEffect->m_pSprite->SetPosition(pEffect->m_vPos, m_vCurrCameraPos);
 		pEffect->m_pSprite->Render();
 	}
 	return true;
@@ -115,51 +119,54 @@ bool Player::Release()
 bool Player::Move()
 {
 	m_fIdleTime += I_Timer.m_fDeltaTime;
-	if (m_fEnergy >= 0)
+	if (m_fChargingTime <= 0.001f)
 	{
-		Vector2D _vPos = m_vPosition;
-		//if (I_Input.GetKey('W') == KEY_HOLD)
-		//{
-		//	_vPos.y += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-		//	//m_fEnergy -= I_Timer.m_fDeltaTime;
-		//	m_iState = NONE;
-		//	m_fIdleTime = 0;
-		//}
-		if (I_Input.GetKey('A') == KEY_HOLD)
+		if (m_fEnergy >= 0)
 		{
-			_vPos.x += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-			m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
-			m_fEnergy -= I_Timer.m_fDeltaTime;
-			m_iState = NONE;
-			m_fIdleTime = 0;
+			Vector2D _vPos = m_vPosition;
+			//if (I_Input.GetKey('W') == KEY_HOLD)
+			//{
+			//	_vPos.y += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+			//	//m_fEnergy -= I_Timer.m_fDeltaTime;
+			//	m_iState = NONE;
+			//	m_fIdleTime = 0;
+			//}
+			if (I_Input.GetKey('A') == KEY_HOLD)
+			{
+				_vPos.x += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+				m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
+				//m_fEnergy -= I_Timer.m_fDeltaTime;
+				m_iState = NONE;
+				m_fIdleTime = 0;
+			}
+			//if (I_Input.GetKey('S') == KEY_HOLD)
+			//{
+			//	_vPos.y += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+			//	//m_fEnergy -= I_Timer.m_fDeltaTime;
+			//	m_iState = NONE;
+			//	m_fIdleTime = 0;
+			//}
+			if (I_Input.GetKey('D') == KEY_HOLD)
+			{
+				_vPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+				//m_fEnergy -= I_Timer.m_fDeltaTime;
+				m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
+				m_iState = NONE;
+				m_fIdleTime = 0;
+			}
+			if (m_fMoveEnergyGage <= 0)
+				m_fMoveEnergyGage = 0.f;
+			if (m_fIdleTime >= 3.0f)
+			{
+				m_iState = IDLE;
+			}
+			m_vPosition = _vPos;
+			//SetPosition(_vPos);
 		}
-		//if (I_Input.GetKey('S') == KEY_HOLD)
-		//{
-		//	_vPos.y += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-		//	//m_fEnergy -= I_Timer.m_fDeltaTime;
-		//	m_iState = NONE;
-		//	m_fIdleTime = 0;
-		//}
-		if (I_Input.GetKey('D') == KEY_HOLD)
+		else if (m_fEnergy <= 0 && m_iState != FIRE && m_pBulletList.empty())
 		{
-			_vPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-			m_fEnergy -= I_Timer.m_fDeltaTime;
-			m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
-			m_iState = NONE;
-			m_fIdleTime = 0;
+			m_iState = STAY;
 		}
-		if (m_fMoveEnergyGage <= 0)
-			m_fMoveEnergyGage = 0.f;
-		if (m_fIdleTime >= 3.0f)
-		{
-			m_iState = IDLE;
-		}
-		m_vPosition = _vPos;
-		//SetPosition(_vPos);
-	}
-	else if (m_fEnergy <= 0 && m_iState !=FIRE && m_pBulletList.empty())
-	{
-		m_iState = STAY;
 	}
 	m_pSprite->SetPosition(m_vPosition, m_vCameraPos);
 	return true;
@@ -168,6 +175,10 @@ bool Player::Move()
 bool Player::Fire()
 {
 	if (m_pBulletList.size() >= 1)
+	{
+		return true;
+	}
+	if (m_iMissileCount <= 0)
 	{
 		return true;
 	}
@@ -195,9 +206,32 @@ bool Player::Fire()
 		m_pBulletList.push_back(_bullet);
 		m_fChargingTime = 0;
 		m_fIdleTime = 0;
-		//m_iIndex = 1;
+		m_iMissileCount--;
 		m_bFire = true;
 	}
+	return true;
+}
+
+bool Player::SecondMove()
+{
+	Vector2D _vScPos;
+	if (I_Input.GetKey('W') == KEY_HOLD)
+	{
+		_vScPos.y += -1.0f * 200.f * I_Timer.m_fDeltaTime;
+	}
+	if (I_Input.GetKey('A') == KEY_HOLD)
+	{
+		_vScPos.x += -1.0f * 200.f * I_Timer.m_fDeltaTime;
+	}
+	if (I_Input.GetKey('S') == KEY_HOLD)
+	{
+		_vScPos.y += 1.0f * 200.f * I_Timer.m_fDeltaTime;
+	}
+	if (I_Input.GetKey('D') == KEY_HOLD)
+	{
+		_vScPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+	}
+	m_vSecondCamera = _vScPos;
 	return true;
 }
 
