@@ -53,10 +53,10 @@ bool EnemyBalloon::Move()
         if (m_vPosition.y >= 1038.f && MoveCheck == true)
         {
             _vPos.y += 1.0f * 100 * I_Timer.m_fDeltaTime;
-            if (m_vPosition.y >= 1590.f)
+            if (m_vPosition.y >= 1500.f)
                 MoveCheck = false;
         }
-        if (m_vPosition.y <= 1593.f && MoveCheck == false)
+        if (m_vPosition.y <= 1503.f && MoveCheck == false)
         {
             _vPos.y += -1.0f * 100 * I_Timer.m_fDeltaTime;
             if (m_vPosition.y <= 1040.f)

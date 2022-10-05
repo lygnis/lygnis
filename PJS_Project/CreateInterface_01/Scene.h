@@ -2,6 +2,12 @@
 #include "Player.h"
 #include "TStd.h"
 #include "Writer.h"
+enum GameClear
+{
+	GAME_NONE,
+	GAME_CLEAR,
+	GAME_OVER
+};
 class Scene
 {
 public:

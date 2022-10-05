@@ -151,6 +151,7 @@
     <ClInclude Include="DxState.h" />
     <ClInclude Include="Efeect.h" />
     <ClInclude Include="EnemyBalloon.h" />
+    <ClInclude Include="EnemyPig.h" />
     <ClInclude Include="FirePos.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="ItemBox.h" />
@@ -159,6 +160,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneEnd.h" />
+    <ClInclude Include="SceneGameover.h" />
     <ClInclude Include="SceneInGame.h" />
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Sprite.h" />
@@ -171,6 +174,7 @@
     <ClCompile Include="DxState.cpp" />
     <ClCompile Include="Efeect.cpp" />
     <ClCompile Include="EnemyBalloon.cpp" />
+    <ClCompile Include="EnemyPig.cpp" />
     <ClCompile Include="FirePos.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="ItemBox.cpp" />
@@ -179,6 +183,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneEnd.cpp" />
+    <ClCompile Include="SceneGameover.cpp" />
     <ClCompile Include="SceneInGame.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -186,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefaultShader.txt" />
+    <Text Include="MushState.txt" />
     <Text Include="Sprite.txt" />
   </ItemGroup>
   <ItemGroup>

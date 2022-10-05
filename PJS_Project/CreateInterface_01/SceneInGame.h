@@ -6,6 +6,7 @@
 #include "ItemBox.h"
 #include "Coordinate.h"
 #include "Interface.h"
+#include "EnemyPig.h"
 #include<deque>
 class SceneInGame : public Scene
 {
@@ -18,16 +19,20 @@ public:
 	IDXGISurface1*	m_pBackBuffer;
 	Interface*		m_pInterface;
 	Interface*		m_pMissileUI;
+	GameClear		m_bClear = GAME_NONE;
 private:
+	int   m_iScore;
 	float m_fCurrTime;
 	float m_fGravity = 50.0f;
 	bool  m_bGravityUse = true;
 public:
 	std::list<MapObject*> GroundObjList;
+	std::list<MapObject*> m_pWallList;
 	std::deque<Interface*> m_pMissileUiList;
 	std::vector<Interface*> m_pBarList;
 	std::list<EnemyBalloon*>	m_pBalloonObjList;
 	std::list<ItemBox*>			m_pItemBoxList;
+	std::list<EnemyPig*>		m_pEnemyList;
 public:
 	bool Init()override;
 	bool Frame()override;
@@ -41,5 +46,6 @@ public:
 	bool SetUI();
 	bool CheckCollision();
 	bool PlayerCollision();
+	GameClear ClearCheck();
 };
 

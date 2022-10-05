@@ -22,6 +22,10 @@ bool Player::Frame()
 	{
 		m_iMissileCount++;
 	}
+	if (m_iMissileCount > 10)
+	{
+		m_iMissileCount = 10;
+	}
 	m_pSprite->SetCameraSize({ 800,600 });
 	m_pSprite->SetCameraPos(m_vCurrCameraPos);
 	AnimState();
@@ -133,11 +137,18 @@ bool Player::Move()
 			//}
 			if (I_Input.GetKey('A') == KEY_HOLD)
 			{
-				_vPos.x += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-				m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
-				//m_fEnergy -= I_Timer.m_fDeltaTime;
-				m_iState = NONE;
-				m_fIdleTime = 0;
+				if (_vPos.x < 2500)
+				{
+					_vPos.x += 0;
+				}
+				else
+				{
+					_vPos.x += -1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+					m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
+					m_fEnergy -= I_Timer.m_fDeltaTime;
+					m_iState = NONE;
+					m_fIdleTime = 0;
+				}
 			}
 			//if (I_Input.GetKey('S') == KEY_HOLD)
 			//{
@@ -148,11 +159,18 @@ bool Player::Move()
 			//}
 			if (I_Input.GetKey('D') == KEY_HOLD)
 			{
-				_vPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-				//m_fEnergy -= I_Timer.m_fDeltaTime;
-				m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
-				m_iState = NONE;
-				m_fIdleTime = 0;
+				if (_vPos.x > 3160)
+				{
+					_vPos.x += 0;
+				}
+				else
+				{
+					_vPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
+					m_fEnergy -= I_Timer.m_fDeltaTime;
+					m_fMoveEnergyGage -= m_fSpeed * I_Timer.m_fDeltaTime;
+					m_iState = NONE;
+					m_fIdleTime = 0;
+				}
 			}
 			if (m_fMoveEnergyGage <= 0)
 				m_fMoveEnergyGage = 0.f;

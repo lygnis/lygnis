@@ -23,12 +23,19 @@ bool Sample::Init()
     DxState::SetState(m_pDevice->m_p3dDevice);
     m_pStartScene = new SceneTitle;
     m_pGameScene = new SceneInGame;
+    m_pGameClearScene = new SceneEnd;
+    m_pGameOverScene = new SceneGameover;
+    m_pGameClearScene->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
+    m_pGameOverScene->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
+    m_pGameClearScene->Init();
+    m_pGameOverScene->Init();
     m_pStartScene->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
     m_pGameScene->SetDevice(m_pDevice->m_p3dDevice, m_pDevice->m_pImmediateContext);
     m_pStartScene->GetSwapChain(m_pDevice->m_pSwapChain);
     m_pGameScene->GetSwapChain(m_pDevice->m_pSwapChain);
     m_pStartScene->Init();
     m_pGameScene->Init();
+    
     m_pCurrScene = m_pStartScene;
     return true;
 }
@@ -38,7 +45,24 @@ bool Sample::Frame()
     {
         m_pCurrScene = m_pGameScene;
     }
+    if (I_Input.GetKey(VK_F2) == KEY_PUSH)
+    {
+        m_pCurrScene = m_pGameOverScene;
+    }
+    if (I_Input.GetKey(VK_F3) == KEY_PUSH)
+    {
+        m_pCurrScene = m_pGameClearScene;
+    }
     m_pCurrScene->Frame();
+    if (m_pGameScene->m_bClear==GameClear::GAME_CLEAR)
+    {
+        m_pCurrScene = m_pGameClearScene;
+    }
+    if (m_pGameScene->m_bClear == GameClear::GAME_OVER)
+    {
+        m_pCurrScene = m_pGameOverScene;
+    }
+
     return true;
 }
 bool Sample::Render()
@@ -53,6 +77,11 @@ bool Sample::Release()
     DxState::Release();
     m_pStartScene->Release();
     m_pGameScene->Release();
+    m_pGameClearScene->Release();
+    m_pGameOverScene->Release();
+
+    delete m_pGameClearScene;
+    delete m_pGameOverScene;
     delete m_pStartScene;
     delete m_pGameScene;
     I_Sprite.Release();

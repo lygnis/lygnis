@@ -9,6 +9,7 @@ bool SceneInGame::Init()
     I_Sprite.SetDevice(m_pd3dDevice, m_pImmediateContext);
     I_Sprite.Load(L"Sprite.txt", L"../../data/bitmap1.bmp");
     I_Sprite.Load(L"tankState.prn", L"../../data/TankState.png");
+    I_Sprite.Load(L"MushState.txt", L"../../data/Enemy.png");
     SetPlayer();
     SetMap();
     SetTile();
@@ -44,6 +45,17 @@ bool SceneInGame::Frame()
     {
         (*iter)->SetCameraPos(m_vCamera);
         (*iter)->Frame();
+    }
+    // 적 프레임
+    for (auto iter = m_pEnemyList.begin(); iter != m_pEnemyList.end(); iter++)
+    {
+        //(*iter)->m_pSprite->SetPosition(m_pPlayer->m_vCurrCameraPos, m_vCamera);
+        (*iter)->SetCameraPos(m_vCamera);
+        if (!(*iter)->Frame())
+        {
+            m_pEnemyList.erase(iter);
+            break;
+        }
     }
     // 땅 오브젝트 프레임
     std::list<MapObject*>::iterator iter;
@@ -86,6 +98,8 @@ bool SceneInGame::Frame()
     m_pBarList[1]->SetPosition({ 300, 552 });
     // 충돌처리
     CheckCollision();
+    // 클리어 조건
+    m_bClear = ClearCheck();
     return true;
 }
 
@@ -120,6 +134,10 @@ bool SceneInGame::Render()
         (*iter)->Render();
     }
     for (auto iter = m_pItemBoxList.begin(); iter != m_pItemBoxList.end(); iter++)
+    {
+        (*iter)->Render();
+    }
+    for (auto iter = m_pEnemyList.begin(); iter != m_pEnemyList.end(); iter++)
     {
         (*iter)->Render();
     }
@@ -186,6 +204,86 @@ bool SceneInGame::SetObject()
         pBox->SetRect({ 0,0,55,55 });
         pBox->SetPosition({ 2500, 1587.f });
         m_pItemBoxList.push_back(pBox);
+    }
+    {
+        ItemBox* pBox = new ItemBox;
+        pBox->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pBox->Init();
+        pBox->Create(L"../../shader/DefaultShader.txt", L"../../data/RTS_Crate.png");
+        pBox->SetRect({ 0,0,55,55 });
+        pBox->SetPosition({ 1920, 1587.f });
+        m_pItemBoxList.push_back(pBox);
+    }
+    {
+        ItemBox* pBox = new ItemBox;
+        pBox->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pBox->Init();
+        pBox->Create(L"../../shader/DefaultShader.txt", L"../../data/RTS_Crate.png");
+        pBox->SetRect({ 0,0,55,55 });
+        pBox->SetPosition({ 1920, 1532.f });
+        m_pItemBoxList.push_back(pBox);
+    }
+    {
+        ItemBox* pBox = new ItemBox;
+        pBox->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pBox->Init();
+        pBox->Create(L"../../shader/DefaultShader.txt", L"../../data/RTS_Crate.png");
+        pBox->SetRect({ 0,0,55,55 });
+        pBox->SetPosition({ 1798, 1587.f });
+        m_pItemBoxList.push_back(pBox);
+    }
+    {
+        ItemBox* pBox = new ItemBox;
+        pBox->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pBox->Init();
+        pBox->Create(L"../../shader/DefaultShader.txt", L"../../data/RTS_Crate.png");
+        pBox->SetRect({ 0,0,55,55 });
+        pBox->SetPosition({ 1688, 1587.f });
+        m_pItemBoxList.push_back(pBox);
+    }
+    {
+        ItemBox* pBox = new ItemBox;
+        pBox->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pBox->Init();
+        pBox->Create(L"../../shader/DefaultShader.txt", L"../../data/RTS_Crate.png");
+        pBox->SetRect({ 0,0,55,55 });
+        pBox->SetPosition({ 1743, 1532.f });
+        m_pItemBoxList.push_back(pBox);
+    }
+    for(int i =0; i<4; i++)
+    {
+        if (i == 2)
+        {
+            EnemyPig* pEnemy1 = new EnemyPig;
+            pEnemy1->SetDevice(m_pd3dDevice, m_pImmediateContext);
+            pEnemy1->Create(L"../../shader/DefaultShader.txt", L"../../data/Enemy.png");
+            pEnemy1->Init();
+            pEnemy1->SetPosition({ 1660.f , 1290.f });
+            pEnemy1->SetCameraSize({ 800,600 });
+            m_pEnemyList.push_back(pEnemy1);
+        }
+        else
+        {
+            EnemyPig* pEnemy1 = new EnemyPig;
+            pEnemy1->SetDevice(m_pd3dDevice, m_pImmediateContext);
+            pEnemy1->Create(L"../../shader/DefaultShader.txt", L"../../data/Enemy.png");
+            pEnemy1->Init();
+            //pEnemy1->SetRect({ 0,0,4080,2448 });
+            pEnemy1->SetPosition ({ 1860.f - (i * 120.f), 1587.f });
+            pEnemy1->SetCameraSize({ 800,600 });
+            m_pEnemyList.push_back(pEnemy1);
+        }
+       
+    }
+    {
+        EnemyPig* pEnemy1 = new EnemyPig;
+        pEnemy1->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pEnemy1->Create(L"../../shader/DefaultShader.txt", L"../../data/Enemy.png");
+        pEnemy1->Init();
+        //pEnemy1->SetRect({ 0,0,4080,2448 });
+        pEnemy1->SetPosition({ 1920.f, 1477.f });
+        pEnemy1->SetCameraSize({ 800,600 });
+        m_pEnemyList.push_back(pEnemy1);
     }
     return true;
 }
@@ -255,6 +353,7 @@ bool SceneInGame::SetTile()
         pData1->SetPosition({ 3370 , 1540.f });
         pData1->SetCameraSize({ 800.0f, 600.0f });
         GroundObjList.push_back(pData1);
+        m_pWallList.push_back(pData1);
     }
 	for (int i = 0; i < 2; i++)
 	{
@@ -274,6 +373,7 @@ bool SceneInGame::SetTile()
         pData1->SetPosition({ 2290 , 1640.f });
         pData1->SetCameraSize({ 800.0f, 600.0f });
         GroundObjList.push_back(pData1);
+        m_pWallList.push_back(pData1);
     }
     for (int i = 0; i < 3; i++)
     {
@@ -301,6 +401,15 @@ bool SceneInGame::SetTile()
         pData->Create(L"../../shader/DefaultShader.txt", L"../../data/GroundObj.png");
         pData->SetRect({ 161, 208, 180, 116 });
         pData->SetPosition({ 2700 , 1350.f });
+        pData->SetCameraSize({ 800.0f, 600.0f });
+        GroundObjList.push_back(pData);
+    }
+    {
+        MapObject* pData = new MapObject;
+        hr = pData->SetDevice(m_pd3dDevice, m_pImmediateContext);
+        pData->Create(L"../../shader/DefaultShader.txt", L"../../data/GroundObj.png");
+        pData->SetRect({ 23, 209, 90, 66 });
+        pData->SetPosition({ 1660 , 1350.f });
         pData->SetCameraSize({ 800.0f, 600.0f });
         GroundObjList.push_back(pData);
     }
@@ -414,6 +523,20 @@ bool SceneInGame::CheckCollision()
             }
         }
     }
+
+    for (auto iter = m_pPlayer->m_pBulletList.begin(); iter != m_pPlayer->m_pBulletList.end(); iter++)
+    {
+        for (auto jter = m_pEnemyList.begin(); jter != m_pEnemyList.end(); jter++)
+        {
+            if (Collision::BoxToBox((*iter)->m_rtCollision, (*jter)->m_rtCollision))
+            {
+                m_pPlayer->m_bCollsionCheck = false;
+                (*jter)->m_bEnemyDead = true;
+                //m_pEnemyList.erase(jter);
+                break;
+            }
+        }
+    }
     for (auto iter = m_pPlayer->m_pBulletList.begin(); iter != m_pPlayer->m_pBulletList.end(); iter++)
     {
         if ((*iter)->m_vPosition.x < 500 || (*iter)->m_vPosition.y > 2000.f)
@@ -437,7 +560,21 @@ bool SceneInGame::PlayerCollision()
             return false;
         }
     }
+    
     return true;
+}
+
+GameClear SceneInGame::ClearCheck()
+{
+    if (m_pEnemyList.empty())
+    {
+        return GameClear::GAME_CLEAR;
+    }
+    if (m_pMissileUiList.empty())
+    {
+        return GameClear::GAME_OVER;
+    }
+    //return false;
 }
 
 bool SceneInGame::Release()
@@ -476,6 +613,12 @@ bool SceneInGame::Release()
         delete* iter;
     }
     m_pMissileUiList.clear();
+    for (auto iter = m_pEnemyList.begin(); iter != m_pEnemyList.end(); iter++)
+    {
+        (*iter)->Release();
+        delete* iter;
+    }
+    m_pEnemyList.clear();
     m_pBarList.clear();
     delete m_pPlayer;
     delete m_pMapObject;
