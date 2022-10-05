@@ -62,6 +62,15 @@ bool Sample::Frame()
     {
         m_pCurrScene = m_pGameOverScene;
     }
+    if (m_pCurrScene == m_pGameOverScene)
+    {
+        if (I_Input.GetKey('R') == KEY_PUSH)
+        {
+            SceneReload();
+            m_pCurrScene = m_pGameScene;
+        }
+    }
+        
 
     return true;
 }
@@ -85,5 +94,12 @@ bool Sample::Release()
     delete m_pStartScene;
     delete m_pGameScene;
     I_Sprite.Release();
+    return true;
+}
+
+bool Sample::SceneReload()
+{
+    m_pGameScene->Release();
+    m_pGameScene->Init();
     return true;
 }

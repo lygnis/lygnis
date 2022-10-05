@@ -4,6 +4,7 @@
 #include "Efeect.h"
 #include <list>
 #include "Sprite.h"
+#include "SecondCamera.h"
 class Bullet;
 enum PlayerState
 {
@@ -40,6 +41,7 @@ public:
 	float					m_fFireGage;
 	float					m_fMoveEnergyGage;
 	int						m_iMissileCount;
+	SecondCamera*			m_pSecondCamera;
 public:
 	std::list<Bullet*>		m_pBulletList;
 	std::list<Efeect*>		m_pEffectList;

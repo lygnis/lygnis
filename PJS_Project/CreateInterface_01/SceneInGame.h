@@ -27,7 +27,6 @@ private:
 	bool  m_bGravityUse = true;
 public:
 	std::list<MapObject*> GroundObjList;
-	std::list<MapObject*> m_pWallList;
 	std::deque<Interface*> m_pMissileUiList;
 	std::vector<Interface*> m_pBarList;
 	std::list<EnemyBalloon*>	m_pBalloonObjList;

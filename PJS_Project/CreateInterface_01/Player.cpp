@@ -7,6 +7,12 @@ bool Player::Init()
 	//m_vSecondCamera = m_vPosition;
 	TankMove();
 	m_vCameraPos = m_vPosition;
+	m_pSecondCamera = new SecondCamera;
+	m_pSecondCamera->SetDevice(m_p3dDevice, m_pImmediateContext);
+	m_pSecondCamera->Create(L"../../shader/DefaultShader.txt", L"../../data/WhiteSpace.png");
+	m_pSecondCamera->SetRect({ 0,0,10,10 });
+	m_pSecondCamera->SetPosition(m_vPosition);
+	m_pSecondCamera->Init();
 	//TankIdle();
 	return true;
 }
@@ -14,9 +20,16 @@ bool Player::Frame()
 {
 	if (m_pBulletList.empty()&&m_pEffectList.empty())
 	{
+		if (I_Input.GetKey('F') == KEY_HOLD)
+		{
+			SecondMove();
+		}
+		else
+		{
 			m_vCurrCameraPos = m_vPosition;
 			m_vCurrCameraPos.y = m_vPosition.y - 100;
-			m_vCameraPos = m_vCurrCameraPos;	
+			m_vCameraPos = m_vCurrCameraPos;
+		}
 	}
 	if (I_Input.GetKey('G') == KEY_UP)
 	{
@@ -232,24 +245,9 @@ bool Player::Fire()
 
 bool Player::SecondMove()
 {
-	Vector2D _vScPos;
-	if (I_Input.GetKey('W') == KEY_HOLD)
-	{
-		_vScPos.y += -1.0f * 200.f * I_Timer.m_fDeltaTime;
-	}
-	if (I_Input.GetKey('A') == KEY_HOLD)
-	{
-		_vScPos.x += -1.0f * 200.f * I_Timer.m_fDeltaTime;
-	}
-	if (I_Input.GetKey('S') == KEY_HOLD)
-	{
-		_vScPos.y += 1.0f * 200.f * I_Timer.m_fDeltaTime;
-	}
-	if (I_Input.GetKey('D') == KEY_HOLD)
-	{
-		_vScPos.x += 1.0f * m_fSpeed * I_Timer.m_fDeltaTime;
-	}
-	m_vSecondCamera = _vScPos;
+	m_pSecondCamera->m_vCameraPos = m_pSprite->m_vCameraPos;
+	m_pSecondCamera->m_vViewSize = m_pSprite->m_vViewSize;
+	m_pSecondCamera->Frame();
 	return true;
 }
 

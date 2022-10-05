@@ -353,7 +353,7 @@ bool SceneInGame::SetTile()
         pData1->SetPosition({ 3370 , 1540.f });
         pData1->SetCameraSize({ 800.0f, 600.0f });
         GroundObjList.push_back(pData1);
-        m_pWallList.push_back(pData1);
+        //m_pWallList.push_back(pData1);
     }
 	for (int i = 0; i < 2; i++)
 	{
@@ -373,7 +373,7 @@ bool SceneInGame::SetTile()
         pData1->SetPosition({ 2290 , 1640.f });
         pData1->SetCameraSize({ 800.0f, 600.0f });
         GroundObjList.push_back(pData1);
-        m_pWallList.push_back(pData1);
+        //m_pWallList.push_back(pData1);
     }
     for (int i = 0; i < 3; i++)
     {
