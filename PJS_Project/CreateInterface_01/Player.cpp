@@ -2,7 +2,7 @@
 
 bool Player::Init()
 {
-	m_fSpeed = 360.0f;
+	m_fSpeed = 60.0f;
 	m_vPosition = { 3000,1450.f };//{ g_rtClient.right / 2.0f, g_rtClient.bottom /2.0f };
 	//m_vSecondCamera = m_vPosition;
 	TankMove();
@@ -13,19 +13,26 @@ bool Player::Init()
 	m_pSecondCamera->SetRect({ 0,0,10,10 });
 	m_pSecondCamera->SetPosition(m_vPosition);
 	m_pSecondCamera->Init();
+
+	I_Sound.
 	//TankIdle();
 	return true;
 }
 bool Player::Frame()
 {
+	bool _OnScope = true;
 	if (m_pBulletList.empty()&&m_pEffectList.empty())
 	{
 		if (I_Input.GetKey('F') == KEY_HOLD)
 		{
+			_OnScope = false;
+			m_vCurrCameraPos = m_pSecondCamera->m_vPosition;
+			m_vCameraPos = m_vCurrCameraPos;
 			SecondMove();
 		}
 		else
 		{
+			m_pSecondCamera->m_vPosition = m_vPosition;
 			m_vCurrCameraPos = m_vPosition;
 			m_vCurrCameraPos.y = m_vPosition.y - 100;
 			m_vCameraPos = m_vCurrCameraPos;
@@ -44,7 +51,11 @@ bool Player::Frame()
 	AnimState();
 	Update();
 	FireUpdate(m_bFire);
-	Move();
+	if (_OnScope)
+	{
+		Move();
+	}
+	m_pSprite->SetPosition(m_vPosition, m_vCameraPos);
 	Fire();
 	if (!m_pBulletList.empty())
 	{
@@ -114,6 +125,10 @@ bool Player::Render()
 		pEffect->m_pSprite->SetPosition(pEffect->m_vPos, m_vCurrCameraPos);
 		pEffect->m_pSprite->Render();
 	}
+	if (I_Input.GetKey('F') == KEY_HOLD)
+	{
+		m_pSecondCamera->Render();
+	}
 	return true;
 }
 
@@ -128,6 +143,8 @@ bool Player::Release()
 	{
 		delete iter;
 	}
+	m_pSecondCamera->Release();
+	delete m_pSecondCamera;
 	m_pEffectList.clear();
 	I_Sprite.Release();
 	return true;
@@ -199,7 +216,6 @@ bool Player::Move()
 			m_iState = STAY;
 		}
 	}
-	m_pSprite->SetPosition(m_vPosition, m_vCameraPos);
 	return true;
 }
 
@@ -332,6 +348,8 @@ void Player::AnimState()
 		break;
 	case STAY:
 		m_iState = TankStay();
+	case LOSE:
+		m_iState = TankLose();
 		break;
 	}
 }
@@ -387,7 +405,18 @@ PlayerState Player::TankStay()
 
 PlayerState Player::TankLose()
 {
-	return PlayerState();
+	if (m_pSprite->m_szName != L"tankLose")
+	{
+		m_pSprite = I_Sprite.GetPtr(L"tankLose");
+		Rect rt = m_pSprite->m_uvArray[0];
+		m_iIndex = 0;
+		m_iMaxIndex = m_pSprite->m_uvArray.size();
+		m_fStep = 4.5f / m_iMaxIndex;
+		SetRect(rt);
+		m_pSprite->SetRect(m_rtInit);
+		m_pSprite->SetPosition(m_vCurrCameraPos, m_vCameraPos);
+	}
+	return LOSE;
 }
 
 PlayerState Player::TankMove()

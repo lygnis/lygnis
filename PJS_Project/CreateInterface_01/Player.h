@@ -26,11 +26,11 @@ private:
 	float					m_fIdleTime;
 	bool					m_bEffect = false;
 	float					m_fEnergy = 6.0f;
-	PlayerState				m_iState = NONE;
 	bool					m_bFire = false;
 	bool					m_fChangeCameraTime;
 	Vector2D				m_vSecondCamera;
 public:
+	PlayerState				m_iState = NONE;
 	Sprite*					m_pSprite = nullptr;
 	UINT					m_iIndex = 0;
 	UINT					m_iMaxIndex = 1;

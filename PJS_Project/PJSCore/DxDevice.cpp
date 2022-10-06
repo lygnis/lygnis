@@ -1,23 +1,27 @@
 #include "DxDevice.h"
-
+#include <cassert>
 bool DxDevice::Init()
 {
         // 매크로 필수 -어떤 메소드를 사용했을때 성공했는지 실패했는지 리턴값이 0이면 성공
         HRESULT hr;
         if (FAILED(hr = CreateDevice()))
         {
+            assert(false);
             return false;
         }
         if (FAILED(hr = CreateDXGIDevice()))
         {
+            assert(false);
             return false;
         }
         if (FAILED(hr = CreateSwapChain()))
         {
+            assert(false);
             return false;
         }
         if (FAILED(hr = CreateRenderTargetView()))
         {
+            assert(false);
             return false;
         }
         CreateViewPort();
@@ -83,6 +87,8 @@ HRESULT DxDevice::CreateDevice()
     //1) 디바이스를 생성한다.
     hr = D3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels, SDKVersion,        
         &m_p3dDevice, &pFeatureLevel, &m_pImmediateContext);    // 디바이스, 다이렉트 버전지원 인터페이스,   를 리턴해라
+    assert(SUCCEEDED(hr));
+
 
     return hr;
 }
@@ -93,6 +99,8 @@ HRESULT DxDevice::CreateDXGIDevice()
     //IDXGIFactory* m_pGIFactory = nullptr;		// swapChain 사용을 위해생성
     //IDXGISwapChain* m_pSwapChain = nullptr;
     HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&m_pGIFactory);      // __uuidof(IDXGIFactory)를 할당해서 넘겨준다
+    assert(SUCCEEDED(hr));
+
     return hr;
 }
 
@@ -114,6 +122,8 @@ HRESULT DxDevice::CreateSwapChain()
     pDesc.Windowed = true;                                              // 윈도우기반으로로 띄운다.
     pDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
     HRESULT hr = m_pGIFactory->CreateSwapChain(m_p3dDevice, &pDesc, &m_pSwapChain);      
+    
+    assert(SUCCEEDED(hr));
     if (FAILED(hr))
         return hr;
 
@@ -136,7 +146,8 @@ HRESULT DxDevice::CreateRenderTargetView()
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBuffer);        // 버퍼가 한개밖에 없기 때문에 0번을 갖고온다
     // 만들어진 백버퍼에 텍스쳐로 리턴한다.
     // 랜더타겟으로 만들어 사용하겠다
-    hr = m_p3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRTV);               // 랜더타겟을 하나 만든다.
+    hr = m_p3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRTV);   
+    assert(SUCCEEDED(hr));// 랜더타겟을 하나 만든다.
     // 앞으로 랜더타겟에 뿌리면 스왑체인 0번버퍼에 뿌리는것이다.
     pBackBuffer->Release();                                                             //dx에서는 Get을 하면 반드시 삭제해줘야 한다.
 

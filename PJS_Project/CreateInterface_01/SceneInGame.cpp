@@ -292,8 +292,8 @@ bool SceneInGame::SetPlayer()
 {
     bool hr;
     m_pPlayer = new Player;
-    m_pPlayer->Init();
     hr = m_pPlayer->SetDevice(m_pd3dDevice, m_pImmediateContext);
+    m_pPlayer->Init();
     if (hr == false) { return false; }  
     return true;
 }
@@ -570,9 +570,17 @@ GameClear SceneInGame::ClearCheck()
     {
         return GameClear::GAME_CLEAR;
     }
-    if (m_pMissileUiList.empty())
+    if (m_pMissileUiList.empty()&&m_pPlayer->m_pBulletList.empty())
     {
-        return GameClear::GAME_OVER;
+        if (m_pPlayer->m_pEffectList.empty())
+        {
+            m_pPlayer->m_iState = LOSE;
+            m_pPlayer->TankLose();
+            if (m_pPlayer->m_iIndex >= m_pPlayer->m_iMaxIndex - 1)
+            {
+                return GameClear::GAME_OVER;
+            }
+        }
     }
     //return false;
 }
