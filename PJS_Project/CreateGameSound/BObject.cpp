@@ -21,6 +21,8 @@ bool BObject::Render()
     m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
     m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
     m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
+
+
     m_pImmediateContext->DrawIndexed(m_pIndexList.size(), 0, 0);
 
     return true;

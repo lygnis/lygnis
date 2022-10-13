@@ -3,13 +3,16 @@
 bool GameCore::CoreInit()
 {
 	//m_pWindow = new TWindow;
-	m_pDevice = new DxDevice;
-	m_pDevice->Init();
+	DxDevice::Init();
 	m_wWriter.Init();
 	I_Timer.Init();
 	I_Input.Init();
-	m_pDevice->m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1), (void**)&m_pBackBuffer);
-	m_wWriter.Set(m_pBackBuffer);
+	//m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1), (void**)&m_pBackBuffer);
+	IDXGISurface1* pBackBuffer;
+	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+		(void**)&pBackBuffer);
+	m_wWriter.Set(pBackBuffer);
+	pBackBuffer->Release();
 	return Init();
 }
 
@@ -21,23 +24,20 @@ bool GameCore::CoreFrame()
 }
 bool GameCore::CoreRender()
 {
-	m_pDevice->PreRender();
+	DxDevice::PreRender();
 	Render();
 	I_Timer.Render();
 	m_wWriter.m_szOutputText = I_Timer.m_szTimeNFps;
 	m_wWriter.Render();
-	m_pDevice->PostRender();
+	DxDevice::PostRender();
 	return true;
 }
 bool GameCore::CoreRelease()
 {
-	m_pDevice->Release();
+	DxDevice::Release();
 	m_wWriter.Release();
 	I_Timer.Release();
 	I_Input.Release();
-	if (m_pBackBuffer)m_pBackBuffer->Release();
-	delete m_pDevice;
-	delete m_pWindow;
 
 	Release();
 	return true;
@@ -45,9 +45,24 @@ bool GameCore::CoreRelease()
 
 bool GameCore::SetWindow(HINSTANCE hInstance, const WCHAR* _prjName, UINT iWidth, UINT iHeight)
 {
-	m_pWindow = new TWindow;
-	m_bGameRun = m_pWindow->SetWindow(hInstance, _prjName, iWidth, iHeight);
+	m_bGameRun = TWindow::SetWindow(hInstance, _prjName, iWidth, iHeight);
 	return m_bGameRun;
+}
+HRESULT GameCore::CreateDXResource()
+{
+	m_wWriter.Init();
+	IDXGISurface1* pBackBuffer;
+	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+		(void**)&pBackBuffer);
+	m_wWriter.Set(pBackBuffer);
+	pBackBuffer->Release();
+	return S_OK;
+}
+HRESULT GameCore::DeleteDXResource()
+{
+	m_wWriter.Release();
+	m_wWriter.DeleteDXResource();
+	return S_OK;
 }
 bool GameCore::Run()
 {
@@ -55,7 +70,7 @@ bool GameCore::Run()
 	CoreInit();
 	while (m_bGameRun)
 	{
-		if (m_pWindow->Run() == true)
+		if (TWindow::Run() == true)
 		{
 			CoreFrame();
 			CoreRender();
