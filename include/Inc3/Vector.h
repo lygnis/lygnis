@@ -77,6 +77,8 @@ struct Pos4
 		float v[4];
 	};
 };
+class MyMatrix4X4;
+
 class Vector2D : public Pos2
 {
 public:
@@ -116,6 +118,7 @@ public:
 	bool      operator == (Vector3D& _vec);
 	bool      operator <= (Vector3D& _vec);
 	bool      operator >= (Vector3D& _vec);
+	Vector3D operator* (MyMatrix4X4& _mat);
 public:
 	float Length();
 	Vector3D Normalized();

@@ -1,5 +1,5 @@
 #include "Vector.h"
-
+#include "MyMatrix.h"
 Vector2D::Vector2D()
 {
 	x = 0;
@@ -202,6 +202,16 @@ bool Vector3D::operator>=(Vector3D& _vec)
 		return true;
 	}
 	return false;
+}
+
+Vector3D Vector3D::operator*(MyMatrix4X4& _mat)
+{
+	// 4차원 행벡터 마지막은 1로 설정하고 곱한다.
+	Vector3D _vec;
+	_vec.x = x * _mat._11 + y * _mat._21 + z * _mat._31 + 1.0f * _mat._41;
+	_vec.y = x * _mat._12 + y * _mat._22 + z * _mat._32 + 1.0f * _mat._42;
+	_vec.z = x * _mat._13 + y * _mat._23 + z * _mat._33 + 1.0f * _mat._43;
+	return _vec;
 }
 
 float Vector3D::Length()
