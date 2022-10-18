@@ -16,38 +16,27 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
 bool Sample::Init()
 {
-    m_pBG = new BObject;
-    m_pBG->SetDevice(m_p3dDevice, m_pImmediateContext);
-    m_pBG->Create(L"../../shader/DefaultShader.txt", L"../../data/1KGCABK.bmp");
+    m_pBox = new ShapeBox;
+    m_pBox->SetDevice(m_p3dDevice, m_pImmediateContext);
+    m_pBox->Create(L"DefaultObject.txt", L"../../data/1KGCABK.bmp");
     return true;
 }
 bool Sample::Frame()
 {
-    MyMatrix4X4 m, s, t, c;
-    float fScale = cos(I_Timer.m_fGameTime) * 0.5f + 0.5f;
-    s = s.Scale(fScale, fScale, fScale);
-    m = m.RotationZ(I_Timer.m_fGameTime*5.0f);
-    t = t.Translation(cos(I_Timer.m_fGameTime), 0, 0);
-    c = t*s*m;
-    for (int i = 0; i < m_pBG->m_pInitVertexBuffer.size(); i++)
-    {
-        Vector3D _vec = m_pBG->m_pInitVertexBuffer[i].position;
-        _vec = _vec * c;
-        m_pBG->m_pVertexList[i].position = _vec;
-    }
-    m_pBG->UpdateVertexBuffer();
+    m_pBox->Frame();
     return true;
 }
 bool Sample::Render()
 {
     //m_pDevice->m_pImmediateContext->PSSetSamplers(0, 1, &DxState::g_pDefaultSS);
-    m_pBG->Render();
+    m_pBox->Render();
     return true;
 }
 
 bool Sample::Release()
 
 {
+    m_pBox->Release();
     //DxState::Release();
     return true;
 }

@@ -145,13 +145,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BObject.cpp" />
+    <ClCompile Include="MCamera.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
+    <ClCompile Include="MyShape.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BObject.h" />
+    <ClInclude Include="MCamera.h" />
     <ClInclude Include="MyMatrix.h" />
+    <ClInclude Include="MyShape.h" />
     <ClInclude Include="Sample.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DefaultObject.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

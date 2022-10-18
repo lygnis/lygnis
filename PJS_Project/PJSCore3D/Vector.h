@@ -119,6 +119,10 @@ public:
 	bool      operator <= (Vector3D& _vec);
 	bool      operator >= (Vector3D& _vec);
 	Vector3D operator* (MyMatrix4X4& _mat);
+	// Dot Product 내적
+	float operator | (Vector3D const& v0);
+	// Cross Product 외적
+	Vector3D operator ^ (Vector3D const& v0);
 public:
 	float Length();
 	Vector3D Normalized();

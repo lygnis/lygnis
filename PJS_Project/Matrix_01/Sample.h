@@ -6,10 +6,11 @@
 #include "DxState.h"
 #include "BObject.h"
 #include "MyMatrix.h"
+#include "MyShape.h"
 class Sample : public GameCore
 {
 	BObject* m_pBG;
-
+	ShapeBox* m_pBox;
 public:
 	bool Init() override;
 	bool Frame() override;

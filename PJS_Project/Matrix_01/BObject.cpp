@@ -18,6 +18,7 @@ bool BObject::Render()
     m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
     m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
     m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
     m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
     m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
@@ -59,6 +60,8 @@ bool BObject::SetDevice(ID3D11Device* _p3dDevice, ID3D11DeviceContext* _pImmedia
 
 bool BObject::Create(const wchar_t* _shName, const wchar_t* _texName)
 {
+    if (FAILED(CreateConstantBuffer()))
+        return false;
     if (FAILED(CreateVertexBuffer()))
         return false;
     if (FAILED(CreateIndexBuffer()))
@@ -119,6 +122,27 @@ HRESULT BObject::CreateIndexBuffer()
     /*sd.SysMemPitch;
     sd.SysMemSlicePitch;*/
     assert(SUCCEEDED(hr));
+    return hr;
+}
+
+HRESULT BObject::CreateConstantBuffer()
+{
+    HRESULT hr;
+    CreateConstantData();
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(bd));
+    bd.ByteWidth = sizeof(VS_CONSTANT_BUFFER) * 1; // 바이트 용량
+    // GPU 메모리에 할당
+    bd.Usage = D3D11_USAGE_DEFAULT; // 버퍼의 할당 장소 내지는 버퍼용도
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA  sd;
+    ZeroMemory(&sd, sizeof(sd));
+    sd.pSysMem = &m_cbData;
+    hr = m_p3dDevice->CreateBuffer(
+        &bd, // 버퍼 할당
+        &sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
+        &m_pConstantBuffer);
     return hr;
 }
 
@@ -230,4 +254,22 @@ void BObject::CreateIndexData()
 void BObject::UpdateVertexBuffer()
 {
     m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, 0, nullptr, &m_pVertexList.at(0), 0, 0);
+}
+
+void BObject::UpdateConstantBuffer()
+{
+    m_cbData.matWorld.Transpose();
+    m_cbData.matView.Transpose();
+    m_cbData.matProj.Transpose();
+    m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &m_cbData, 0, 0);
+}
+
+void BObject::CreateConstantData()
+{
+    m_cbData.matWorld.Identity();
+    m_cbData.matView.Identity();
+    m_cbData.matProj.Identity();
+    m_cbData.matWorld.Transpose();
+    m_cbData.matView.Transpose();
+    m_cbData.matProj.Transpose();
 }

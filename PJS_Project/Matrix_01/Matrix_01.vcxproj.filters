@@ -24,6 +24,12 @@
     <ClCompile Include="MyMatrix.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="MyShape.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MCamera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -35,5 +41,14 @@
     <ClInclude Include="MyMatrix.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="MyShape.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MCamera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DefaultObject.txt" />
   </ItemGroup>
 </Project>

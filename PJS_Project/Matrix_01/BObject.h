@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "WICTextureLoader.h"
 #include "DDSTextureLoader.h" 
+#include "MyMatrix.h"
 #ifdef _DEBUG
 #pragma comment(lib, "DirectXTK.lib")
 #else 
@@ -16,6 +17,15 @@ struct ObjectVertex
 	Vector4D color;
 	Vector2D texture;
 };
+struct VS_CONSTANT_BUFFER
+{
+	// 월드 행렬
+	MyMatrix4X4 matWorld;
+	// 뷰 행렬
+	MyMatrix4X4 matView;
+	// 투영 행렬
+	MyMatrix4X4 matProj;
+};
 
 class BObject
 {
@@ -26,6 +36,8 @@ public:
 	// 버텍스 버퍼 생성
 	ID3D11Buffer*				m_pVertexBuffer;
 	ID3D11Buffer*				m_pIndexBuffer;
+	ID3D11Buffer*				m_pConstantBuffer;
+	VS_CONSTANT_BUFFER			m_cbData;
 	ID3D11InputLayout*			m_pVertexLayout;
 	// 쉐이더 생성
 	ID3D11VertexShader*			m_pVS;
@@ -42,7 +54,7 @@ public:
 public:
 	bool Init();
 	virtual bool Frame();
-	bool Render();
+	virtual bool Render();
 	bool Release();
 public:
 	bool SetDevice(ID3D11Device* _p3dDevice, ID3D11DeviceContext* _pImmediateContext);
@@ -50,6 +62,7 @@ public:
 public:
 	virtual HRESULT CreateVertexBuffer();		// 버텍스 버퍼
 	virtual HRESULT CreateIndexBuffer();		// 인덱스 버퍼
+	virtual HRESULT CreateConstantBuffer();		// 상수버퍼
 	virtual HRESULT CreateVertexLayout();
 	virtual HRESULT CreateVertexShader(std::wstring _shFile);
 	virtual HRESULT CreatePixelShader(std::wstring _shFile);
@@ -57,4 +70,6 @@ public:
 	virtual void	CreateVertexData();
 	virtual void	CreateIndexData();
 	void UpdateVertexBuffer();
+	void UpdateConstantBuffer();
+	void CreateConstantData();
 };

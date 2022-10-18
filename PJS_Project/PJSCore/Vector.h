@@ -116,6 +116,8 @@ public:
 	bool      operator == (Vector3D& _vec);
 	bool      operator <= (Vector3D& _vec);
 	bool      operator >= (Vector3D& _vec);
+	float	  operator | (Vector3D const& _vec);
+	Vector3D  operator ^ (Vector3D const& _vec);
 public:
 	float Length();
 	Vector3D Normalized();

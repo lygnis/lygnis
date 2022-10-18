@@ -213,6 +213,15 @@ Vector3D Vector3D::operator*(MyMatrix4X4& _mat)
 	_vec.z = x * _mat._13 + y * _mat._23 + z * _mat._33 + 1.0f * _mat._43;
 	return _vec;
 }
+float Vector3D:: operator | (Vector3D const& v0)
+{
+	return x * v0.x + y * v0.y + z * v0.z;
+}
+
+Vector3D Vector3D::operator ^ (Vector3D const& v0)
+{
+	return Vector3D((y * v0.z - z * v0.y), (z * v0.x - x * v0.z), (x * v0.y - y * v0.x));
+}
 
 float Vector3D::Length()
 {

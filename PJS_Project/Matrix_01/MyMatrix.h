@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector.h"
+#include "TStd.h"
 struct float3X3
 {
 	union
@@ -60,7 +61,11 @@ public:
 	MyMatrix4X4 Translation(float _x, float _y, float _z);
 	// 크기 조정
 	MyMatrix4X4 Scale(float _x, float _y, float _z);
-
+	void ObjectLookAt(Vector3D& _vPosition, Vector3D& _vTarget, Vector3D& _vUp);
+	MyMatrix4X4 ViewLookAt(Vector3D& _vPosition, Vector3D& _vTarget, Vector3D& _vUp);
+	MyMatrix4X4 PerspectiveFovLH(float _fNearplane, float _fFarPlane, float _fOvy, float _Aspect);
+	MyMatrix4X4 OrthoLH(MyMatrix4X4& _mat, float _w, float _h, float _n, float _f);
+	MyMatrix4X4 OrthoOffCenterLH(MyMatrix4X4& _mat, float _l, float _r, float _b, float _t, float _n, float _f);
 public:
 	MyMatrix4X4 operator*(MyMatrix4X4& _mat);
 };

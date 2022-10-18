@@ -203,6 +203,20 @@ bool Vector3D::operator>=(Vector3D& _vec)
 	return false;
 }
 
+float Vector3D::operator|(Vector3D const& _vec)
+{
+	float _Dprd;
+	_Dprd = x * _vec.x + y * _vec.y + z * _vec.z;
+	return _Dprd;
+}
+
+Vector3D Vector3D::operator^(Vector3D const& _vec)
+{
+	Vector3D _Cprd;
+	_Cprd = { y * _vec.z - z * _vec.y, z * _vec.x - x * _vec.z, x * _vec.y - y * _vec.x };
+	return _Cprd;
+}
+
 float Vector3D::Length()
 {
 	return sqrt(x * x + y * y + z*z);
