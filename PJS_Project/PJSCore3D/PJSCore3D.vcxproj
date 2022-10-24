@@ -25,6 +25,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TSoundManager.cpp" />
     <ClCompile Include="TWindow.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MyMatrix.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TMath.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TSoundManager.h" />
     <ClInclude Include="TStd.h" />

@@ -40,7 +40,7 @@ bool Timer::Render()
 	m_szTimeNFps +=  L" ";
 	m_szTimeNFps += std::to_wstring(m_iFPS);
 	m_szTimeNFps += '\n';
-	OutputDebugString(m_szTimeNFps.c_str());
+	//OutputDebugString(m_szTimeNFps.c_str());
 	return true;
 }
 bool Timer::Release()

@@ -1,0 +1,22 @@
+#pragma once
+#include "GameCore.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#include "DxState.h"
+#include "BObject.h"
+#include "MyMatrix.h"
+#include "MyShape.h"
+#include "MCamera.h"
+class Sample : public GameCore
+{
+	BObject*	m_pBG;
+	ShapeBox*	m_pBox;
+	MCamera*	m_pCamera;
+public:
+	bool Init() override;
+	bool Frame() override;
+	bool Render() override;
+	bool Release() override;
+};
+

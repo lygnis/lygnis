@@ -12,6 +12,8 @@ class Input : public SingleTone<Input>
 public:
 	DWORD	m_dwKeyState[256];				// 키입력 값
 	POINT	m_pMpos;						//마우스 위치 값
+	POINT   m_pPrevMpos;
+	POINT   m_pOffset;
 public:
 	bool Init();
 	bool Frame();

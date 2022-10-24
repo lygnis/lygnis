@@ -2,6 +2,9 @@
 bool		Input::Init()
 {
     ZeroMemory(m_dwKeyState, sizeof(DWORD) * 256);
+    ::GetCursorPos(&m_pMpos); // 화면좌표
+    ::ScreenToClient(g_hWnd, &m_pMpos); // 클라이언트
+    m_pPrevMpos = m_pMpos;
     return true;
 }
 DWORD  Input::GetKey(DWORD dwKey)
@@ -12,7 +15,8 @@ bool		Input::Frame()
 {
     ::GetCursorPos(&m_pMpos); // 화면좌표
     ::ScreenToClient(g_hWnd, &m_pMpos); // 클라이언트
-
+    m_pOffset.x = m_pMpos.x - m_pPrevMpos.x;
+    m_pOffset.y = m_pMpos.y - m_pPrevMpos.y;
     for (int iKey = 0; iKey < 256; iKey++)
     {
         SHORT sKey = ::GetAsyncKeyState(iKey); // 비동기 키 상태 
@@ -31,6 +35,7 @@ bool		Input::Frame()
                 m_dwKeyState[iKey] = KEY_FREE;
         }
     }
+    m_pPrevMpos = m_pMpos;
     return true;
 }
 bool		Input::Render()

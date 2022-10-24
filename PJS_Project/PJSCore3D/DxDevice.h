@@ -1,21 +1,25 @@
 #pragma once
 #include "TWindow.h"
-
+#include "DxState.h"
 class DxDevice : public TWindow
 {
 	// 소멸할때 쓰레기 값일 수도 있으니 Nullptr로 설정
 	// 인터페이스 -> 하드웨어 직접 제어 -> 획득
 public:
 	// 생성 디바이스 인터페이스
-	ID3D11Device* m_p3dDevice = nullptr;
+	ID3D11Device*					m_p3dDevice = nullptr;
 	// 생성 디바이스 관리 제어 인터페이스
-	ID3D11DeviceContext* m_pImmediateContext = nullptr;		
+	ID3D11DeviceContext*			m_pImmediateContext = nullptr;		
 	// swapChain 사용을 위해생성
-	IDXGIFactory* m_pGIFactory = nullptr;	
+	IDXGIFactory*					m_pGIFactory = nullptr;	
 	// 버퍼 스왑체인
-	IDXGISwapChain* m_pSwapChain = nullptr;
+	IDXGISwapChain*					m_pSwapChain = nullptr;
+	// 깊이 버퍼를 통한 렌더링 뷰
+	ComPtr<ID3D11DepthStencilView>  m_pDepthStencilView;
 	// 백버퍼를 통해 랜더타겟뷰를 생성한다.
 	ComPtr<ID3D11RenderTargetView>	m_pRTV = nullptr;
+	// 뷰 포트
+	D3D11_VIEWPORT m_vp;
 
 private:
 	// 1) 디바이스 생성
@@ -26,6 +30,8 @@ private:
 	HRESULT CreateSwapChain();
 	// 4) 렌더타겟뷰 생성
 	HRESULT CreateRenderTargetView();
+	// 4) 깊이 버퍼 설정
+	HRESULT CreateDepthStencilView();
 	// 5) 뷰포트 설정
 	void CreateViewPort();
 	// 디바이스 크기 재조정

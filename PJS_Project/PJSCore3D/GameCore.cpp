@@ -4,6 +4,7 @@ bool GameCore::CoreInit()
 {
 	//m_pWindow = new TWindow;
 	DxDevice::Init();
+	DxState::SetState(m_p3dDevice);
 	m_wWriter.Init();
 	I_Timer.Init();
 	I_Input.Init();

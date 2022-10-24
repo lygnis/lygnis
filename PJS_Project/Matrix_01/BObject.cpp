@@ -273,3 +273,10 @@ void BObject::CreateConstantData()
     m_cbData.matView.Transpose();
     m_cbData.matProj.Transpose();
 }
+
+void BObject::SetMatrix(MyMatrix4X4* _matWorld, MyMatrix4X4* _matView, MyMatrix4X4* _matProj)
+{
+    if (_matWorld != nullptr)
+        m_matWorld = *_matWorld;
+ 
+}

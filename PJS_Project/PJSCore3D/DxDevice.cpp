@@ -24,6 +24,11 @@ bool DxDevice::Init()
             assert(false);
             return false;
         }
+        if (FAILED(hr = CreateDepthStencilView()))
+        {
+            assert(false);
+            return false;
+        }
         CreateViewPort();
 
         return true;      // 디바이스 만들고 Init()호출
@@ -48,10 +53,20 @@ bool DxDevice::PreRender()
 {
     // 매프레임마다 이 랜더 타겟에 뿌린다. (m_pRTV에)
     // 백버퍼를 렌더 타겟으로 지정
-    m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(), NULL);
+    m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(), m_pDepthStencilView.Get());
     float color[4] = { 1.0f, 1.0f, 1.0f,1.0f };
     m_pImmediateContext->ClearRenderTargetView(m_pRTV.Get(), color);      // 지우고 렌더타겟뷰(백버퍼)를 출력한다.
     // 프리렌더는 클리어 까지만
+    // 깊이 스텐실버퍼를 같이 클리어 시켜준다.
+    m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+
+    m_pImmediateContext->PSSetSamplers(0, 1, &DxState::g_pDefaultSSMirror);
+    m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_pImmediateContext->RSSetViewports(1, &m_vp);
+    m_pImmediateContext->RSSetState(DxState::g_pDefaultRSSolid);
+    m_pImmediateContext->OMSetBlendState(DxState::g_pAlphaBlend, 0, -1);
+    m_pImmediateContext->OMSetDepthStencilState(DxState::g_pDefaultDepthStencil,0xff);
 
 	return true;
 }
@@ -165,15 +180,53 @@ HRESULT DxDevice::CreateRenderTargetView()
 void DxDevice::CreateViewPort()
 {
     //5) 뷰 포트 생성
-    D3D11_VIEWPORT vp;
-    vp.Width = g_rtClient.right;
-    vp.Height = g_rtClient.bottom;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 0.0f;
+    m_vp.Width = g_rtClient.right;
+    m_vp.Height = g_rtClient.bottom;
+    m_vp.TopLeftX = 0;
+    m_vp.TopLeftY = 0;
+    m_vp.MinDepth = 0.0f;
+    m_vp.MaxDepth = 1.0f;
 
-    m_pImmediateContext->RSSetViewports(1, &vp);
+    m_pImmediateContext->RSSetViewports(1, &m_vp);
+}
+
+HRESULT DxDevice::CreateDepthStencilView()
+{
+    HRESULT hr;
+    D3D11_RENDER_TARGET_VIEW_DESC rtvd;
+    m_pRTV->GetDesc(&rtvd);
+    DXGI_SWAP_CHAIN_DESC scd;
+    m_pSwapChain->GetDesc(&scd);
+
+    // 1번 텍스처를 생성한다.
+    ComPtr<ID3D11Texture2D>  pDSTexture;
+    D3D11_TEXTURE2D_DESC td;
+    ZeroMemory(&td, sizeof(td));
+    td.Width = scd.BufferDesc.Width;
+    td.Height = scd.BufferDesc.Height;
+    td.MipLevels = 1;
+    td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_DEFAULT;
+    td.CPUAccessFlags = 0;
+    td.MiscFlags = 0;
+    td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+    hr = m_p3dDevice->CreateTexture2D(&td, NULL, pDSTexture.GetAddressOf());
+    // 2번 깊이스텐실 뷰로 생성한다.
+    D3D11_DEPTH_STENCIL_VIEW_DESC dtvd;
+    ZeroMemory(&dtvd, sizeof(dtvd));
+    dtvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    dtvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    hr = m_p3dDevice->CreateDepthStencilView(pDSTexture.Get(), &dtvd, m_pDepthStencilView.GetAddressOf());
+    // 3번 뷰 적용
+    //m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(),
+       //m_pDepthStencilView.Get());
+       // 렌더에서 렌더타겟에 깊이 버퍼를 넣어준다.
+    // 4번 깊이스텐실 뷰 상태 객체 생성해서 적용
+    // 렌더 상태에서 설정해준다음에 렌더할떄 적용시켜준다.
+    return hr;
 }
 
 HRESULT DxDevice::ResizeDevice(UINT width, UINT height)
@@ -206,6 +259,10 @@ HRESULT DxDevice::ResizeDevice(UINT width, UINT height)
     // 변경된 백 버퍼의 크기를 얻고 렌더타겟 뷰를 다시 생성 및 적용
     // 뷰포트 재지정
     if (FAILED(hr = CreateRenderTargetView()))
+    {
+        return false;
+    }
+    if (FAILED(hr = CreateDepthStencilView()))
     {
         return false;
     }
