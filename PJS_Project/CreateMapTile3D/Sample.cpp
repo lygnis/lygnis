@@ -20,12 +20,12 @@ bool Sample::Init()
     m_pMap->SetDevice(m_p3dDevice, m_pImmediateContext);
     m_pMap->Build(512 + 1, 512 + 1);
     m_pMap->Create(L"DefaultObject.txt", L"../../data/wall.bmp");
-    m_pMap->m_matWorld.Translation(0, -2, 0);
+    m_pMap->m_matWorld.Translation(0, 0, 0);
     m_pBoxA = new ShapeBox;
     m_pBoxA->SetDevice(m_p3dDevice, m_pImmediateContext);
     m_pBoxA->Init();
     m_pBoxA->Create(L"DefaultObject.txt", L"../../data/1KGCABK.bmp");
-    m_pBoxA->m_matWorld.Translation(-2,2,5);
+    m_pBoxA->m_matWorld.Translation(-2,0,5);
 
     m_pBoxB = new ShapeBox;
     m_pBoxB->SetDevice(m_p3dDevice, m_pImmediateContext);

@@ -60,7 +60,6 @@ bool DxDevice::PreRender()
     // 깊이 스텐실버퍼를 같이 클리어 시켜준다.
     m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
     m_pImmediateContext->PSSetSamplers(0, 1, &DxState::g_pDefaultSSMirror);
     m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_pImmediateContext->RSSetViewports(1, &m_vp);
