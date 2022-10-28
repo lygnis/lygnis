@@ -131,7 +131,7 @@ HRESULT BObject::CreateConstantBuffer()
     CreateConstantData();
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
-    bd.ByteWidth = sizeof(VS_CONSTANT_BUFFER) * 1; // 바이트 용량
+    bd.ByteWidth = sizeof(VS_CONSTANT_BUFFERS) * 1; // 바이트 용량
     // GPU 메모리에 할당
     bd.Usage = D3D11_USAGE_DEFAULT; // 버퍼의 할당 장소 내지는 버퍼용도
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;

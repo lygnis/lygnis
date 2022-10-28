@@ -23,6 +23,14 @@ struct PNCT_VERTEX
 		p = _p;
 		n = _n;
 		c = _c;
-		t = _t
+		t = _t;
 	}
+};
+
+struct VS_CONSTANT_BUFFER
+{
+	TMatrix matWorld;
+	TMatrix matView;
+	TMatrix matProj;
+	TVector4 Color;
 };

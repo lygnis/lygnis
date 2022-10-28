@@ -23,6 +23,8 @@
     <ClCompile Include="DxState.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="MActor.cpp" />
+    <ClCompile Include="MDxHelper.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TMath.cpp" />
@@ -37,6 +39,9 @@
     <ClInclude Include="DxState.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MActor.h" />
+    <ClInclude Include="MDxHelper.h" />
+    <ClInclude Include="MObjStd.h" />
     <ClInclude Include="MyMatrix.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TMath.h" />

@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../output/Debug/DeviceResize_01</OutDir>
-    <IntDir>../../output/Debug/DeviceResize_01</IntDir>
+    <OutDir>../../output/Debug/001_CreateObject</OutDir>
+    <IntDir>../../output/Debug/001_CreateObject</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -150,6 +150,7 @@
     <ClCompile Include="MCamera.cpp" />
     <ClCompile Include="MDxHelper.cpp" />
     <ClCompile Include="MFrustum.cpp" />
+    <ClCompile Include="MShape.cpp" />
     <ClCompile Include="MShapeLine.cpp" />
     <ClCompile Include="MyMap.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="MDxHelper.h" />
     <ClInclude Include="MFrustum.h" />
     <ClInclude Include="MObjStd.h" />
+    <ClInclude Include="MShape.h" />
     <ClInclude Include="MShapeLine.h" />
     <ClInclude Include="MyMap.h" />
     <ClInclude Include="MyMatrix.h" />

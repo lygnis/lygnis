@@ -18,7 +18,7 @@
 //#include <crtdbg.h>
 #include <fstream>
 #include <wrl.h>
-
+#include <assert.h>
 using namespace Microsoft::WRL;
 extern HWND g_hWnd;
 extern RECT g_rtClient;

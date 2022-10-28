@@ -48,6 +48,9 @@
     <ClCompile Include="MActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="MShape.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -84,6 +87,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="MObjStd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MShape.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

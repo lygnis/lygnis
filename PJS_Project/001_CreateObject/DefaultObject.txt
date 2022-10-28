@@ -1,12 +1,14 @@
 struct VS_IN
 {
-	float3 p : POSITION; 
+	float3 p : POSITION;
+	float3 n : NORMAL;
     float4 c : COLOR;
-	float2 t : TEXTURE;
+	float2 t : TEXCOORD;
 };
 struct VS_OUT
 {
 	float4 p : SV_POSITION;
+	float3 n : NORMAL;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
@@ -14,9 +16,9 @@ struct VS_OUT
 // 레지스터 단위란 :  float4(x,y,z,w)
 cbuffer cb_data : register(b0)
 {
-	matrix g_matWorld : packoffset(c0);
-	matrix g_matView : packoffset(c4);
-	matrix g_matProj : packoffset(c8);
+	row_major matrix g_matWorld : packoffset(c0);
+	row_major matrix g_matView : packoffset(c4);
+	row_major matrix g_matProj : packoffset(c8);
 	float  fTimer : packoffset(c12.z);
 };
 VS_OUT VS(VS_IN input) 
@@ -29,10 +31,12 @@ VS_OUT VS(VS_IN input)
 	// vWolrd.z = vLocal dot c2;
 	// vWolrd.w = vLocal dot c3;	
 	// matrix matTranspose = transpose(g_matWorld);
-	float4 vWorld = mul(vLocal, g_matWorld);
-	float4 vView = mul(vWorld, g_matView);
-	float4 vProj = mul(vView, g_matProj);	
+	//input.p.w = 1.0f;
+	float4 vWorld = mul(g_matWorld, vLocal );
+	float4 vView = mul(g_matView, vWorld );
+	float4 vProj = mul(g_matProj,vView );	
 	output.p = vProj;
+	output.n = input.n;
 	output.c = input.c;
 	output.t = input.t;
 	return output;
@@ -43,6 +47,6 @@ SamplerState g_SampleWrap		: register(s0);
 
 float4 PS(VS_OUT input) : SV_Target
 {
-	float4 vColor = g_txTex.Sample(g_SampleWrap , input.t);
-	return vColor*input.c;
+	//float4 vColor = g_txTex.Sample(g_SampleWrap , input.t);
+	return input.c; //* vColor;
 }

@@ -18,7 +18,7 @@ struct ObjectVertex
 	Vector4D color;
 	Vector2D texture;
 };
-struct VS_CONSTANT_BUFFER
+struct VS_CONSTANT_BUFFERS
 {
 	// 월드 행렬
 	MyMatrix4X4 matWorld;
@@ -43,7 +43,7 @@ public:
 	ID3D11Buffer*				m_pVertexBuffer;
 	ID3D11Buffer*				m_pIndexBuffer;
 	ID3D11Buffer*				m_pConstantBuffer;
-	VS_CONSTANT_BUFFER			m_cbData;
+	VS_CONSTANT_BUFFERS			m_cbData;
 	ID3D11InputLayout*			m_pVertexLayout;
 	// 쉐이더 생성
 	ID3D11VertexShader*			m_pVS;

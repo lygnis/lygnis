@@ -5,5 +5,6 @@ class MyMap : public BObject
 {
 public:
 	bool Build(UINT iWidth, UINT iHeight);
+	
 };
 
