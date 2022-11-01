@@ -34,3 +34,15 @@ struct VS_CONSTANT_BUFFER
 	TMatrix matProj;
 	TVector4 Color;
 };
+
+struct M_BOX
+{
+	TVector3	vPos[8];
+	// aabb
+	TVector3	vMin;
+	TVector3	vMax;
+	// obb
+	TVector3	vCenter;
+	TVector3	vAxis[3];
+	float		fExtent[3];
+};
