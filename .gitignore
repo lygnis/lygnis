@@ -290,4 +290,5 @@ __pycache__/
 # Executables
 *.exe
 *.Out/
+*.lib
 /PJS_Project/DirectXTK-main
