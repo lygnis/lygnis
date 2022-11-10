@@ -51,12 +51,8 @@ bool Sample::Render()
     D3DXMatrixIdentity(&mWorld);
     TMatrix mMatWorld =*(TMatrix*)&m_pCamera->m_matView;
     TMatrix matProj = *(TMatrix*)&m_pCamera->m_matProj;
-    bool bRender = m_pCamera->m_vFrustum.ClassifyPoint(m_pBox->m_vCenter);
-    if(bRender)
-    {
-		m_pBox->SetMatrix(&mWorld, &mMatWorld, &matProj);
-		m_pBox->Render(m_pImmediateContext);
-    }
+    m_pBox->SetMatrix(&mWorld, &mMatWorld, &matProj);
+    m_pBox->Render(m_pImmediateContext);
     m_pMap->SetMatrix(&mWorld, &mMatWorld, &matProj);
     m_pMap->Render(m_pImmediateContext);
     DebugCamera* pCame = (DebugCamera*)m_pCamera;

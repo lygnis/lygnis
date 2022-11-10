@@ -290,3 +290,5 @@ __pycache__/
 # Executables
 *.exe
 *.Out/
+
+*.lib

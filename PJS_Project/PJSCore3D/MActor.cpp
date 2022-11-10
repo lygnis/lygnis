@@ -73,12 +73,12 @@ HRESULT MActor::SetInputLayout()
 
 bool MActor::CreateVertexData()
 {
-    return false;
+    return true;
 }
 
 bool MActor::CreateIndexData()
 {
-    return false;
+    return true;
 }
 
 HRESULT MActor::CreateVertexBuffer()
@@ -144,7 +144,7 @@ void MActor::UpdateConstantBuffer(ID3D11DeviceContext* pContext, MActor* pParent
     }
 }
 
-void MActor::SetMatrix(TMatrix* pWorld, TMatrix* pView, TMatrix* pProj)
+void MActor::SetMatrix(TMatrix* pWorld, TMatrix* pView, TMatrix* pProj, ID3D11DeviceContext* pContext)
 {
     if (pWorld != NULL)
     {
@@ -161,6 +161,7 @@ void MActor::SetMatrix(TMatrix* pWorld, TMatrix* pView, TMatrix* pProj)
     {
         m_matProj = *pProj;
     }
+    UpdateConstantBuffer(pContext);
     D3DXMatrixTranspose(&m_cbDatas.matWorld, &m_matWorld);
     D3DXMatrixTranspose(&m_cbDatas.matView, &m_matView);
     D3DXMatrixTranspose(&m_cbDatas.matProj, & m_matProj);
@@ -199,7 +200,7 @@ bool MActor::PreRender(ID3D11DeviceContext* _pContext)
 
 bool MActor::PostRender(ID3D11DeviceContext* _pContext)
 {
-    UpdateConstantBuffer(_pContext);
+    //UpdateConstantBuffer(_pContext);
     m_dxObj.PostRender(_pContext, m_dxObj.m_iNumIndex);
     return true;
 }

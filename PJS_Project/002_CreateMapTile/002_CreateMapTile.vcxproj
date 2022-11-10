@@ -148,7 +148,6 @@
     <ClCompile Include="MCamera.cpp" />
     <ClCompile Include="MFrustum.cpp" />
     <ClCompile Include="MmapTile.cpp" />
-    <ClCompile Include="MQuadTree.cpp" />
     <ClCompile Include="MShape.cpp" />
     <ClCompile Include="MShapeLine.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
@@ -159,7 +158,6 @@
     <ClInclude Include="MCamera.h" />
     <ClInclude Include="MFrustum.h" />
     <ClInclude Include="MmapTile.h" />
-    <ClInclude Include="MQuadTree.h" />
     <ClInclude Include="MShape.h" />
     <ClInclude Include="MShapeLine.h" />
     <ClInclude Include="MyMatrix.h" />

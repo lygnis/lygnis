@@ -8,6 +8,7 @@ bool GameCore::CoreInit()
 	m_wWriter.Init();
 	I_Timer.Init();
 	I_Input.Init();
+	I_Tex.SetDvice(m_p3dDevice, m_pImmediateContext);
 	//m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1), (void**)&m_pBackBuffer);
 	IDXGISurface1* pBackBuffer;
 	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),

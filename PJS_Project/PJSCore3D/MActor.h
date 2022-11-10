@@ -3,6 +3,7 @@
 #include "MObjStd.h"
 #include "Timer.h"
 #include "Input.h"
+#include "TextureManager.h"
 class MActor
 {
 public:
@@ -37,7 +38,7 @@ public:
 	virtual HRESULT CreateResource();
 	virtual void UpdateConstantBuffer(ID3D11DeviceContext* pContext, MActor* pParentTActor = NULL);
 
-	virtual void SetMatrix(TMatrix* pWorld, TMatrix* pView, TMatrix* pProj);
+	virtual void SetMatrix(TMatrix* pWorld, TMatrix* pView, TMatrix* pProj, ID3D11DeviceContext* pContext);
 	// 바운딩 박스 및 스피어를 계산해둔다.
 	virtual void SetCollisionData(TMatrix& matWorld);
 	virtual bool PreRender(ID3D11DeviceContext* _pContext);

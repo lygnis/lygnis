@@ -53,7 +53,7 @@ bool DxDevice::PreRender()
 {
     // 매프레임마다 이 랜더 타겟에 뿌린다. (m_pRTV에)
     // 백버퍼를 렌더 타겟으로 지정
-    float color[4] = { 1.0f, 1.0f, 1.0f,1.0f };
+    float color[4] = { 0.5f, 0.5f, 0.5f,1.0f };
     m_pImmediateContext->ClearRenderTargetView(m_pRTV.Get(), color);      // 지우고 렌더타겟뷰(백버퍼)를 출력한다.
     m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     // 프리렌더는 클리어 까지만

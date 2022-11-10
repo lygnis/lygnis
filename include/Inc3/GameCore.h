@@ -3,6 +3,7 @@
 #include "Writer.h"
 #include "Timer.h"
 #include "Input.h"
+#include "TextureManager.h"
 class GameCore : public DxDevice
 {
 public:

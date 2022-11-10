@@ -26,6 +26,8 @@
     <ClCompile Include="MActor.cpp" />
     <ClCompile Include="MDxHelper.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TSound.cpp" />
@@ -43,6 +45,8 @@
     <ClInclude Include="MDxHelper.h" />
     <ClInclude Include="MObjStd.h" />
     <ClInclude Include="MyMatrix.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TMath.h" />
     <ClInclude Include="TSound.h" />
