@@ -4,6 +4,9 @@ struct VS_IN
 	float3 n : NORMAL;
     float4 c : COLOR;
 	float2 t : TEXCOORD;
+
+	float4 index : INDEX;
+	float4 weight : WEIGHT;
 };
 struct VS_OUT
 {
@@ -21,18 +24,24 @@ cbuffer cb_data : register(b0)
 	row_major matrix g_matProj : packoffset(c8);
 	float  fTimer : packoffset(c12.z);
 };
+cbuffer cb_Animation : register(b1)
+{
+	matrix  g_matBone[255];
+};
 VS_OUT VS(VS_IN input) 
 {
 	VS_OUT output = (VS_OUT)0;
 	float4 vLocal = float4(input.p,1.0f);
-	// 중요:  mul 함수는 내적으로 처리된다.
-	// vWolrd.x = vLocal dot c0; // 행*행
-	// vWolrd.y = vLocal dot c1;
-	// vWolrd.z = vLocal dot c2;
-	// vWolrd.w = vLocal dot c3;	
-	// matrix matTranspose = transpose(g_matWorld);
-	//input.p.w = 1.0f;
-	float4 vWorld = mul(g_matWorld, vLocal );
+	float4 vAnim =0;
+	float4 vAnimNormal =0;
+	for(int iBone =0; iBone<4; iBone++)
+	{
+		uint iBoneIndex = input.index[iBone];
+		float fWeight = input.weight[iBone];
+		vAnim += mul(vLocal, g_matBone[iBoneIndex])* fWeight;
+		vAnimNormal += mul(input.n, g_matBone[iBoneIndex]) * fWeight;
+	}
+	float4 vWorld = mul(g_matWorld, vAnim );
 	float4 vView = mul(g_matView, vWorld );
 	float4 vProj = mul(g_matProj,vView );	
 	output.p = vProj;
@@ -52,3 +61,12 @@ float4 PS(VS_OUT input) : SV_Target
 
 	return input.c * vColor;
 }
+	
+	
+	// 중요:  mul 함수는 내적으로 처리된다.
+	// vWolrd.x = vLocal dot c0; // 행*행
+	// vWolrd.y = vLocal dot c1;
+	// vWolrd.z = vLocal dot c2;
+	// vWolrd.w = vLocal dot c3;	
+	// matrix matTranspose = transpose(g_matWorld);
+	//input.p.w = 1.0f;

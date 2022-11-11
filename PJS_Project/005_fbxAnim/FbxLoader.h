@@ -21,11 +21,20 @@ public:
 	std::vector<MFbxObject*>	m_pDrawObjectList;
 
 	std::map<FbxNode*, MFbxObject*> m_pObjectMap;
-
+	// 상수버퍼 인덱스
+	std::map<FbxNode*, UINT>		m_pObjectIDMap;
 	ID3D11DeviceContext*		m_pContext;
+	VS_CONSTANT_BONE_BUFFER		m_cbDataBone;
+public:
+	MAnimScene m_AnimScene;
+	float	m_fAnimFrame = 0;
+	float	m_fAnimInverse = 1.0f;
+	float	m_fAnimSpeed = 1.0f;
+	ID3D11Buffer* m_pAnimBoneCB;
 public:
 	bool Init();
-	bool Frame();
+	HRESULT CreateConstantBuffer(ID3D11Device* _p3dDevice);
+	bool UpdateFrame(ID3D11DeviceContext* pCOntext);
 	bool Render();
 	bool Release();
 	bool Load(C_STR filename);
@@ -39,5 +48,6 @@ public:
 	TMatrix DxConvertMatrix(FbxAMatrix& fbxMatrix);
 	TMatrix ConvertMatrix(FbxAMatrix& fbxMatrix);
 	W_STR GetSplitName(std::string szFileName);
+	bool ParseMeshSkinning(FbxMesh* pFbxMesh, MFbxObject* pObj);
 };
 

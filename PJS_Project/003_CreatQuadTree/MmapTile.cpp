@@ -25,8 +25,8 @@ bool MmapTile::CreateVertexData()
             m_VertexList[iRow * m_iNumCol + iCol].p.y = 0;
             m_VertexList[iRow * m_iNumCol + iCol].p.z = { (float)(fHalfHeight - iRow) * fCellDistance };
             m_VertexList[iRow * m_iNumCol + iCol].c = { 1,1,1,1 };
-            m_VertexList[iRow * m_iNumCol + iCol].t.x = { ((float)iCol / (float)m_iCellCols) *100 };
-            m_VertexList[iRow * m_iNumCol + iCol].t.y = { ((float)iRow / (float)m_iCellRows) * 100};
+            m_VertexList[iRow * m_iNumCol + iCol].t.x = { ((float)iCol / (float)m_iCellCols) * 1 };
+            m_VertexList[iRow * m_iNumCol + iCol].t.y = { ((float)iRow / (float)m_iCellRows) * 1 };
         }
     }
     m_dxObj.m_iNumVertex = (UINT)m_VertexList.size();

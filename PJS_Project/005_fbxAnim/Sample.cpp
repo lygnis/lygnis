@@ -18,8 +18,9 @@ bool Sample::Init()
 {
     m_fbxLoad = new FbxLoader;
     m_fbxLoad->Init();
-    m_fbxLoad->Load("../../fbxdata/Turret_Deploy/Turret_Deploy1.fbx");
-    W_STR szDefaultDir = L"../../fbxdata/";
+    m_fbxLoad->Load("../../fbxdata/Girl_FBX2020/Girl_FBX2020.fbx");
+    m_fbxLoad->CreateConstantBuffer(m_p3dDevice);
+    W_STR szDefaultDir = L"../../fbxdata//Girl_FBX2020/";
     for (int i = 0; i < m_fbxLoad->m_pDrawObjectList.size(); i++)
     {
         MFbxObject* pObj = m_fbxLoad->m_pDrawObjectList[i];
@@ -28,15 +29,15 @@ bool Sample::Init()
     }
 
     m_pBox = new MBoxShape;
-    m_pBox->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/circle_violet.dds");//L"../../data/RTS_Crate.png");
+    //m_pBox->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/circle_violet.dds");//L"../../data/RTS_Crate.png");
     m_pCamera = new DebugCamera;
     m_pMap = new MmapTile;
-    m_pMap->CreateMap(4 + 1, 4 + 1);
-    m_pMap->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/020.bmp");
+    //m_pMap->CreateMap(4 + 1, 4 + 1);
+    //m_pMap->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/020.bmp");
     // 카메라 시작 위치, 카메라 타겟 위치 , 가상 업벡터
     m_pCamera->CreateViewMatrix(TVector3(0, 0, -10), TVector3(0, 0, 0), TVector3(0, 1, 0));
-    m_pCamera->CreateProjMatrix(1.0f, 10000.0f, PI * 0.5f, (float)g_rtClient.right / (float)g_rtClient.bottom);
-    m_QuadTree.Create( m_pImmediateContext, m_pCamera, m_pMap,3 );
+    m_pCamera->CreateProjMatrix(0.5f, 10000.0f, PI * 0.5f, (float)g_rtClient.right / (float)g_rtClient.bottom);
+    //m_QuadTree.Create( m_pImmediateContext, m_pCamera, m_pMap,3 );
     return true;
 }
 bool Sample::Frame()
@@ -49,6 +50,7 @@ bool Sample::Frame()
     //m_pBoxA->m_matWorld;
     //m_pBoxB->Frame();
     m_pCamera->Frame();
+    m_fbxLoad->UpdateFrame(m_pImmediateContext);
     return true;
 }
 bool Sample::Render()
@@ -61,9 +63,9 @@ bool Sample::Render()
     TMatrix mWorld;
 
     D3DXMatrixIdentity(&mWorld);
-    mWorld._11 = 0.5;
-    mWorld._22 = 0.5;
-    mWorld._33 = 0.5;
+    mWorld._11 = 1.0f;
+    mWorld._22 = 1.0f;
+    mWorld._33 = 1.0f;
     TMatrix gWorld;
     gWorld._11 = 10;
     gWorld._22 = 10;
@@ -74,24 +76,25 @@ bool Sample::Render()
 		m_pBox->SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
 		m_pBox->Render(m_pImmediateContext);
     }*/
-    m_QuadTree.m_pMap->SetMatrix(&gWorld, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
-    m_QuadTree.Frame();
-    m_QuadTree.Render();
+    //m_QuadTree.m_pMap->SetMatrix(&gWorld, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
+    //m_QuadTree.Frame();
+    //m_QuadTree.Render();
     for (int i = 0; i < m_fbxLoad->m_pDrawObjectList.size(); i++)
     {
         MFbxObject* pObj = m_fbxLoad->m_pDrawObjectList[i];
-        pObj->m_fAnimFrame = pObj->m_fAnimFrame + I_Timer.m_fDeltaTime * pObj->m_fAnimSpeed * pObj->m_AnimScene.fFrameSpeed * pObj->m_fAnimInverse;
+        /*pObj->m_fAnimFrame = pObj->m_fAnimFrame + I_Timer.m_fDeltaTime * pObj->m_fAnimSpeed * pObj->m_AnimScene.fFrameSpeed * pObj->m_fAnimInverse;
         if (pObj->m_fAnimFrame > pObj->m_AnimScene.iEndFrame || pObj->m_fAnimFrame < pObj->m_AnimScene.iStartFrame)
         {
             pObj->m_fAnimFrame = min(pObj->m_fAnimFrame, pObj->m_AnimScene.iEndFrame);
             pObj->m_fAnimFrame = max(pObj->m_fAnimFrame, pObj->m_AnimScene.iStartFrame);
             pObj->m_fAnimInverse *= -1.0f;
-        }
-        pObj->m_matAnim = pObj->Interplate(pObj->m_fAnimFrame);
-        //mWorld = pObj->m_AnimTrack[pObj->m_fAnimFrame].matAnim;
-        pObj->m_matWorld = pObj->m_matAnim * mWorld;
+        }*/
 
-        pObj->SetMatrix(&pObj->m_matWorld, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
+        //pObj->m_matAnim = pObj->Interplate(pObj->m_fAnimFrame);
+        //mWorld = pObj->m_AnimTrack[pObj->m_fAnimFrame].matAnim;
+        //pObj->m_matWorld = pObj->m_matAnim * mWorld;
+
+        pObj->SetMatrix(&mWorld, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
         pObj->Render(m_pImmediateContext);
     }
     DebugCamera* pCame = (DebugCamera*)m_pCamera;

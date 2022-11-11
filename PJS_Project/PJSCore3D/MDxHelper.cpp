@@ -291,7 +291,7 @@ namespace DX
 		}
 		if (FAILED(hr))
 		{
-			assert(false);
+			//assert(false);
 			return nullptr;
 		}
 		return pSRV;

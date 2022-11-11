@@ -54,7 +54,7 @@ MNode* MQuadTree::VisibleNode(MNode* pNode)
 {
     //T_POSITION dwRet = m_Camera->m_vFrustum.C
     T_POSITION dwRet = m_Camera->m_vFrustum.ClassifyBox(pNode->m_tBox);
-    dwRet = P_SPANNING;
+    //dwRet = P_SPANNING;
     if (P_FRONT == dwRet)
     {
         m_pDrawLeafNodeList.push_back(pNode);

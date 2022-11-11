@@ -34,3 +34,30 @@ struct VS_CONSTANT_BUFFER
 	TMatrix matProj;
 	TVector4 Color;
 };
+struct VS_CONSTANT_BONE_BUFFER
+{
+	TMatrix matBone[255];
+};
+struct IW_VERTEX
+{
+	TVector4 i;
+	TVector4 w;
+	IW_VERTEX() {};
+	IW_VERTEX(TVector4 vIndex, TVector4 vWeight)
+	{
+		i = vIndex;
+		w = vWeight;
+	}
+};
+struct M_BOX
+{
+	// Common
+	TVector3		vCenter;
+	TVector3		vPos[8];
+	// AABB
+	TVector3		vMax;
+	TVector3		vMin;
+	// OBB
+	TVector3		vAxis[3];
+	float			fExtent[3];
+};

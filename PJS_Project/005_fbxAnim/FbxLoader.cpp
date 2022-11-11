@@ -8,14 +8,74 @@ bool FbxLoader::Init()
     return true;
 }
 
-bool FbxLoader::Frame()
+HRESULT FbxLoader::CreateConstantBuffer(ID3D11Device* _p3dDevice)
 {
-    return false;
+    HRESULT hr;
+    for (int iBone = 0; iBone < 255; iBone++)
+    {
+        D3DXMatrixIdentity(&m_cbDataBone.matBone[iBone]);
+    }
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(bd));
+    bd.ByteWidth = sizeof(VS_CONSTANT_BONE_BUFFER) * 1;
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA sd;
+    ZeroMemory(&sd, sizeof(sd));
+    sd.pSysMem = &m_cbDataBone;
+    hr = _p3dDevice->CreateBuffer(&bd, &sd, &m_pAnimBoneCB);
+    if (FAILED(hr))
+        assert(false);
+    return hr;
+}
+
+bool FbxLoader::UpdateFrame(ID3D11DeviceContext* pCOntext)
+{
+    m_fAnimFrame = m_fAnimFrame + I_Timer.m_fDeltaTime * m_fAnimSpeed * m_AnimScene.fFrameSpeed * m_fAnimInverse;
+    if (m_fAnimFrame > m_AnimScene.iEndFrame || m_fAnimFrame < m_AnimScene.iStartFrame)
+    {
+        m_fAnimFrame = min(m_fAnimFrame, m_AnimScene.iEndFrame);
+        m_fAnimFrame = max(m_fAnimFrame, m_AnimScene.iStartFrame);
+        m_fAnimInverse *= -1.0f;
+    }
+    std::vector<TMatrix> matCurrentAnimList;
+    for (int iBone = 0; iBone < m_pObjectList.size(); iBone++)
+    {
+        TMatrix matAnimation = m_pObjectList[iBone]->Interplate(m_fAnimFrame, m_AnimScene);
+        D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnimation);
+        matCurrentAnimList.push_back(matAnimation);
+    }
+    pCOntext->UpdateSubresource(m_pAnimBoneCB, 0, nullptr, &m_cbDataBone, 0, 0);
+
+    for (int iDraw = 0; iDraw < m_pDrawObjectList.size(); iDraw++)
+    {
+        if (m_pDrawObjectList[iDraw]->m_dxMatrixBindPseMap.size())
+        {
+            for (int iBone = 0; iBone < m_pObjectList.size(); iBone++)
+            {
+
+                auto iter = m_pDrawObjectList[iDraw]->m_dxMatrixBindPseMap.find(iBone);
+                if (iter != m_pDrawObjectList[iDraw]->m_dxMatrixBindPseMap.end())
+                {
+                    TMatrix matBind = iter->second;
+                    TMatrix matAnim = matBind * matCurrentAnimList[iBone];
+                    D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnim);
+                }
+            }
+            pCOntext->UpdateSubresource(m_pDrawObjectList[iDraw]->m_pSkinBoneCB, 0, nullptr, &m_cbDataBone, 0, 0);
+        }
+    }
+    return true;
 }
 
 bool FbxLoader::Render()
 {
-    return false;
+    for (auto obj : m_pDrawObjectList)
+    {
+        obj->Render(m_pContext);
+    }
+    return true;
 }
 
 bool FbxLoader::Release()
@@ -72,10 +132,11 @@ void FbxLoader::LoadAnimation(MFbxObject* pObj)
         s = start.GetFrameCount(TimeMode);
         n = end.GetFrameCount(TimeMode);
     }
-    pObj->m_AnimScene.iStartFrame = s;
-    pObj->m_AnimScene.iEndFrame = n;
-    pObj->m_AnimScene.fFrameSpeed = 40.0f;
-    pObj->m_AnimScene.fTickPerFrame = 60000;
+    m_AnimScene.iStartFrame = s;
+    m_AnimScene.iEndFrame = n;
+    m_AnimScene.fFrameSpeed = 40.0f;
+    m_AnimScene.fTickPerFrame = 160;
+    m_AnimScene.TimeMode = TimeMode;
     FbxTime time;
     for (FbxLongLong t = s; t <= n; t++)
     {
@@ -97,6 +158,7 @@ void FbxLoader::LoadAnimation(MFbxObject* pObj)
 
 void FbxLoader::ParseMesh(FbxMesh* pMesh, MFbxObject* pObj)
 {
+    pObj->m_bSkinned = ParseMeshSkinning(pMesh, pObj);
     FbxNode* pNode = pMesh->GetNode();
 
     FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
@@ -180,6 +242,7 @@ void FbxLoader::ParseMesh(FbxMesh* pMesh, MFbxObject* pObj)
     if (iNumMtrl > 1)
     {
         pObj->vbDataList.resize(iNumMtrl);
+        pObj->vbDataListIW.resize(iNumMtrl);
         pObj->vbTexList.resize(iNumMtrl);
         for (int iTex = 0; iTex < iNumMtrl; iTex++)
         {
@@ -250,13 +313,39 @@ void FbxLoader::ParseMesh(FbxMesh* pMesh, MFbxObject* pObj)
                     tVertex.n.y = n.mData[2];
                     tVertex.n.z = n.mData[1];
                 }
+                IW_VERTEX IWVertex;
+                if (pObj->m_bSkinned == false)
+                {
+                    IWVertex.i.x = m_pObjectIDMap.find(pNode)->second;
+                    IWVertex.i.y = 0;
+                    IWVertex.i.z = 0;
+                    IWVertex.i.w = 0;
+                    IWVertex.w.x = 1.0f;
+                    IWVertex.w.y = 0.0f;
+                    IWVertex.w.z = 0.0f;
+                    IWVertex.w.w = 0.0f;
+                }
+                else
+                {
+                    MWeight* pWeight = &pObj->m_WeightList[vertexID];
+                    IWVertex.i.x = pWeight->Index[0];
+                    IWVertex.i.y = pWeight->Index[1];
+                    IWVertex.i.z = pWeight->Index[2];
+                    IWVertex.i.w = pWeight->Index[3];
+                    IWVertex.w.x = pWeight->weight[0];
+                    IWVertex.w.y = pWeight->weight[1];
+                    IWVertex.w.z = pWeight->weight[2];
+                    IWVertex.w.w = pWeight->weight[3];
+                }
                 if (iNumMtrl <= 1)
                 {
                     pObj->m_VertexList.push_back(tVertex);
+                    pObj->m_VertexList_IW.push_back(IWVertex);
                 }
                 else
                 {
                     pObj->vbDataList[iSubMtrl].push_back(tVertex);
+                    pObj->vbDataListIW[iSubMtrl].push_back(IWVertex);
                 }
             }
         }
@@ -279,19 +368,23 @@ void FbxLoader::PreProcess(FbxNode* pFbxNode)
     pObject->m_szName = to_mw(name);
     pObject->m_pFbxNode = pFbxNode;
     pObject->m_pFbxParentNode = pFbxNode->GetParent();
-
+    pObject->m_iObjIndex = m_pObjectList.size();
     m_pObjectList.push_back(pObject);
     m_pObjectMap.insert(std::make_pair(pFbxNode, pObject));
-
+    m_pObjectIDMap.insert(std::make_pair(pFbxNode, pObject->m_iObjIndex));
     int iNumChild = pFbxNode->GetChildCount();
     for (int iChild = 0; iChild < iNumChild; iChild++)
     {
         FbxNode* pChild = pFbxNode->GetChild(iChild);
         // 헬퍼오브젝트 + 지오메트리 오브젝트
-        FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
-        if (type == FbxNodeAttribute::eMesh || type == FbxNodeAttribute::eSkeleton || type == FbxNodeAttribute::eNull)
+
+        if (pChild->GetNodeAttribute()!= nullptr)
         {
-            PreProcess(pChild);
+            FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
+            if (type == FbxNodeAttribute::eMesh || type == FbxNodeAttribute::eSkeleton || type == FbxNodeAttribute::eNull)
+            {
+                PreProcess(pChild);
+            }
         }
     }
 }
@@ -492,4 +585,52 @@ W_STR FbxLoader::GetSplitName(std::string szFileName)
     name += ext;
 
     return name;
+}
+
+bool FbxLoader::ParseMeshSkinning(FbxMesh* pFbxMesh, MFbxObject* pObj)
+{
+    // 리깅도구 (뼈대에 스킨을 붙이는 작업도구)
+    int iDeformerCount = pFbxMesh->GetDeformerCount(FbxDeformer::eSkin);
+    if (iDeformerCount == 0) 
+        return false;
+
+    // iNumVertex == 메쉬의 정점 개수와 동일해야한다.
+    int iNumVertex = pFbxMesh->GetControlPointsCount();
+    pObj->m_WeightList.resize(iNumVertex);
+    for (int iDeformer = 0; iDeformer < iDeformerCount; iDeformer++)
+    {
+        FbxDeformer* deformer = pFbxMesh->GetDeformer(iDeformer, FbxDeformer::eSkin);
+        FbxSkin* pSkin = (FbxSkin*)deformer;
+        int iNumClusterCount = pSkin->GetClusterCount();
+        for (int iCluster = 0; iCluster < iNumClusterCount; iCluster++)
+        {
+            FbxCluster* pCluster = pSkin->GetCluster(iCluster);
+            FbxNode* pFbxNode = pCluster->GetLink();
+            if (m_pObjectIDMap.find(pFbxNode) == m_pObjectIDMap.end())
+                continue;
+            int iBoneIndex = m_pObjectIDMap.find(pFbxNode)->second;
+
+            // 뼈대 공간으로 변환하는 행렬이 필요하다.
+            FbxAMatrix matXBindPose;
+            FbxAMatrix matReferenceGlobalInitPosition;
+            pCluster->GetTransformLinkMatrix(matXBindPose);
+            pCluster->GetTransformMatrix(matReferenceGlobalInitPosition);
+            FbxAMatrix matBindPos = matReferenceGlobalInitPosition.Inverse() * matXBindPose;
+
+            TMatrix matInvBindPos = DxConvertMatrix(matBindPos);
+            matInvBindPos = matInvBindPos.Invert();
+            pObj->m_dxMatrixBindPseMap.insert(std::make_pair(iBoneIndex, matInvBindPos));
+            // 임의의 1개 정점에 영향을 미치는 뼈대의 개수
+            int iNumWeightCounter = pCluster->GetControlPointIndicesCount();
+            int* pIndicss = pCluster->GetControlPointIndices();
+            double* pWeights = pCluster->GetControlPointWeights();
+            for (int iVertex = 0; iVertex < iNumWeightCounter; iVertex++)
+            {
+                int iVertexIndex = pIndicss[iVertex];
+                float fWeight = pWeights[iVertex];
+                pObj->m_WeightList[iVertexIndex].insert(iBoneIndex, fWeight);
+            }
+        }
+    }
+    return true;
 }

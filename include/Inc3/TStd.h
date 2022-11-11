@@ -116,3 +116,7 @@ static void PRINT(char* fmt, ...) // 나열연산자
 	printf("\n=====> %s", buf);
 	va_end(arg);
 }
+
+#define SAFE_RELEASE(A)				{ if(A) { (A)->Release(); (A)=NULL; } }
+#define SAFE_DEL(A)					{ if (A) delete A; (A)=NULL; }
+#define SAFE_NEW(A, B)				{ if (!A) A = new B; }
