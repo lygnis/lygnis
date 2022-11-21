@@ -15,13 +15,13 @@ bool MyMap::Build(UINT iWidth, UINT iHeight)
 		{
 			m_pVertexList[iRow * iWidth + iCol].position =
 				//{(float)iCol, 0.0f, (float)iHeight-iRow};
-			{ (float)(iCol - iHalfWidth) * fCellDistance, 0,
-				(float)(iHalfHeight - iRow) * fCellDistance };
+			{ (float)(iCol - iHalfWidth) * fCellDistance *10, 0,
+				(float)(iHalfHeight - iRow) * fCellDistance*10 };
 			m_pVertexList[iRow * iWidth + iCol].color =
 			{ 1,1,1,1 };
 			m_pVertexList[iRow * iWidth + iCol].texture =
-			{ ((float)iCol / (float)(iWidth - 1)) * 100.0f,
-			  ((float)iRow / (float)(iHeight - 1)) * 100.0f };
+			{ ((float)iCol / (float)(iWidth - 1)) * 10,
+			  ((float)iRow / (float)(iHeight - 1)) * 10.0f };
 		}
 	}
 	m_pIndexList.resize((iWidth - 1) * (iHeight - 1) * 2 * 3.0f);

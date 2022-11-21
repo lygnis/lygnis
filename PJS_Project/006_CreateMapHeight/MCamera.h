@@ -21,7 +21,7 @@ public:
 	float			m_fRoll;
 	float			m_fPitch;
 	float			m_fDistance;
-	float			m_fSpeed;
+	float			m_fSpeed = 100.0f;
 public:
 	void CreateViewMatrix(TVector3 _vEye, TVector3 _vAt, TVector3 _vUp);
 	void CreateProjMatrix(float _fNear, float _fFar, float fFovY, float fAspecRatio);

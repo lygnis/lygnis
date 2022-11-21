@@ -16,14 +16,14 @@ bool MmapTile::CreateVertexData()
     m_VertexList.resize(m_iNumVertices);
     float fHalfWidth = m_iNumCol /2;
     float fHalfHeight = m_iNumRow /2;
-    float fCellDistance = 1.0f;
+    float fCellDistance = 10.0f;
     for (int iRow = 0; iRow < m_iNumRow; iRow++)
     {
         for (int iCol = 0; iCol < m_iNumCol; iCol++)
         {
-            m_VertexList[iRow * m_iNumCol + iCol].p.x = { (float)(iCol - fHalfWidth) * fCellDistance };
+            m_VertexList[iRow * m_iNumCol + iCol].p.x = { (float)(iCol - fHalfWidth) * fCellDistance *1 };
             m_VertexList[iRow * m_iNumCol + iCol].p.y = 0;
-            m_VertexList[iRow * m_iNumCol + iCol].p.z = { (float)(fHalfHeight - iRow) * fCellDistance };
+            m_VertexList[iRow * m_iNumCol + iCol].p.z = { (float)(fHalfHeight - iRow) * fCellDistance *1};
             m_VertexList[iRow * m_iNumCol + iCol].c = { 1,1,1,1 };
             m_VertexList[iRow * m_iNumCol + iCol].t.x = { ((float)iCol / (float)m_iCellCols) * 1 };
             m_VertexList[iRow * m_iNumCol + iCol].t.y = { ((float)iRow / (float)m_iCellRows) * 1 };

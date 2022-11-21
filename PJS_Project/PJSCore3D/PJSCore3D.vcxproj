@@ -24,7 +24,9 @@
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MActor.cpp" />
+    <ClCompile Include="MCamera.cpp" />
     <ClCompile Include="MDxHelper.cpp" />
+    <ClCompile Include="MFrustum.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -42,7 +44,9 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MActor.h" />
+    <ClInclude Include="MCamera.h" />
     <ClInclude Include="MDxHelper.h" />
+    <ClInclude Include="MFrustum.h" />
     <ClInclude Include="MObjStd.h" />
     <ClInclude Include="MyMatrix.h" />
     <ClInclude Include="Texture.h" />

@@ -17,11 +17,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 bool Sample::Init()
 {
     m_pBox = new MBoxShape;
-    m_pBox->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/circle_violet.dds");//L"../../data/RTS_Crate.png");
+    m_pBox->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/circleDust.png");//L"../../data/RTS_Crate.png");
     m_pCamera = new DebugCamera;
     m_pMap = new MmapTile;
     m_pMap->CreateMap(4 + 1, 4 + 1);
-    m_pMap->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/020.bmp");
+    m_pMap->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/Sand.jpg");
     // 카메라 시작 위치, 카메라 타겟 위치 , 가상 업벡터
     m_pCamera->CreateViewMatrix(TVector3(0, 0, -10), TVector3(0, 0, 0), TVector3(0, 1, 0));
     m_pCamera->CreateProjMatrix(1.0f, 1000.0f, PI * 0.5f, (float)g_rtClient.right / (float)g_rtClient.bottom);

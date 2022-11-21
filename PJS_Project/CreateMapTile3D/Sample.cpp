@@ -18,19 +18,19 @@ bool Sample::Init()
 {
     m_pMap = new MyMap;
     m_pMap->SetDevice(m_p3dDevice, m_pImmediateContext);
-    m_pMap->Build(512 + 1, 512 + 1);
-    m_pMap->Create(L"DefaultObject.txt", L"../../data/wall.bmp");
+    m_pMap->Build(8 + 1, 8 + 1);
+    m_pMap->Create(L"DefaultObject.txt", L"../../data/Sand.jpg");
     m_pMap->m_matWorld.Translation(0, 0, 0);
     m_pBoxA = new ShapeBox;
     m_pBoxA->SetDevice(m_p3dDevice, m_pImmediateContext);
     m_pBoxA->Init();
-    m_pBoxA->Create(L"DefaultObject.txt", L"../../data/1KGCABK.bmp");
+    m_pBoxA->Create(L"DefaultObject.txt", L"../../data/circleDust.png");
     m_pBoxA->m_matWorld.Translation(-2,0,5);
 
     m_pBoxB = new ShapeBox;
     m_pBoxB->SetDevice(m_p3dDevice, m_pImmediateContext);
     m_pBoxB->Init();
-    m_pBoxB->Create(L"DefaultObject.txt", L"../../data/RTS_Crate.png");
+    m_pBoxB->Create(L"DefaultObject.txt", L"../../data/circleDust.png");
     m_pBoxB->m_matWorld.Translation(2, 0, -5);
 
     m_pCamera = new DebugCamera;

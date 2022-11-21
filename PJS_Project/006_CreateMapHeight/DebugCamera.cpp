@@ -9,25 +9,25 @@ bool DebugCamera::Frame()
     }
     if (I_Input.GetKey('W') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vLook * 10 * I_Timer.m_fDeltaTime;
+        TBASIS_EX::TVector3 _v = m_vLook * 100 * I_Timer.m_fDeltaTime;
         m_vCameraPos += _v;
         //vTarget.z += 10.0f * g_fSecondPerFrame;
     }
     if (I_Input.GetKey('S') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vLook * 10 * I_Timer.m_fDeltaTime;
+        TBASIS_EX::TVector3 _v = m_vLook * 100 * I_Timer.m_fDeltaTime;
         m_vCameraPos -= _v;
         //vTarget.z -= 10.0f * g_fSecondPerFrame;
     }
     if (I_Input.GetKey('D') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vRight * 10 * I_Timer.m_fDeltaTime;
+        TBASIS_EX::TVector3 _v = m_vRight * 100 * I_Timer.m_fDeltaTime;
         m_vCameraPos += _v;
         //vTarget.x -= 10.0f * g_fSecondPerFrame;
     }
     if (I_Input.GetKey('A') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vRight * 10 * I_Timer.m_fDeltaTime;
+        TBASIS_EX::TVector3 _v = m_vRight * 100 * I_Timer.m_fDeltaTime;
         m_vCameraPos -= _v;
         //vTarget.x += 10.0f * g_fSecondPerFrame;
     }

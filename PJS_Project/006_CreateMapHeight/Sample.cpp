@@ -20,22 +20,15 @@ bool Sample::Init()
     m_pBox->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/circleDust.png");//L"../../data/RTS_Crate.png");
     m_pCamera = new DebugCamera;
     m_pMap = new MmapTile;
-    m_pMap->CreateMap(4 + 1, 4 + 1);
+    m_pMap->SetDevice(m_p3dDevice, m_pImmediateContext);
+    m_pMap->CreateHeightMap(L"../../data/height12.jpg");
+    m_pMap->CreateMap(m_pMap->m_iNumRow , m_pMap->m_iNumCol);
     m_pMap->Create(m_p3dDevice, L"DefaultObject.txt", L"../../data/Sand.JPG");
     // 카메라 시작 위치, 카메라 타겟 위치 , 가상 업벡터
     m_pCamera->CreateViewMatrix(TVector3(0, 0, -10), TVector3(0, 0, 0), TVector3(0, 1, 0));
     m_pCamera->CreateProjMatrix(1.0f, 1000.0f, PI * 0.5f, (float)g_rtClient.right / (float)g_rtClient.bottom);
     m_QuadTree.Create( m_pImmediateContext, m_pCamera, m_pMap,3 );
     return true;
-}
-bool Sample::SetDevice(ID3D11Device* _p3dDevice, ID3D11DeviceContext* _Context)
-{
-    m_p3dDevice = _p3dDevice;
-    m_pImmediateContext = _Context;
-    D3DXMatrixIdentity(&matW)
-        D3DXMatrixIdentity
-        D3DXMatrixIdentity
-    return false;
 }
 bool Sample::Frame()
 {
