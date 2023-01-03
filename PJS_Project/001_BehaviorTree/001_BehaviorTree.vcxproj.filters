@@ -24,6 +24,18 @@
     <ClInclude Include="btComposite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="btConditiona.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="btAction.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="btSelector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="btSequence.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -33,6 +45,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="btComposite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="btConditiona.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="btAction.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="btSelector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="btSequence.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,10 @@ namespace BT
 	protected:
 		std::vector<btNode*> listChild_;
 	public:
-		btComposite();
+		btComposite()
+		{
+			listChild_.reserve(sizeof(btNode));
+		}
 		virtual ~btComposite() {};
 	public:
 		// 인덱스 검색
