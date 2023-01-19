@@ -115,6 +115,11 @@ bool MGraphicsEngine::GetShaderBufferSize(void** bytecode, UINT* size)
 	return true;
 }
 
+std::shared_ptr<MVertexShader> MGraphicsEngine::CreateVertexShader(const void* shader_byte_code, size_t byte_code_size)
+{
+	return std::shared_ptr<MVertexShader>();
+}
+
 MGraphicsEngine* MGraphicsEngine::get()
 {
 	static MGraphicsEngine engine;

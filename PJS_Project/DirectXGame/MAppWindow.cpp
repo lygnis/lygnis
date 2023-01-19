@@ -23,11 +23,8 @@ void MAppWindow::OnCreate()
 	{
 		{-0.5f, -0.5f, 0.0f},
 		{-0.5f, 0.5f, 0.0f},
-		{0.5f, 0.5f, 0.0f},
-		{0.5f, 0.5f, 0.0f},
 		{0.5f, -0.5f, 0.0f},
-		{-0.5f, -0.5f, 0.0f}
-
+		{0.5f, 0.5f, 0.0f},
 	};
 	_vb = MGraphicsEngine::get()->CreateVertexBuffer();
 
@@ -50,7 +47,7 @@ void MAppWindow::OnUpdate()
 	MGraphicsEngine::get()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 	MGraphicsEngine::get()->SetShader();
 	MGraphicsEngine::get()->getImmediateDeviceContext()->SetVertexBuffer(_vb.get());
-	MGraphicsEngine::get()->getImmediateDeviceContext()->DrawTriangleList(_vb->GetSizeVertexList(), 0);
+	MGraphicsEngine::get()->getImmediateDeviceContext()->DrawTriangleStrip(_vb->GetSizeVertexList(), 0);
 
 	_swapChain->Present(false);
 }

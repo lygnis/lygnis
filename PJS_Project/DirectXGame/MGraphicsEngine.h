@@ -5,6 +5,7 @@
 #include "DeviceContext.h"
 //#include "MVertexBuffer.h"
 class MVertexBuffer;
+class MVertexShader;
 
 class MGraphicsEngine
 {
@@ -22,7 +23,7 @@ public:
 	bool CreateShader();
 	bool SetShader();
 	bool GetShaderBufferSize(void** bytecode, UINT* size);
-
+	std::shared_ptr<MVertexShader> CreateVertexShader(const void* shader_byte_code, size_t byte_code_size);
 public:
 	// ΩÃ±€≈Ê
 	static MGraphicsEngine* get();
@@ -39,6 +40,7 @@ private:
 private:
 	friend class MSwapChain;
 	friend class MVertexBuffer;
+	friend class MVertexShader;
 private:
 	D3D_FEATURE_LEVEL _feature_level;
 	std::unique_ptr<DeviceContext> _immContext;

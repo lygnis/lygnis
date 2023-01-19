@@ -148,6 +148,7 @@
     <ClInclude Include="MStd.h" />
     <ClInclude Include="MSwapChain.h" />
     <ClInclude Include="MVertexBuffer.h" />
+    <ClInclude Include="MVertexShader.h" />
     <ClInclude Include="MWindow.h" />
     <ClInclude Include="TMath.h" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClCompile Include="MGraphicsEngine.cpp" />
     <ClCompile Include="MSwapChain.cpp" />
     <ClCompile Include="MVertexBuffer.cpp" />
+    <ClCompile Include="MVertexShader.cpp" />
     <ClCompile Include="MWindow.cpp" />
     <ClCompile Include="TMath.cpp" />
   </ItemGroup>

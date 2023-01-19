@@ -29,6 +29,9 @@
     <Filter Include="math">
       <UniqueIdentifier>{d22b2f33-d14b-4dfd-bdbd-9a6b2804ee5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\VertexShader">
+      <UniqueIdentifier>{8dab93c0-6690-4044-8702-27425892e0aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MAppWindow.h">
@@ -55,6 +58,9 @@
     <ClInclude Include="TMath.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="MVertexShader.h">
+      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="TMath.cpp">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="MVertexShader.cpp">
+      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
