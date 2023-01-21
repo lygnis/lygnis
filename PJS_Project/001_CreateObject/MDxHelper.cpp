@@ -8,6 +8,7 @@ namespace DX
 		hr = D3DCompileFromFile(szFileName, NULL, NULL, szEntryPoint, szShaderModel, 0, 0, ppBlobOut, &pErrorCode);
 		if (FAILED(hr))
 		{
+			assert(false);
 			if(pErrorCode != NULL)
 				OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
 			pErrorCode->Release();

@@ -23,7 +23,7 @@ bool Sample::Init()
     m_pMap->m_matWorld.Translation(0, 0, 0);*/
 
     //m_pBox.Create(m_p3dDevice, L"../../shader/Box.hlsl", L"../../data/RTS_Crate.png");
-    m_pBox.Create(m_p3dDevice, L"DefaultObject.txt", nullptr);//L"../../data/RTS_Crate.png");
+    m_pBox.Create(m_p3dDevice, L"DefaultObject.xt", nullptr);//L"../../data/RTS_Crate.png");
    /* m_pBoxA = new ShapeBox;
     m_pBoxA->SetDevice(m_p3dDevice, m_pImmediateContext);
     m_pBoxA->Init();

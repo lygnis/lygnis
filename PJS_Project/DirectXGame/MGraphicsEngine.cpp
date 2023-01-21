@@ -1,5 +1,7 @@
 #include "MGraphicsEngine.h"
 #include "MVertexBuffer.h"
+#include "MVertexShader.h"
+#include "ConstantBuffer.h"
 
 bool MGraphicsEngine::Init()
 {
@@ -54,70 +56,86 @@ bool MGraphicsEngine::Release()
 	return true;
 }
 
-std::unique_ptr<MSwapChain> MGraphicsEngine::CreateSwapChain()
+MGraphicsEngine::MGraphicsEngine()
+{
+}
+
+MGraphicsEngine::~MGraphicsEngine()
+{
+}
+
+std::shared_ptr<MSwapChain> MGraphicsEngine::CreateSwapChain()
 {
 	return std::make_unique<MSwapChain>();
 }
 
 DeviceContext* MGraphicsEngine::getImmediateDeviceContext()
 {
-	return this->_immContext.get();
+	return _immContext.get();
 }
 
-bool MGraphicsEngine::CreateShader()
+
+
+std::unique_ptr<MVertexShader> MGraphicsEngine::CreateVertexShader(const void* shader_byte_code, size_t byte_code_size)
+{
+	std::unique_ptr<MVertexShader> _vs{ new MVertexShader() };
+	if (!_vs->Init(shader_byte_code, byte_code_size))
+	{
+		assert(false);
+		return nullptr;
+	}
+	return _vs;
+}
+
+std::unique_ptr<PixelShader> MGraphicsEngine::CreatePixelShader(const void* shader_byte_code, size_t byte_code_size)
+{
+	std::unique_ptr<PixelShader> _ps { new PixelShader() };
+	if (!_ps->Init(shader_byte_code, byte_code_size))
+	{
+		assert(false);
+		return nullptr;
+	}
+	return _ps;
+}
+
+bool MGraphicsEngine::CompileVertexShader(const WCHAR* file_name, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size )
 {
 	HRESULT hr;
-	// 쉐이더 생성
+	ComPtr<ID3DBlob> errCode;
+	hr = D3DCompileFromFile(file_name, nullptr, nullptr, point_name , "vs_5_0", NULL, NULL, _vsBlob.GetAddressOf(), errCode.GetAddressOf());
+	if (FAILED(hr))
+	{
+		if (errCode != NULL)
+		{
+			OutputDebugStringA((char*)errCode->GetBufferPointer());
+		}
+		assert(false);
+		return false;
+	}
+	*shader_byte_code = _vsBlob->GetBufferPointer();
+	*byte_code_size = _vsBlob->GetBufferSize();
+
+
+	return true;
+}
+
+bool MGraphicsEngine::CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size)
+{
+	HRESULT hr;
 	ComPtr<ID3DBlob> errCode = nullptr;
 	// 쉐이더 컴파일러
-	hr = D3DCompileFromFile(L"shader.fx", nullptr, nullptr, "mainvs", "vs_5_0", NULL, NULL, _vsBlob.GetAddressOf(), errCode.GetAddressOf());
+
+	hr = D3DCompileFromFile(filename, nullptr, nullptr, point_name, "ps_5_0", NULL, NULL, _psBlob.GetAddressOf(), errCode.GetAddressOf());
 	if (FAILED(hr))
 	{
-		if (errCode != NULL)
+		if (errCode.Get() != NULL)
 		{
 			OutputDebugStringA((char*)errCode->GetBufferPointer());
 		}
 	}
-	hr = D3DCompileFromFile(L"shader.fx", nullptr, nullptr, "mainps", "ps_5_0", NULL, NULL, _psBlob.GetAddressOf(), errCode.GetAddressOf());
-	if (FAILED(hr))
-	{
-		if (errCode != NULL)
-		{
-			OutputDebugStringA((char*)errCode->GetBufferPointer());
-		}
-	}
-	hr = _d3d_Device->CreateVertexShader(_vsBlob->GetBufferPointer(), _vsBlob->GetBufferSize(), nullptr, _vsShader.GetAddressOf());
-	if (FAILED(hr))
-	{
-		assert(false);
-		return false;
-	}
-	hr = _d3d_Device->CreatePixelShader(_psBlob->GetBufferPointer(), _psBlob->GetBufferSize(), nullptr, _psShader.GetAddressOf());
-	if (FAILED(hr))
-	{
-		assert(false);
-		return false;
-	}
+	*shader_byte_code = _psBlob->GetBufferPointer();
+	*byte_code_size = _psBlob->GetBufferSize();
 	return true;
-}
-
-bool MGraphicsEngine::SetShader()
-{
-	_immContext->GetDeviceContext()->VSSetShader(_vsShader.Get(), nullptr, 0);
-	_immContext->GetDeviceContext()->PSSetShader(_psShader.Get(), nullptr, 0);
-	return true;
-}
-
-bool MGraphicsEngine::GetShaderBufferSize(void** bytecode, UINT* size)
-{
-	*bytecode = this->_vsBlob->GetBufferPointer();
-	*size = (UINT)this->_vsBlob->GetBufferSize();
-	return true;
-}
-
-std::shared_ptr<MVertexShader> MGraphicsEngine::CreateVertexShader(const void* shader_byte_code, size_t byte_code_size)
-{
-	return std::shared_ptr<MVertexShader>();
 }
 
 MGraphicsEngine* MGraphicsEngine::get()
@@ -126,7 +144,12 @@ MGraphicsEngine* MGraphicsEngine::get()
 	return &engine;
 }
 
-std::shared_ptr<MVertexBuffer> MGraphicsEngine::CreateVertexBuffer()
+std::unique_ptr<MVertexBuffer> MGraphicsEngine::CreateVertexBuffer()
 {
-	return std::make_shared<MVertexBuffer>();
+	return std::make_unique<MVertexBuffer>();
+}
+
+std::unique_ptr<ConstantBuffer> MGraphicsEngine::CreateConstantBuffer()
+{
+	return std::make_unique<ConstantBuffer>();
 }

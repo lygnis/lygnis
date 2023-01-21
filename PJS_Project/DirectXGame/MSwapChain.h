@@ -15,7 +15,7 @@ public:
 	bool Present(bool vsync);
 	bool Release();
 private:
-	ComPtr<IDXGISwapChain> _swapChain;
+	ComPtr<IDXGISwapChain> _gi_swapChain;
 	ComPtr<ID3D11RenderTargetView> _Rtv;
 private:
 	friend class DeviceContext;

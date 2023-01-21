@@ -1,4 +1,9 @@
 #pragma once
+#include "MStd.h"
+
+class MGraphicsEngine;
+class DeviceContext;
+
 class MVertexShader
 {
 public:
@@ -6,8 +11,11 @@ public:
 	~MVertexShader() {};
 	bool Release() {};
 private:
-	bool Init(void* shader_byte_code, size_t byte_code_size);
+	bool Init(const void* shader_byte_code, size_t byte_code_size);
 private:
-	ComPtr<ID3D11VertexShader> _vs;
+	ComPtr<ID3D11VertexShader> _vsShader;
+private:
+	friend class MGraphicsEngine;
+	friend class DeviceContext;
 };
 

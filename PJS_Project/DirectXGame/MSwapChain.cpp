@@ -20,7 +20,7 @@ bool MSwapChain::Init(HWND hwnd, UINT width, UINT height)
 	desc.Windowed = TRUE;
 
 	// 윈도우 핸들로 부터 swapchain 생성
-	HRESULT hr = MGraphicsEngine::get()->_dxgi_Factory->CreateSwapChain(device, &desc, _swapChain.GetAddressOf());
+	HRESULT hr = MGraphicsEngine::get()->_dxgi_Factory->CreateSwapChain(device, &desc, _gi_swapChain.GetAddressOf());
 	
 	if (FAILED(hr))
 	{
@@ -29,7 +29,7 @@ bool MSwapChain::Init(HWND hwnd, UINT width, UINT height)
 	}
 
 	ID3D11Texture2D* buffer = NULL;
-	hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+	hr = _gi_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
 	if (FAILED(hr))
 	{
@@ -52,7 +52,7 @@ bool MSwapChain::Init(HWND hwnd, UINT width, UINT height)
 bool MSwapChain::Present(bool vsync)
 {
 	// 백버퍼와 바꾼다.
-	_swapChain->Present(0, 0);
+	_gi_swapChain->Present(0, 0);
 	return true;
 }
 

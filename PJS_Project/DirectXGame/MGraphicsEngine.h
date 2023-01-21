@@ -3,9 +3,11 @@
 #include "MSwapChain.h"
 #include "MStd.h"
 #include "DeviceContext.h"
-//#include "MVertexBuffer.h"
+#include "MVertexShader.h"
+#include "PixelShader.h"
+#include "ConstantBuffer.h"
 class MVertexBuffer;
-class MVertexShader;
+//class MVertexShader;
 
 class MGraphicsEngine
 {
@@ -13,17 +15,20 @@ public:
 	bool Init();
 	bool Release();
 public:
-	MGraphicsEngine() {}
-	~MGraphicsEngine() {}
+	MGraphicsEngine();
+	~MGraphicsEngine();
 public:
-	std::unique_ptr<MSwapChain> CreateSwapChain();
-	std::shared_ptr<MVertexBuffer> CreateVertexBuffer();
+	// 스왑체인 클래스 생성
+	std::shared_ptr<MSwapChain> CreateSwapChain();
+	// 버텍스 버퍼 클래스 생성
+	std::unique_ptr<MVertexBuffer> CreateVertexBuffer();
+	std::unique_ptr<ConstantBuffer>CreateConstantBuffer();
 	DeviceContext* getImmediateDeviceContext();
 public:
-	bool CreateShader();
-	bool SetShader();
-	bool GetShaderBufferSize(void** bytecode, UINT* size);
-	std::shared_ptr<MVertexShader> CreateVertexShader(const void* shader_byte_code, size_t byte_code_size);
+	std::unique_ptr<MVertexShader> CreateVertexShader(const void* shader_byte_code, size_t byte_code_size);
+	std::unique_ptr<PixelShader> CreatePixelShader(const void* shader_byte_code, size_t byte_code_size);
+	bool CompileVertexShader(const WCHAR* filename, const CHAR* point_name,  void** shader_byte_code, size_t* byte_code_size);
+	bool CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 public:
 	// 싱글톤
 	static MGraphicsEngine* get();
@@ -35,12 +40,14 @@ private:
 	ComPtr<IDXGIFactory>		_dxgi_Factory;
 	ComPtr<ID3DBlob>			_vsBlob;
 	ComPtr<ID3DBlob>			_psBlob;
-	ComPtr<ID3D11VertexShader>		_vsShader;
-	ComPtr<ID3D11PixelShader>		_psShader;
+	//ComPtr<ID3D11VertexShader>		_vsShader;
+	//ComPtr<ID3D11PixelShader>		_psShader;
 private:
 	friend class MSwapChain;
 	friend class MVertexBuffer;
 	friend class MVertexShader;
+	friend class PixelShader;
+	friend class ConstantBuffer;
 private:
 	D3D_FEATURE_LEVEL _feature_level;
 	std::unique_ptr<DeviceContext> _immContext;

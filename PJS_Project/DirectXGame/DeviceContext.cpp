@@ -1,6 +1,10 @@
 #include "DeviceContext.h"
 #include "MSwapChain.h"
 #include "MVertexBuffer.h"
+#include "MVertexShader.h"
+#include "PixelShader.h"
+#include "ConstantBuffer.h"
+
 DeviceContext::DeviceContext(ID3D11DeviceContext* context) : _deviceContex(context)
 {
 }
@@ -44,6 +48,26 @@ void DeviceContext::SetViewportSize(UINT width, UINT height)
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     _deviceContex->RSSetViewports(1, &vp);
+}
+
+void DeviceContext::SetVertexShader(MVertexShader* vertex_shader)
+{
+    _deviceContex->VSSetShader(vertex_shader->_vsShader.Get(), nullptr, 0);
+}
+
+void DeviceContext::SetPixelShader(PixelShader* pixel_shader)
+{
+    _deviceContex->PSSetShader(pixel_shader->_psShader.Get(), nullptr, 0);
+}
+
+void DeviceContext::SetConstantBuffer(MVertexShader* vertex_shader, ConstantBuffer* buffer)
+{
+    _deviceContex->VSSetConstantBuffers(0, 1, buffer->_constBuffer.GetAddressOf());
+}
+
+void DeviceContext::SetConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer)
+{
+    _deviceContex->PSSetConstantBuffers(0, 1, buffer->_constBuffer.GetAddressOf());
 }
 
 bool DeviceContext::Realese()
