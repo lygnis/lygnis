@@ -1,8 +1,9 @@
 #include "MVertexBuffer.h"
-//#include "MGraphicsEngine.h"
+#include "RenderSystem.h"
+#include <exception>
 
-bool MVertexBuffer::Load(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
-{
+MVertexBuffer::MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader ,RenderSystem* system) : _system(system), _layout(0), _buffer(0)
+{ 
     HRESULT hr;
 
 
@@ -20,11 +21,11 @@ bool MVertexBuffer::Load(void* list_vertices, UINT size_vertex, UINT size_list, 
     _size_vertex = size_vertex;
     _size_list = size_list;
     
-    hr = MGraphicsEngine::get()->_d3d_Device->CreateBuffer(&buffDesc, &init_data, &_buffer);
+    hr = _system->_d3d_Device->CreateBuffer(&buffDesc, &init_data, &_buffer);
     if (FAILED(hr))
     {
         assert(false);
-        return false;
+        throw std::exception("VertexBuffer not create successfully");
     }
 
     D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -32,20 +33,17 @@ bool MVertexBuffer::Load(void* list_vertices, UINT size_vertex, UINT size_list, 
         // ½¦ÀÌ´õ ³Ñ±æ Á¤º¸
         // ½Ã¸àÆ½ ÀÌ¸§, ½Ã¸àÆ½ ÀÎµ¦½º, Æ÷¸Ë, ÀÔ·Â ½½·Ô, ¹ÙÀÌÆ® ¿ÀÇÁ¼Â, ÀÔ·Â ½½·Ô Å¬·¡½º, 
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
-
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        //{"COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     UINT size_layout = ARRAYSIZE(layout);
 
-    hr = MGraphicsEngine::get()->_d3d_Device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader,_layout.GetAddressOf());
+    hr = _system->_d3d_Device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader,_layout.GetAddressOf());
     if (FAILED(hr))
     {
         assert(false);
-        return false;
+        throw std::exception("Layout not create successfully");
     }
-
-    return true;
 }
 
 UINT MVertexBuffer::GetSizeVertexList()
@@ -53,7 +51,3 @@ UINT MVertexBuffer::GetSizeVertexList()
     return _size_list;
 }
 
-bool MVertexBuffer::Release()
-{
-    return true;
-}

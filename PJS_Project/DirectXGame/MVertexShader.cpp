@@ -1,16 +1,15 @@
 #include "MVertexShader.h"
-#include "MGraphicsEngine.h"
+#include "RenderSystem.h"
+#include <exception>
 
-bool MVertexShader::Init(const void* shader_byte_code, size_t byte_code_size)
+MVertexShader::MVertexShader(const void* shader_byte_code, size_t byte_code_size ,RenderSystem* system) : _system(system)
 {
     HRESULT hr;
 
-    hr = MGraphicsEngine::get()->_d3d_Device->CreateVertexShader(shader_byte_code, byte_code_size, nullptr, _vsShader.GetAddressOf());
+    hr = _system->_d3d_Device->CreateVertexShader(shader_byte_code, byte_code_size, nullptr, _vsShader.GetAddressOf());
     if (FAILED(hr))
     {
         assert(false);
-        return false;
+        throw std::exception("VertexShader not create successfully");
     }
-
-    return true;
 }

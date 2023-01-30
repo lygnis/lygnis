@@ -1,22 +1,17 @@
 #pragma once
 #pragma once
 #include "MStd.h"
-#include "MGraphicsEngine.h"
-
-class DeviceContext;
-//class MGraphicsEngine;
 
 class ConstantBuffer
 {
 public:
-	ConstantBuffer() {};
+	ConstantBuffer(void* buffer, UINT size_buffer, RenderSystem* system);
 	~ConstantBuffer() {};
 public:
-	bool Load(void* buffer, UINT size_buffer);
-	void Update(DeviceContext* context, void* buffer);
-	bool Release();
+	void Update(DeviceContextPtr context, void* buffer);
 private:
 	ComPtr<ID3D11Buffer> _constBuffer;
+	RenderSystem* _system = nullptr;
 private:
 	friend class DeviceContext;
 };

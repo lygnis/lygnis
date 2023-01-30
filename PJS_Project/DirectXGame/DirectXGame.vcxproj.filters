@@ -17,26 +17,47 @@
     <Filter Include="GameEngine\GraphicsEngine">
       <UniqueIdentifier>{2759b1ed-9fa7-4de2-a11a-94d5779a4ac9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\SwapChain">
-      <UniqueIdentifier>{8363994a-405f-42b4-8f21-ebb23e92500e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\DeviceContext">
-      <UniqueIdentifier>{31e92653-b04e-4052-a527-f57462feab0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\VertexBuffer">
-      <UniqueIdentifier>{ab803ea1-0bc6-4a5c-bf70-702386a4d9f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{d22b2f33-d14b-4dfd-bdbd-9a6b2804ee5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\VertexShader">
-      <UniqueIdentifier>{8dab93c0-6690-4044-8702-27425892e0aa}</UniqueIdentifier>
+    <Filter Include="GameEngine\GraphicsEngine\Render System">
+      <UniqueIdentifier>{f6043991-c17b-4c52-8815-c3d8e3940571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\PixelShader">
+    <Filter Include="GameEngine\GraphicsEngine\Render System\PixelShader">
       <UniqueIdentifier>{debbbefd-1102-43f8-b84b-d34c564a5ec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\ConstantBuffer">
+    <Filter Include="GameEngine\GraphicsEngine\Render System\SwapChain">
+      <UniqueIdentifier>{8363994a-405f-42b4-8f21-ebb23e92500e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Render System\VertexBuffer">
+      <UniqueIdentifier>{ab803ea1-0bc6-4a5c-bf70-702386a4d9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Render System\VertexShader">
+      <UniqueIdentifier>{8dab93c0-6690-4044-8702-27425892e0aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Render System\IndexBuffer">
+      <UniqueIdentifier>{f72522fc-f5a6-489b-b086-dfea6b62c3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Render System\DeviceContext">
+      <UniqueIdentifier>{31e92653-b04e-4052-a527-f57462feab0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Render System\ConstantBuffer">
       <UniqueIdentifier>{06158738-7628-4618-9fd6-d428f37809ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\InputSystem">
+      <UniqueIdentifier>{ac2eea91-23b8-4da2-834e-1b6149766893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{fc62a506-b397-4220-81f4-3b109e3b6737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager">
+      <UniqueIdentifier>{42761eb4-49a3-428c-952b-2860b1b0a773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager\TextureManager">
+      <UniqueIdentifier>{ac898594-3ffb-4535-950e-3292f1c51783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\MeshManager">
+      <UniqueIdentifier>{d0b90c8c-8fe7-4baf-ab27-9a2dd6607a2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,28 +71,67 @@
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="MSwapChain.h">
-      <Filter>GameEngine\GraphicsEngine\SwapChain</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\SwapChain</Filter>
     </ClInclude>
     <ClInclude Include="DeviceContext.h">
-      <Filter>GameEngine\GraphicsEngine\DeviceContext</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\DeviceContext</Filter>
     </ClInclude>
     <ClInclude Include="MStd.h">
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="MVertexBuffer.h">
-      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="TMath.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="MVertexShader.h">
-      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\VertexShader</Filter>
     </ClInclude>
     <ClInclude Include="PixelShader.h">
-      <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\PixelShader</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>GameEngine\GraphicsEngine\ConstantBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\Render System\IndexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InputListener.h">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>GameEngine\GraphicsEngine\Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexMesh.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,30 +148,61 @@
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClCompile>
     <ClCompile Include="MSwapChain.cpp">
-      <Filter>GameEngine\GraphicsEngine\SwapChain</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\SwapChain</Filter>
     </ClCompile>
     <ClCompile Include="DeviceContext.cpp">
-      <Filter>GameEngine\GraphicsEngine\DeviceContext</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\DeviceContext</Filter>
     </ClCompile>
     <ClCompile Include="MVertexBuffer.cpp">
-      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="TMath.cpp">
       <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="MVertexShader.cpp">
-      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\VertexShader</Filter>
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
-      <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\PixelShader</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>GameEngine\GraphicsEngine\ConstantBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\Render System\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\Render System\IndexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>GameEngine\GraphicsEngine\Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="shader.fx" />
     <FxCompile Include="PixelShader.hlsl" />
+    <FxCompile Include="VertexMesh.hlsl" />
   </ItemGroup>
 </Project>

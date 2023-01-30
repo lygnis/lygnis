@@ -1,8 +1,9 @@
 #include "ConstantBuffer.h"
-#include "MGraphicsEngine.h"
+#include "RenderSystem.h"
 #include "DeviceContext.h"
+#include <exception>
 
-bool ConstantBuffer::Load(void* buffer, UINT size_buffer)
+ConstantBuffer::ConstantBuffer(void* buffer, UINT size_buffer, RenderSystem* system) : _system(system)
 {
     HRESULT hr;
 
@@ -16,18 +17,17 @@ bool ConstantBuffer::Load(void* buffer, UINT size_buffer)
     D3D11_SUBRESOURCE_DATA init_data = {};
     init_data.pSysMem = buffer;
 
-    hr = MGraphicsEngine::get()->_d3d_Device->CreateBuffer(&buffDesc, &init_data, &_constBuffer);
-   
-    return true;
+    hr = _system->_d3d_Device->CreateBuffer(&buffDesc, &init_data, &_constBuffer);
+    if (FAILED(hr))
+    {
+        assert(false);
+        throw std::exception("ConstBuffer not create successfully");
+    }
 }
 
-void ConstantBuffer::Update(DeviceContext* context, void* buffer)
+
+void ConstantBuffer::Update(DeviceContextPtr context, void* buffer)
 {
     // 상수버퍼 업데이트
     context->_deviceContex->UpdateSubresource(_constBuffer.Get(), NULL, NULL, buffer, NULL,NULL);
-}
-
-bool ConstantBuffer::Release()
-{
-	return true;
 }

@@ -80,6 +80,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\output\Debug/DirectXGame</OutDir>
     <IntDir>..\..\..\output\Debug/DirectXGame</IntDir>
+    <ExternalIncludePath>Libs\DirectXTex\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>Libs\DirectXTex\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -118,11 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>../../include/DXinc;../../include/tinyobjloader/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,7 +149,16 @@
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DeviceContext.h" />
+    <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="InputListener.h" />
+    <ClInclude Include="InputSystem.h" />
     <ClInclude Include="MAppWindow.h" />
+    <ClInclude Include="Mesh.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="MGraphicsEngine.h" />
     <ClInclude Include="MStd.h" />
     <ClInclude Include="MSwapChain.h" />
@@ -152,19 +166,47 @@
     <ClInclude Include="MVertexShader.h" />
     <ClInclude Include="MWindow.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Texture.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="TMath.h" />
+    <ClInclude Include="VertexMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MAppWindow.cpp" />
+    <ClCompile Include="Mesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="MGraphicsEngine.cpp" />
     <ClCompile Include="MSwapChain.cpp" />
     <ClCompile Include="MVertexBuffer.cpp" />
     <ClCompile Include="MVertexShader.cpp" />
     <ClCompile Include="MWindow.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TMath.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +218,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="shader.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="VertexMesh.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">

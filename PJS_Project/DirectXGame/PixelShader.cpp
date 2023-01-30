@@ -1,16 +1,16 @@
 #include "PixelShader.h"
-#include "MGraphicsEngine.h"
+#include "RenderSystem.h"
+#include <exception>
 
-bool PixelShader::Init(const void* shader_byte_code, size_t byte_code_size)
+PixelShader::PixelShader(const void* shader_byte_code, size_t byte_code_size ,RenderSystem* system): _system(system)
 {
     HRESULT hr;
 
-    hr = MGraphicsEngine::get()->_d3d_Device->CreatePixelShader(shader_byte_code, byte_code_size, nullptr, _psShader.GetAddressOf());
+    hr = _system->_d3d_Device->CreatePixelShader(shader_byte_code, byte_code_size, nullptr, _psShader.GetAddressOf());
     if (FAILED(hr))
     {
         assert(false);
-        return false;
+        throw std::exception("PixelShader not create successfully");
     }
-
-    return true;
 }
+
