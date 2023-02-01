@@ -25,6 +25,7 @@ class MeshManager;
 
 using namespace Microsoft::WRL;
 using namespace TBASIS_EX;
+extern HWND g_hWnd;
 
 typedef std::shared_ptr<MSwapChain> SwapChainPtr;
 typedef std::shared_ptr<DeviceContext> DeviceContextPtr;

@@ -11,7 +11,10 @@ public:
 	MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system);
 	~MSwapChain() {}
 public:
+	void Resize(UINT width, UINT height);
 	bool Present(bool vsync);
+private:
+	void ReloadBuffers(UINT width, UINT height);
 private:
 	ComPtr<IDXGISwapChain> _gi_swapChain;
 	ComPtr<ID3D11RenderTargetView> _Rtv;

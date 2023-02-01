@@ -1,6 +1,8 @@
 #include "MWindow.h"
 #include <exception>
+#include "MStd.h"
 
+HWND g_hWnd;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,  WPARAM wparam, LPARAM lparam)
 {
@@ -10,6 +12,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,  WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 	{
 		
+		break;
+	}
+	case WM_SIZE:
+	{
+		MWindow* window = (MWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		// 윈도우 포인터가 만들어지는 중에 함수 호출이 될 수 있다. 방지
+		if(window)
+			window->OnSize();
 		break;
 	}
 	case WM_SETFOCUS:
@@ -49,6 +59,7 @@ bool MWindow::broadcast()
 	{
 		// 생성자 대신 맨 첫 프레임 때 동작
 		SetWindowLongPtr(_hwnd, GWLP_USERDATA, (LONG_PTR)this);
+		g_hWnd = _hwnd;
 		this->OnCreate();
 		this->_is_init = true;
 	}
@@ -88,6 +99,15 @@ void MWindow::OnFocus()
 
 void MWindow::OnKillFocus()
 {
+}
+
+void MWindow::OnSize()
+{
+}
+
+HWND& MWindow::GetHandel()
+{
+	return _hwnd;
 }
 
 MWindow::MWindow()

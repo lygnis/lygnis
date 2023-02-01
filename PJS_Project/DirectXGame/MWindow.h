@@ -6,6 +6,7 @@ public:
 	
 	bool IsRun();
 	// 윈도우 종료
+	HWND _hwnd;
 
 	RECT GetClientRect();
 	// 이벤트
@@ -14,8 +15,9 @@ public:
 	virtual void OnDestroy();
 	virtual void OnFocus();
 	virtual void OnKillFocus();
+	virtual void OnSize();
+	HWND& GetHandel();
 protected:
-	HWND _hwnd;
 	bool _is_Run;
 	bool _is_init = false;
 private:

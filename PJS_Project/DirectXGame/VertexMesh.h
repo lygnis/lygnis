@@ -4,15 +4,15 @@
 class VertexMesh
 {
 public:
-	VertexMesh() : _position(), _texcoord()
+	VertexMesh() : _position(), _texcoord(), _normal()
 	{
 
 	}
-	VertexMesh(TBASIS_EX::TVector3 position, TBASIS_EX::TVector2 texcoord) : _position(position), _texcoord(texcoord)
+	VertexMesh(TVector3 position, TVector2 texcoord, TVector3 normal) : _position(position), _texcoord(texcoord), _normal(normal)
 	{
 
 	}
-	VertexMesh(const VertexMesh& vertex) : _position(vertex._position), _texcoord(vertex._texcoord)
+	VertexMesh(const VertexMesh& vertex) : _position(vertex._position), _texcoord(vertex._texcoord), _normal(vertex._normal)
 	{
 
 	}
@@ -21,6 +21,7 @@ public:
 
 	}
 public:
-	TBASIS_EX::TVector3 _position;
-	TBASIS_EX::TVector2 _texcoord;
+	TVector3 _position;
+	TVector2 _texcoord;
+	TVector3 _normal;
 };

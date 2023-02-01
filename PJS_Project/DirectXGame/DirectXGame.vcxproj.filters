@@ -56,8 +56,14 @@
     <Filter Include="GameEngine\GraphicsEngine\ResourceManager\TextureManager">
       <UniqueIdentifier>{ac898594-3ffb-4535-950e-3292f1c51783}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\MeshManager">
+    <Filter Include="Shader">
+      <UniqueIdentifier>{5ed992eb-3112-40f9-aff5-c9abff538f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager\MeshManager">
       <UniqueIdentifier>{d0b90c8c-8fe7-4baf-ab27-9a2dd6607a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Camera">
+      <UniqueIdentifier>{8ef63bdc-348f-4ece-83f0-150fcd52e063}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,13 +131,22 @@
       <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
     </ClInclude>
     <ClInclude Include="MeshManager.h">
-      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
     </ClInclude>
     <ClInclude Include="VertexMesh.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCamera.h">
+      <Filter>GameEngine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MCamera.h">
+      <Filter>GameEngine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>GameEngine\InputSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,16 +208,33 @@
       <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
     </ClCompile>
     <ClCompile Include="MeshManager.cpp">
-      <Filter>GameEngine\GraphicsEngine\MeshManager</Filter>
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugCamera.cpp">
+      <Filter>GameEngine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MCamera.cpp">
+      <Filter>GameEngine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>GameEngine\InputSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="shader.fx" />
-    <FxCompile Include="PixelShader.hlsl" />
-    <FxCompile Include="VertexMesh.hlsl" />
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexMesh.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

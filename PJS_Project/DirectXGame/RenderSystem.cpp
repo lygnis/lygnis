@@ -44,6 +44,8 @@ D3D_DRIVER_TYPE driver_type[] =
 	_d3d_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)_dxgi.GetAddressOf());
 	_dxgi->GetParent(__uuidof(IDXGIAdapter), (void**)_dxgi_Adapter.GetAddressOf());
 	_dxgi_Adapter->GetParent(__uuidof(IDXGIFactory), (void**)_dxgi_Factory.GetAddressOf());
+
+	InitRasterizerState();
 }
 
 RenderSystem::~RenderSystem()
@@ -119,6 +121,27 @@ bool RenderSystem::CompilePixelShader(const WCHAR* filename, const CHAR* point_n
 	*shader_byte_code = _psBlob->GetBufferPointer();
 	*byte_code_size = _psBlob->GetBufferSize();
 	return true;
+}
+
+void RenderSystem::SetRaterizerState(bool cull_front)
+{
+	if (cull_front)
+		_immContext->GetDeviceContext()->RSSetState(_cull_front_state.Get());
+	else
+		_immContext->GetDeviceContext()->RSSetState(_cull_back_state.Get());
+}
+
+void RenderSystem::InitRasterizerState()
+{
+	D3D11_RASTERIZER_DESC desc = {};
+	desc.CullMode = D3D11_CULL_FRONT;
+	desc.DepthClipEnable = true;
+	desc.FillMode = D3D11_FILL_SOLID;
+
+	_d3d_Device->CreateRasterizerState(&desc, _cull_front_state.GetAddressOf());
+
+	desc.CullMode = D3D11_CULL_BACK;
+	_d3d_Device->CreateRasterizerState(&desc, _cull_back_state.GetAddressOf());
 }
 
 

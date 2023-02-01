@@ -33,7 +33,8 @@ MVertexBuffer::MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_li
         // 쉐이더 넘길 정보
         // 시멘틱 이름, 시멘틱 인덱스, 포맷, 입력 슬롯, 바이트 오프셋, 입력 슬롯 클래스, 
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}
         //{"COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     UINT size_layout = ARRAYSIZE(layout);

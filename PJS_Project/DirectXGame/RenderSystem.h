@@ -31,7 +31,9 @@ public:
 	// 쉐이더 컴파일
 	bool				CompileVertexShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool				CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
-
+	void SetRaterizerState(bool cull_front);
+private:
+	void InitRasterizerState();
 private:
 	ComPtr<ID3D11Device> _d3d_Device;
 	ComPtr<IDXGIDevice>			_dxgi;
@@ -39,6 +41,8 @@ private:
 	ComPtr<IDXGIFactory>		_dxgi_Factory;
 	ComPtr<ID3DBlob>			_vsBlob;
 	ComPtr<ID3DBlob>			_psBlob;
+	ComPtr<ID3D11RasterizerState> _cull_front_state;
+	ComPtr<ID3D11RasterizerState> _cull_back_state;
 private:
 	friend class MSwapChain;
 	friend class MVertexBuffer;

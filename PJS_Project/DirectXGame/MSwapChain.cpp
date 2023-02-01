@@ -29,7 +29,31 @@ MSwapChain::MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system)
 		assert(false);
 		throw std::exception("SwapChain not create successfully");
 	}
+	ReloadBuffers(width, height);
+}
 
+void MSwapChain::Resize(UINT width, UINT height)
+{
+	HRESULT hr;
+	_Rtv.ReleaseAndGetAddressOf();
+	_Dsv.ReleaseAndGetAddressOf();
+
+	hr = _gi_swapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	ReloadBuffers(width, height);
+}
+
+bool MSwapChain::Present(bool vsync)
+{
+	// ¹é¹öÆÛ¿Í ¹Ù²Û´Ù.
+	_gi_swapChain->Present(0, 0);
+	return true;
+}
+
+void MSwapChain::ReloadBuffers(UINT width, UINT height)
+{
+	HRESULT hr;
+	ID3D11Device* device = _system->_d3d_Device.Get();
+	// ¹é ¹öÆÛ »ö, ·»´õÅ¸°Ùºä¸¦ °¡Á®¿Â´Ù
 	ID3D11Texture2D* buffer = NULL;
 	hr = _gi_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
@@ -47,6 +71,7 @@ MSwapChain::MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system)
 		assert(false);
 		throw std::exception("RenderTarget not create successfully");
 	}
+	// ±íÀÌ¹öÆÛ ¼³Á¤
 	D3D11_TEXTURE2D_DESC tex_desc = {};
 	tex_desc.Width = width;
 	tex_desc.Height = height;
@@ -74,11 +99,4 @@ MSwapChain::MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system)
 		assert(false);
 		throw std::exception("RenderTarget not create successfully");
 	}
-}
-
-bool MSwapChain::Present(bool vsync)
-{
-	// ¹é¹öÆÛ¿Í ¹Ù²Û´Ù.
-	_gi_swapChain->Present(0, 0);
-	return true;
 }

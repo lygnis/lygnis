@@ -3,12 +3,15 @@ struct VS_INPUT
 {
 	float4 position : POSITION;
 	float2 texcoord : TEXCOORD;
+	float3 normal : NORMAL;
 };
 // ÇÈ¼¿ ½¦ÀÌ´õ·Î º¸³¾ µ¥ÀÌÅÍ
 struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;
 	float2 texcoord : TEXCOORD;
+	float3 normal: NORMAL;
+	float3 direction_cam: TEXCOORD1;
 };
 
 cbuffer constant : register(b0)
@@ -16,7 +19,8 @@ cbuffer constant : register(b0)
 	row_major float4x4 _world;
 	row_major float4x4 _view;
 	row_major float4x4 _proj;
-	unsigned int _time;
+	float4 _light_dir;
+	float4 _cameraPos;
 }
 
 VS_OUTPUT mainvs(VS_INPUT  input)
@@ -26,12 +30,14 @@ VS_OUTPUT mainvs(VS_INPUT  input)
 	
 	// ¿ùµå ÁÂÇ¥°è
 	output.position = mul(input.position, _world);
+	output.direction_cam = normalize(output.position.xyz - _cameraPos.xyz);
 	// ºä ÁÂÇ¥°è
 	output.position = mul(output.position, _view);
 	// Åõ¿µ ÁÂÇ¥°è
 	output.position = mul(output.position, _proj);
 
 	output.texcoord = input.texcoord;
+	output.normal = input.normal;
 	//output.color = input.color;
 
 	return output;
