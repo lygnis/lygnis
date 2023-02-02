@@ -18,6 +18,7 @@ struct Constant
 	TMatrix _proj;
 	TVector4 _light_dir;
 	TVector4 _cameraPos;
+	float _cTime = 0.0f;
 };
 
 
@@ -32,6 +33,7 @@ void MAppWindow::UpdateQuadPosition()
 void MAppWindow::UpdateCamera()
 {
 	_camera->Frame();
+	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 	_view_cam = _camera->m_matView;
 	_proj_cam = _camera->m_matProj;
 }
@@ -43,7 +45,7 @@ void MAppWindow::UpdateModel()
 	TMatrix _light_rot_mat;
 	_light_rot_mat.Identity;
 	_light_rot_mat = TMatrix::CreateRotationY(_light_tor_y);
-	_light_tor_y += 0.707f * Timer::get()->m_fDeltaTime;
+	_light_tor_y += 0.307f * Timer::get()->m_fDeltaTime;
 
 	TVector3 temp_light = _light_rot_mat.Backward();
 	cc._light_dir.x = temp_light.x; cc._light_dir.y = temp_light.y; cc._light_dir.z = temp_light.z; cc._light_dir.w = 1.0f;
@@ -53,6 +55,7 @@ void MAppWindow::UpdateModel()
 	cc._cameraPos = temp;
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
+	cc._cTime = _time;
 	_cb->Update(MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
 
@@ -68,7 +71,9 @@ void MAppWindow::UpdateSkyBox()
 	_sky_cb->Update(MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
 
-void MAppWindow::DrawMesh(const MeshPtr& mesh, MVertexShaderPtr& vs, PixelShaderPtr& ps, const ConstantBufferPtr& cb, const TexturePtr& texture)
+
+
+void MAppWindow::DrawMesh(const MeshPtr& mesh, MVertexShaderPtr& vs, PixelShaderPtr& ps, const ConstantBufferPtr& cb, const TexturePtr* list_tex, UINT num_texture)
 {
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(vs, cb);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(ps, cb);
@@ -76,7 +81,7 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, MVertexShaderPtr& vs, PixelShader
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(vs);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(ps);
 
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(ps, texture);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(ps, list_tex, num_texture);
 	// 오브젝트 렌더링
 	// 버텍스로 삼각형
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(mesh->getVertexBuffer());
@@ -93,14 +98,21 @@ void MAppWindow::OnCreate()
 	Input::get()->Init();
 	//MWindow::OnCreate();
 	InputSystem::get()->addListener(this);
+
 	_camera = std::make_shared<DebugCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 
-	_wood_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick.png");
-	_sky_Tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
+	_earth_color_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_color.jpg");
+	// 빛의 반사 조정 이미지
+	_earth_spec_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_spec.jpg");
+	// 구름 이미지
+	_clouds_tex =		MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/clouds.jpg");
+	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
+	// 밤 낮 구분
+	_earth_night_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_night.jpg");
 
-	_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/suzanne.obj");
+	_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere_hq.obj");
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
 
 	RECT rc = GetClientRect();
@@ -131,13 +143,22 @@ void MAppWindow::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
-	//MAppWindow::OnUpdate();
-	// 
-	InputSystem::get()->Update();
+	if (Input::get()->GetKey('F') == KEY_UP)
+	{
+		_fullscreen_state = !_fullscreen_state;
+		RECT size_screen = this->GetSizeScreen();
+
+		_swapChain->SetFullScreen(_fullscreen_state, size_screen.right, size_screen.bottom);
+	}
+	this->Render();
+}
+
+void MAppWindow::Render()
+{
 	// 렌더링
 	// 렌더타겟 색 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearRenderTargetColor(this->_swapChain,
-		0.2,0.2,0.2,1);
+		0.2, 0.2, 0.2, 1);
 	RECT rc = this->GetClientRect();
 	// 뷰포트 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
@@ -148,26 +169,28 @@ void MAppWindow::OnUpdate()
 	// 렌더 .모델링
 	// 밖에서 렌더링
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(false);
-	DrawMesh(_mesh, _vs, _ps, _cb, _wood_tex);
+	TexturePtr list_tex[4];
+	list_tex[0] = _earth_color_tex;
+	list_tex[1] = _earth_spec_tex;
+	list_tex[2] = _clouds_tex;
+	list_tex[3] = _earth_night_tex;
+	DrawMesh(_mesh, _vs, _ps, _cb, list_tex,4);
 	// 스카이 박스 그리기
 	// 안쪽에서도 렌더링
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(true);
-	DrawMesh(_sky_mesh, _vs, _sky_ps, _sky_cb, _sky_Tex);
+
+	list_tex[0] = _sky_Tex;
+	DrawMesh(_sky_mesh, _vs, _sky_ps, _sky_cb, list_tex,1);
 
 	// 버퍼 바꾸기
-	_swapChain->Present(false);
-
-	// 시간 구하기
-	_oldDelta = _newDelta;
-	_newDelta = ::GetTickCount();
-	_deltaTime = (_oldDelta)? ((_newDelta - _oldDelta) /1000.0f) : 0;
+	_swapChain->Present(true);
+	_time += Timer::get()->m_fDeltaTime;
 }
 
 void MAppWindow::OnDestroy()
 {
-	_wood_tex.reset();
-
 	MWindow::OnDestroy();
+	_swapChain->SetFullScreen(false, 1, 1);
 }
 
 void MAppWindow::OnFocus()
@@ -182,13 +205,14 @@ void MAppWindow::OnKillFocus()
 void MAppWindow::OnSize()
 {
 	RECT rc = this->GetClientRect();
+	//MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->GetDeviceContext()->OMSetRenderTargets(0, nullptr, NULL);
 	_swapChain->Resize(rc.right, rc.bottom);
-	OnUpdate();
+	Render();
 }
 
 void MAppWindow::onKeyDown(int key)
 {
-
+	
 }
 
 void MAppWindow::onKeyUp(int key)
@@ -218,6 +242,8 @@ void MAppWindow::OnRightMouseDown(const Point& delta_mouse_pos)
 void MAppWindow::OnRightMouseUp(const Point& delta_mouse_pos)
 {
 }
+
+
 
 TMatrix MAppWindow::RotationY(float fRad)
 {

@@ -86,18 +86,38 @@ void DeviceContext::SetConstantBuffer(const PixelShaderPtr& pixel_shader, const 
     _deviceContex->PSSetConstantBuffers(0, 1, buffer->_constBuffer.GetAddressOf());
 }
 
-void DeviceContext::SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr &texture)
+void DeviceContext::SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr* texture, UINT num_textures)
 {
-    _deviceContex->VSSetShaderResources(0, 1, &texture->_srview);
+    // 쉐이더에서 검색 할 수 있게
+    ComPtr<ID3D11ShaderResourceView> list_res[32];
+    ID3D11SamplerState* list_sampler[32];
+    for (UINT i = 0; i < num_textures; i++)
+    {
+        list_res[i] = texture[i]->_srview;
+        list_sampler[i] = texture[i]->_sampler_state;
+    }
+    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
+    _deviceContex->VSSetShaderResources(0, 1, list_res->GetAddressOf());
+    _deviceContex->VSSetSamplers(0, num_textures, list_sampler);
 }
 
-void DeviceContext::SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr &texture)
+void DeviceContext::SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr* texture, UINT num_textures)
 {
-    _deviceContex->PSSetShaderResources(0, 1, &texture->_srview);
+    // 쉐이더에서 검색 할 수 있게
+   ID3D11ShaderResourceView* list_res[32];
+   ID3D11SamplerState* list_sampler[32];
+    for (UINT i = 0; i < num_textures; i++)
+    {
+        list_res[i] = texture[i]->_srview;
+        list_sampler[i] = texture[i]->_sampler_state;
+    }
+    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
+    _deviceContex->PSSetShaderResources(0, num_textures, list_res);
+    _deviceContex->PSSetSamplers(0, num_textures, list_sampler);
 }
 
 
-ComPtr<ID3D11DeviceContext> DeviceContext::GetDeviceContext()
+ID3D11DeviceContext* DeviceContext::GetDeviceContext()
 {
-    return _deviceContex;
+    return _deviceContex.Get();
 }

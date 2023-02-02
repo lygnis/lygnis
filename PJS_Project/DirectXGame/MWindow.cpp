@@ -87,6 +87,14 @@ RECT MWindow::GetClientRect()
 	return rc;
 }
 
+RECT MWindow::GetSizeScreen()
+{
+	RECT rc;
+	rc.right = ::GetSystemMetrics(SM_CXSCREEN);
+	rc.bottom = ::GetSystemMetrics(SM_CXSCREEN);
+	return rc;
+}
+
 
 void MWindow::OnDestroy()
 {

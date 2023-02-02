@@ -19,6 +19,7 @@ MSwapChain::MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system)
 	desc.OutputWindow = hwnd;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
+	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	desc.Windowed = TRUE;
 
 	// 윈도우 핸들로 부터 swapchain 생성
@@ -32,12 +33,22 @@ MSwapChain::MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system)
 	ReloadBuffers(width, height);
 }
 
+void MSwapChain::SetFullScreen(bool fullscreen, UINT width, UINT height)
+{
+	Resize(width, height);
+	_gi_swapChain->SetFullscreenState(fullscreen, nullptr);
+}
+
 void MSwapChain::Resize(UINT width, UINT height)
 {
 	HRESULT hr;
 	_Rtv.ReleaseAndGetAddressOf();
+	if (_Rtv)
+		return;
 	_Dsv.ReleaseAndGetAddressOf();
+	
 
+	//hr = _gi_swapChain->ResizeBuffers(CurrentSD.BufferCount, width, height,CurrentSD.BufferDesc.Format, 0);
 	hr = _gi_swapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 	ReloadBuffers(width, height);
 }
@@ -45,7 +56,7 @@ void MSwapChain::Resize(UINT width, UINT height)
 bool MSwapChain::Present(bool vsync)
 {
 	// 백버퍼와 바꾼다.
-	_gi_swapChain->Present(0, 0);
+	_gi_swapChain->Present(vsync, NULL);
 	return true;
 }
 
@@ -99,4 +110,5 @@ void MSwapChain::ReloadBuffers(UINT width, UINT height)
 		assert(false);
 		throw std::exception("RenderTarget not create successfully");
 	}
+	
 }

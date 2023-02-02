@@ -80,7 +80,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\output\Debug/DirectXGame</OutDir>
     <IntDir>..\..\..\output\Debug/DirectXGame</IntDir>
-    <ExternalIncludePath>Libs\DirectXTex\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>../../include/DXinc;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>Libs\DirectXTex\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../include/DXinc;../../include/tinyobjloader/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/tinyobjloader/include;../../include/DXinc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

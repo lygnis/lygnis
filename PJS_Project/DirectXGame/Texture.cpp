@@ -20,7 +20,22 @@ Texture::Texture(const wchar_t* full_path) : Resource(full_path)
 		desc.Texture2D.MipLevels = image_data.GetMetadata().mipLevels;
 		desc.Texture2D.MostDetailedMip = 0;
 
-		MGraphicsEngine::get()->getRenderSystem()->_d3d_Device->CreateShaderResourceView(_texture.Get(), &desc, &_srview);
+		D3D11_SAMPLER_DESC sampler_desc = {};
+		// 텍스쳐 매핑
+		sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+		sampler_desc.MinLOD = 0;
+		sampler_desc.MaxLOD = image_data.GetMetadata().mipLevels;
+
+		hr = MGraphicsEngine::get()->getRenderSystem()->_d3d_Device->CreateSamplerState(&sampler_desc, &_sampler_state);
+		if (FAILED(hr))
+			assert(false);
+
+		hr = MGraphicsEngine::get()->getRenderSystem()->_d3d_Device->CreateShaderResourceView(_texture.Get(), &desc, &_srview);
+		if (FAILED(hr))
+			assert(false);
 	}
 	else
 	{

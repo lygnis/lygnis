@@ -11,6 +11,7 @@ public:
 	MSwapChain(HWND hwnd, UINT width, UINT height ,RenderSystem* system);
 	~MSwapChain() {}
 public:
+	void SetFullScreen(bool fullscreen,UINT width, UINT height);
 	void Resize(UINT width, UINT height);
 	bool Present(bool vsync);
 private:

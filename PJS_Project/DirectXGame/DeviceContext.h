@@ -25,10 +25,10 @@ public:
 	void SetConstantBuffer(const MVertexShaderPtr &vertex_shader, const ConstantBufferPtr &buffer);
 	void SetConstantBuffer(const PixelShaderPtr &pixel_shader, const ConstantBufferPtr &buffer);
 
-	void SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr& texture);
-	void SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr& texture);
+	void SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr* texture, UINT num_textures);
+	void SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr* texture, UINT num_textures);
 
-	ComPtr<ID3D11DeviceContext> GetDeviceContext();
+	ID3D11DeviceContext* GetDeviceContext();
 private:
 	ComPtr<ID3D11DeviceContext> _deviceContex;
 	RenderSystem* _system = nullptr;

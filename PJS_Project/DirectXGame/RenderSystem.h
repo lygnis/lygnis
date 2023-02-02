@@ -35,7 +35,7 @@ public:
 private:
 	void InitRasterizerState();
 private:
-	ComPtr<ID3D11Device> _d3d_Device;
+	ComPtr<ID3D11Device>		_d3d_Device;
 	ComPtr<IDXGIDevice>			_dxgi;
 	ComPtr<IDXGIAdapter>		_dxgi_Adapter;
 	ComPtr<IDXGIFactory>		_dxgi_Factory;

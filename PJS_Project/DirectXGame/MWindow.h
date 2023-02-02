@@ -9,6 +9,7 @@ public:
 	HWND _hwnd;
 
 	RECT GetClientRect();
+	RECT GetSizeScreen();
 	// ¿Ã∫•∆Æ
 	virtual void OnCreate() =0;
 	virtual void OnUpdate() =0;
