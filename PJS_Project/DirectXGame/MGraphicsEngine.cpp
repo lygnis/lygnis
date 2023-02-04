@@ -1,6 +1,6 @@
 #include "MGraphicsEngine.h"
 #include <exception>
-
+#include "DeviceContext.h"
 std::shared_ptr<MGraphicsEngine> MGraphicsEngine::_engine = nullptr;
 
 MGraphicsEngine::MGraphicsEngine()
@@ -58,6 +58,35 @@ void MGraphicsEngine::GetVertexMeshLayoutShader(void** byte_code, size_t* size)
 {
 	*byte_code = _mesh_layout_byte_code;
 	*size = _mesh_layout_size;
+}
+
+MaterialPtr MGraphicsEngine::CreateMaterial(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
+{
+	MaterialPtr mat;
+	mat = std::make_shared<Material>(vertex_shader_path, pixel_shader_path);
+	return mat;
+}
+
+MaterialPtr MGraphicsEngine::CreateMaterial(const MaterialPtr& material)
+{
+	MaterialPtr mat;
+	mat = std::make_shared<Material>(material);
+	return mat;
+}
+
+void MGraphicsEngine::SetMaterial(const MaterialPtr& material)
+{
+	// 레스터 라이스 컬링 모드 설정
+	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState((material->_cullmode == CULL_MODE_FRONT));
+
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(material->_vertex_shader, material->_constant_buffer);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(material->_pixel_shader, material->_constant_buffer);
+	// 쉐이더 설정
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(material->_vertex_shader);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(material->_pixel_shader);
+
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(material->_pixel_shader, &material->_vec_textures[0], material->_vec_textures.size());
+
 }
 
 

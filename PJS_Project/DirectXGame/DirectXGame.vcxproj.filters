@@ -65,6 +65,15 @@
     <Filter Include="GameEngine\Camera">
       <UniqueIdentifier>{8ef63bdc-348f-4ece-83f0-150fcd52e063}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\EarthShader">
+      <UniqueIdentifier>{11ae7e78-af62-46a2-b81a-8ba66bd39bae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\PointLightShader">
+      <UniqueIdentifier>{49d1864b-7acf-4ab2-b3f8-b8fbc638b7db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Material">
+      <UniqueIdentifier>{693d3f80-3dc4-4a9e-9f4d-34e07ced2219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MAppWindow.h">
@@ -148,6 +157,9 @@
     <ClInclude Include="Input.h">
       <Filter>GameEngine\InputSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>GameEngine\GraphicsEngine\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -222,19 +234,28 @@
     <ClCompile Include="Input.cpp">
       <Filter>GameEngine\InputSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>GameEngine\GraphicsEngine\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="VertexMesh.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="VertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyBoxShader.hlsl">
       <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shader\EarthShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Shader\EarthShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightVertex.hlsl">
+      <Filter>Shader\PointLightShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightShader.hlsl">
+      <Filter>Shader\PointLightShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -17,11 +17,12 @@ public:
 	~MAppWindow() {}
 public:
 	void UpdateQuadPosition();
-	void DrawMesh(const MeshPtr& mesh, MVertexShaderPtr& vs, PixelShaderPtr& ps, const ConstantBufferPtr& cb, 
-		const TexturePtr* list_tex, UINT num_texture);
+	// 버텍스 셰이더 픽셀셰이더와 같은 모든 리소스가 이제 머티리얼의 일부이다.
+	void DrawMesh(const MeshPtr& mesh, const MaterialPtr& material);
 	void UpdateCamera();
-	void UpdateModel();
+	void UpdateModel(TVector3 position, const MaterialPtr& material);
 	void UpdateSkyBox();
+	void UpdateLight();
 	void Render();
 public:
 	// MWindow을(를) 통해 상속됨
@@ -51,12 +52,19 @@ private:
 	ConstantBufferPtr	_sky_cb;
 	IndexBufferPtr		_ib;
 	TexturePtr			_earth_color_tex;
+	TexturePtr			_wall_tex;
+	TexturePtr			_bricks_tex;
 	TexturePtr			_earth_spec_tex;
 	TexturePtr			_earth_night_tex;
 	TexturePtr			_clouds_tex;
 	TexturePtr			_sky_Tex;
 	MeshPtr				_mesh;
 	MeshPtr				_sky_mesh;
+
+	MaterialPtr			_mater;
+	MaterialPtr			_bricks_mat;
+	MaterialPtr			_earth_mat;
+	MaterialPtr			_skyMat;
 	std::shared_ptr<DebugCamera> _camera;
 private:
 	DWORD _oldDelta;
@@ -69,11 +77,13 @@ private:
 	float _rot_y = 0.0f;
 	float _camPos = 0.0f;
 	float _time = 0.0f;
+	float _light_radius = 4.0f;
 
 	float _light_tor_y;
 	TMatrix _world_cam;
 	TMatrix _view_cam;
 	TMatrix _proj_cam;
+	TVector4 _light_position;
 
 	bool _fullscreen_state = false;
 public:

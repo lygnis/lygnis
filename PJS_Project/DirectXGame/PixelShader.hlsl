@@ -39,8 +39,8 @@ float4 mainps(PS_INPUT input) : SV_TARGET
 	// 구름또한 반사가 안되게 해야한다
 	float clouds = Clouds.Sample(CloudsSampler, 1.0 - input.texcoord + float2(_time/100.0,0)).r;
 	// 밤에 활성화 텍스쳐 작업
-	float4 night_color = EarthNight.Sample(EarthNightSampler, 1.0 - input.texcoord);
-
+	float4 night_color = EarthNight.Sample(EarthNightSampler, input.texcoord);
+	//night_color *= float4(1.0, 0.0, 0.0, 1.0);
 	// ambient_light
 	float ka = 1.5f;
 	// 하얀색으로 초기화

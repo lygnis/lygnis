@@ -4,6 +4,8 @@
 #include "RenderSystem.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
+#include "Material.h"
+
 class MGraphicsEngine
 {
 public:
@@ -14,6 +16,10 @@ public:
 	TextureManager* getTextureManager();
 	MeshManager* getMeshManager();
 	void GetVertexMeshLayoutShader(void** byte_code, size_t* size);
+public:
+	MaterialPtr CreateMaterial(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
+	MaterialPtr CreateMaterial(const MaterialPtr& material);
+	void SetMaterial(const MaterialPtr& material);
 public:
 	// ΩÃ±€≈Ê
 	static MGraphicsEngine* get();

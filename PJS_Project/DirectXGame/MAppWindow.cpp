@@ -18,6 +18,8 @@ struct Constant
 	TMatrix _proj;
 	TVector4 _light_dir;
 	TVector4 _cameraPos;
+	TVector4 _light_position = TVector4(0,1,0,0);
+	float _light_radius;
 	float _cTime = 0.0f;
 };
 
@@ -26,7 +28,7 @@ struct Constant
 void MAppWindow::UpdateQuadPosition()
 {
 	UpdateCamera();
-	UpdateModel();
+	UpdateLight();
 	UpdateSkyBox();
 }
 
@@ -37,15 +39,21 @@ void MAppWindow::UpdateCamera()
 	_view_cam = _camera->m_matView;
 	_proj_cam = _camera->m_matProj;
 }
+void MAppWindow::UpdateLight()
+{
+	_light_tor_y += 1.807f * Timer::get()->m_fDeltaTime;
+	float dist_from_origin = 3.0f;
+	_light_position = TVector4(cos(_light_tor_y) * dist_from_origin, 3.1f, sin(_light_tor_y) * dist_from_origin, 3.1f);
+}
 
-void MAppWindow::UpdateModel()
+void MAppWindow::UpdateModel(TVector3 position, const MaterialPtr& material)
 {
 	Constant cc;
 	cc._world.Identity;
+	cc._world.Translation(position);
 	TMatrix _light_rot_mat;
 	_light_rot_mat.Identity;
 	_light_rot_mat = TMatrix::CreateRotationY(_light_tor_y);
-	_light_tor_y += 0.307f * Timer::get()->m_fDeltaTime;
 
 	TVector3 temp_light = _light_rot_mat.Backward();
 	cc._light_dir.x = temp_light.x; cc._light_dir.y = temp_light.y; cc._light_dir.z = temp_light.z; cc._light_dir.w = 1.0f;
@@ -55,8 +63,11 @@ void MAppWindow::UpdateModel()
 	cc._cameraPos = temp;
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
+	cc._light_position = _light_position;
+	cc._light_radius = _light_radius;
+
 	cc._cTime = _time;
-	_cb->Update(MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+	material->SetData(&cc, sizeof(Constant));
 }
 
 void MAppWindow::UpdateSkyBox()
@@ -68,20 +79,15 @@ void MAppWindow::UpdateSkyBox()
 	cc._world.Translation(camWorld);
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
-	_sky_cb->Update(MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+	_skyMat->SetData(&cc, sizeof(Constant));
 }
 
 
 
-void MAppWindow::DrawMesh(const MeshPtr& mesh, MVertexShaderPtr& vs, PixelShaderPtr& ps, const ConstantBufferPtr& cb, const TexturePtr* list_tex, UINT num_texture)
+void MAppWindow::DrawMesh(const MeshPtr& mesh, const MaterialPtr& material)
 {
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(vs, cb);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(ps, cb);
-	// 쉐이더 설정
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(vs);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(ps);
-
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(ps, list_tex, num_texture);
+	// 머티리얼 설정 방법을 사용하여 머티리얼을 그래픽 파이프 라인에 바인딩 한다.
+	MGraphicsEngine::get()->SetMaterial(material);
 	// 오브젝트 렌더링
 	// 버텍스로 삼각형
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(mesh->getVertexBuffer());
@@ -103,40 +109,37 @@ void MAppWindow::OnCreate()
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 
-	_earth_color_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_color.jpg");
-	// 빛의 반사 조정 이미지
-	_earth_spec_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_spec.jpg");
-	// 구름 이미지
-	_clouds_tex =		MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/clouds.jpg");
+	_wall_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/wall.jpg");
+	_bricks_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick.png");
+	_earth_color_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_color.jpg");
+
 	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
 	// 밤 낮 구분
-	_earth_night_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_night.jpg");
+	//_earth_night_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_night.jpg");
 
-	_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere_hq.obj");
+	_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/scene.obj");
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
 
 	RECT rc = GetClientRect();
 
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
-	// 쉐이더 컴파일
-	void* shader_byte_code = nullptr;
-	size_t size_shader =0;
-	MGraphicsEngine::get()->getRenderSystem()->CompileVertexShader(L"VertexShader.hlsl", "mainvs", &shader_byte_code, &size_shader);
-	_vs = std::move(MGraphicsEngine::get()->getRenderSystem()->CreateVertexShader(shader_byte_code, size_shader));
+	_mater = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"PointLightShader.hlsl");
+	_mater->AddTexture(_wall_tex);
+	_mater->SetCullMode(CULL_MODE_BACK);
 
-	//_vb = MGraphicsEngine::get()->getRenderSystem()->CreateVertexBuffer(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	_earth_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
+	_earth_mat->AddTexture(_earth_color_tex);
+	_earth_mat->SetCullMode(CULL_MODE_BACK);
 
-	MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(L"PixelShader.hlsl", "mainps", &shader_byte_code, &size_shader);
-	_ps = std::move(MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader));
+	_bricks_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
+	_bricks_mat->AddTexture(_bricks_tex);
+	_bricks_mat->SetCullMode(CULL_MODE_BACK);
 
-	MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(L"SkyBoxShader.hlsl", "mainps", &shader_byte_code, &size_shader);
-	_sky_ps = std::move(MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader));
-
-	Constant cc;
-	// 상수버퍼 클래스 할당
-	_cb = MGraphicsEngine::get()->getRenderSystem()->CreateConstantBuffer(&cc, sizeof(Constant));
-	_sky_cb = MGraphicsEngine::get()->getRenderSystem()->CreateConstantBuffer(&cc, sizeof(Constant));
+	// 스카이 박스
+	_skyMat = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"SkyBoxShader.hlsl");
+	_skyMat->AddTexture(_sky_Tex);	
+	_skyMat->SetCullMode(CULL_MODE_FRONT);
 }
 
 void MAppWindow::OnUpdate()
@@ -149,6 +152,14 @@ void MAppWindow::OnUpdate()
 		RECT size_screen = this->GetSizeScreen();
 
 		_swapChain->SetFullScreen(_fullscreen_state, size_screen.right, size_screen.bottom);
+	}
+	if (Input::get()->GetKey(VK_F10) == KEY_HOLD)
+	{
+		_light_radius -= 1.0f * Timer::get()->m_fDeltaTime;
+	}
+	if (Input::get()->GetKey(VK_F11) == KEY_HOLD)
+	{
+		_light_radius += 1.0f * Timer::get()->m_fDeltaTime;
 	}
 	this->Render();
 }
@@ -168,20 +179,20 @@ void MAppWindow::Render()
 	UpdateQuadPosition();
 	// 렌더 .모델링
 	// 밖에서 렌더링
-	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(false);
-	TexturePtr list_tex[4];
-	list_tex[0] = _earth_color_tex;
-	list_tex[1] = _earth_spec_tex;
-	list_tex[2] = _clouds_tex;
-	list_tex[3] = _earth_night_tex;
-	DrawMesh(_mesh, _vs, _ps, _cb, list_tex,4);
+
+	UpdateModel(TVector3(0,0,0), _mater);
+	DrawMesh(_sky_mesh, _mater);
 	// 스카이 박스 그리기
 	// 안쪽에서도 렌더링
-	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(true);
 
-	list_tex[0] = _sky_Tex;
-	DrawMesh(_sky_mesh, _vs, _sky_ps, _sky_cb, list_tex,1);
+	UpdateModel(TVector3(4, 0, 0), _earth_mat);
+	DrawMesh(_sky_mesh, _earth_mat);
 
+	UpdateModel(TVector3(-4, 0, 0), _bricks_mat);
+	DrawMesh(_sky_mesh, _bricks_mat);
+
+	//UpdateModel(TVector3(0, 0, 0), _skyMat);
+	DrawMesh(_sky_mesh, _skyMat);
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
 	_time += Timer::get()->m_fDeltaTime;
