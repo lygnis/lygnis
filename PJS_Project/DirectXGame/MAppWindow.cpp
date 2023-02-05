@@ -35,7 +35,6 @@ void MAppWindow::UpdateQuadPosition()
 void MAppWindow::UpdateCamera()
 {
 	_camera->Frame();
-	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 	_view_cam = _camera->m_matView;
 	_proj_cam = _camera->m_matProj;
 }
@@ -72,6 +71,7 @@ void MAppWindow::UpdateModel(TVector3 position, const MaterialPtr& material)
 
 void MAppWindow::UpdateSkyBox()
 {
+	// 스카이 박스 업데이트
 	Constant cc;
 	cc._world.Identity;
 	cc._world = TMatrix::CreateScale(TVector3(100.f, 100.f, 100.f));
@@ -102,36 +102,34 @@ void MAppWindow::OnCreate()
 	// 타이머
 	Timer::get()->Init();
 	Input::get()->Init();
-	//MWindow::OnCreate();
 	InputSystem::get()->addListener(this);
 
+	// 카메라 생성 및 초기화
 	_camera = std::make_shared<DebugCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 
+	// 텍스쳐 로딩
 	_wall_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/wall.jpg");
 	_bricks_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick.png");
 	_earth_color_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_color.jpg");
-
 	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
-	// 밤 낮 구분
-	//_earth_night_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_night.jpg");
 
+	// 오브젝트 로딩
 	_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/scene.obj");
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
 
+	// 스왑체인 생성
 	RECT rc = GetClientRect();
-
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
+	// 머티리얼 생성
 	_mater = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"PointLightShader.hlsl");
 	_mater->AddTexture(_wall_tex);
 	_mater->SetCullMode(CULL_MODE_BACK);
-
 	_earth_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
 	_earth_mat->AddTexture(_earth_color_tex);
 	_earth_mat->SetCullMode(CULL_MODE_BACK);
-
 	_bricks_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
 	_bricks_mat->AddTexture(_bricks_tex);
 	_bricks_mat->SetCullMode(CULL_MODE_BACK);
@@ -174,12 +172,11 @@ void MAppWindow::Render()
 	// 뷰포트 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-
-	// 상수버퍼 수정 후 업데이트
+	// 카메라 라이트 스카이 박스 업데이트
 	UpdateQuadPosition();
+
 	// 렌더 .모델링
 	// 밖에서 렌더링
-
 	UpdateModel(TVector3(0,0,0), _mater);
 	DrawMesh(_sky_mesh, _mater);
 	// 스카이 박스 그리기
@@ -191,10 +188,11 @@ void MAppWindow::Render()
 	UpdateModel(TVector3(-4, 0, 0), _bricks_mat);
 	DrawMesh(_sky_mesh, _bricks_mat);
 
-	//UpdateModel(TVector3(0, 0, 0), _skyMat);
 	DrawMesh(_sky_mesh, _skyMat);
+
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
+	// 상수버퍼 시간 갱신
 	_time += Timer::get()->m_fDeltaTime;
 }
 
@@ -216,10 +214,11 @@ void MAppWindow::OnKillFocus()
 void MAppWindow::OnSize()
 {
 	RECT rc = this->GetClientRect();
-	//MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->GetDeviceContext()->OMSetRenderTargets(0, nullptr, NULL);
 	_swapChain->Resize(rc.right, rc.bottom);
+	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
 	Render();
 }
+
 
 void MAppWindow::onKeyDown(int key)
 {
@@ -233,48 +232,16 @@ void MAppWindow::onKeyUp(int key)
 
 void MAppWindow::OnMouseMove(const Point& delta_mouse_pos)
 {
-	_rot_x += delta_mouse_pos._y * 5 * Timer::get()->m_fDeltaTime;
-	_rot_y += delta_mouse_pos._x * 5 * Timer::get()->m_fDeltaTime;
 }
-
-
 void MAppWindow::OnLeftMouseDown(const Point& delta_mouse_pos)
 {
 }
-
 void MAppWindow::OnLeftMouseUp(const Point& delta_mouse_pos)
 {
 }
-
 void MAppWindow::OnRightMouseDown(const Point& delta_mouse_pos)
 {
 }
-
 void MAppWindow::OnRightMouseUp(const Point& delta_mouse_pos)
 {
-}
-
-
-
-TMatrix MAppWindow::RotationY(float fRad)
-{
-	float _fCostheta = cos(fRad);
-	float _fSintheta = sin(fRad);
-	TMatrix _mat;
-	_mat._11 = cos(fRad); _mat._13 = -sin(fRad);
-	_mat._31 = sin(fRad); _mat._33 = cos(fRad);
-	return _mat;
-
-	//float _fCostheta = cos(fRad);
-	//float _fSintheta = sin(fRad);
-	//TMatrix _mat;
-	//_mat._22 = _fCostheta; _mat._23 = _fSintheta;
-	//_mat._32 = -_fSintheta; _mat._33 = _fCostheta;
-	//return _mat;
-	/*float _fCostheta = cos(fRad);
-	float _fSintheta = sin(fRad);
-	TMatrix _mat;
-	_mat._11 = _fCostheta; _mat._12 = -_fSintheta;
-	_mat._21 = _fSintheta; _mat._22 = _fCostheta;
-	return _mat;*/
 }

@@ -67,14 +67,6 @@ private:
 	MaterialPtr			_skyMat;
 	std::shared_ptr<DebugCamera> _camera;
 private:
-	DWORD _oldDelta;
-	DWORD _newDelta;
-	float _deltaTime;
-
-	float _deltaPos;
-
-	float _rot_x = 0.0f;
-	float _rot_y = 0.0f;
 	float _camPos = 0.0f;
 	float _time = 0.0f;
 	float _light_radius = 4.0f;
@@ -86,7 +78,5 @@ private:
 	TVector4 _light_position;
 
 	bool _fullscreen_state = false;
-public:
-	TMatrix RotationY(float fRad);
 };
 

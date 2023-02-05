@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MWindow" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIABAIAAAAECAAQIAAAAAAQAACAAAACAAAIAAAMAAEA=</HashCode>
+      <FileName>MWindow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MGraphicsEngine" Collapsed="true">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAZAAAACAAAEACAAAAAQAAABAAAAECMAAAABBAAgCA=</HashCode>
+      <FileName>MGraphicsEngine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RenderSystem" Collapsed="true">
+    <Position X="13.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAGCAIAAARgQIAAAAAADAAAIAQRCAQgAgAs=</HashCode>
+      <FileName>RenderSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PixelShader" Collapsed="true">
+    <Position X="10.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAABAAAAgAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>PixelShader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MSwapChain" Collapsed="true">
+    <Position X="13.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACQBAAAAAAAACAAAAQAABAAAAEAAGAAAA=</HashCode>
+      <FileName>MSwapChain.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MVertexBuffer" Collapsed="true">
+    <Position X="15.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAABAAAAAABAAAAIAAAIAACAAAAAECAAAAAA=</HashCode>
+      <FileName>MVertexBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MVertexShader" Collapsed="true">
+    <Position X="17.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAgAAAAAAAAAAAAEAAAAAIA=</HashCode>
+      <FileName>MVertexShader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IndexBuffer" Collapsed="true">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgABBAAAAAAAAAEAIBAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>IndexBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeviceContext" Collapsed="true">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCABAQAAABEQBAIAACACCAAAEgAEAAAAABA=</HashCode>
+      <FileName>DeviceContext.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConstantBuffer" Collapsed="true">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAAAIAAAAAAAAIAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Resource" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Resource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAEAAAAAAAAAAAACEAABAIAAA=</HashCode>
+      <FileName>ResourceManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Texture" Collapsed="true">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAgEAAAAAAAAAAAAAAQAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Texture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextureManager" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAABAAAAAAAACAAABAAAAI=</HashCode>
+      <FileName>TextureManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh" Collapsed="true">
+    <Position X="5.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAEAAAAQAAAAAAAAAAAAAAAAAQAAAAAEAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshManager" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAgAAAAAAAAAAAAAAAAAAAAACAAAAAAAEA=</HashCode>
+      <FileName>MeshManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Material" Collapsed="true">
+    <Position X="10.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAACARAAQEAQAAAAAAAAAAAAAAAAACAkQCAAAAAAA=</HashCode>
+      <FileName>Material.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Input" Collapsed="true">
+    <Position X="15.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQQQAAAAACAAAABACABCAAAE=</HashCode>
+      <FileName>Input.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputListener" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAACAAAAAgIAAAgAAABCAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>InputListener.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputSystem" Collapsed="true">
+    <Position X="17.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIACAAEAABIEAAAAIAQAAAAAAQAECAAAAEABAAAAA=</HashCode>
+      <FileName>InputSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DebugCamera" Collapsed="true">
+    <Position X="5.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>DebugCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MCamera" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IUECAAAAAgAAAAIABQQgEwACAAAACAAAAiiAAAAACBE=</HashCode>
+      <FileName>MCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MAppWindow" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CgABgAEMEEGgQoCAggBCAgAZlDIBACQDiDIQQCmRBEg=</HashCode>
+      <FileName>MAppWindow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Point" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAQAgAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Point.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VertexMesh" Collapsed="true">
+    <Position X="12" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAQAAAAAAAAAAABAAAgAAACAA=</HashCode>
+      <FileName>VertexMesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Timer" Collapsed="true">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAARABAQABQAAAAAABAAAAAFACABAAAAE=</HashCode>
+      <FileName>Timer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TBASIS_EX::TRay" Collapsed="true">
+    <Position X="12" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAIAAAAAAAIQAAAAAAAAAAAAAgAAAAAIA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TBASIS_EX::TViewport" Collapsed="true">
+    <Position X="10.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgBAAQAAAQAQgBACQggBAAgAAAAAABgAAQAgAA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="vertex" Collapsed="true">
+    <Position X="10.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>MAppWindow.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Constant" Collapsed="true">
+    <Position X="10.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAABAAAAAAAAAKAAACAAABAAAEA=</HashCode>
+      <FileName>MAppWindow.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TVector2" Collapsed="true">
+    <Position X="13.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAIAABCBAABAAAEAAgQwRBCQAAAgRAgECgAAAAAMA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TVector3" Collapsed="true">
+    <Position X="15.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAIgKBCBAABAAAEAAgQwRBCQEAAARQiECgAAAAAMI=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TVector4" Collapsed="true">
+    <Position X="17.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAIgIBCBAABAAAEAABQwRBCQAAAABAgECgAAAAAMA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TMatrix" Collapsed="true">
+    <Position X="15.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEEagAIAAAgACEAEgAQRTIBAAADIAiEDgAAgAAAI=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TQuaternion" Collapsed="true">
+    <Position X="10.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABYAAAAAAAAAEAIAAYBAKAAAAAAAgEAgAAAQAAA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TPlane" Collapsed="true">
+    <Position X="17.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAMACAAQQACAAIAEAAgAAgBAAAAAA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TRectangle" Collapsed="true">
+    <Position X="12" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAEAAAAAAAAQAQAIEAQAAAAABIAAAAABgAQAYgIA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TBASIS_EX::TColor" Collapsed="true">
+    <Position X="13.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAIAAAAAEAAQAAAARAAAAAEAAEBgQQkKAEAAQA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="std::less&lt;TBASIS_EX::TRectangle&gt;" Collapsed="true">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="SwapChainPtr" Collapsed="true">
+    <Position X="17.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DeviceContextPtr" Collapsed="true">
+    <Position X="12" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MVertexBufferPtr" Collapsed="true">
+    <Position X="10.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="IndexBufferPtr" Collapsed="true">
+    <Position X="13.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ConstantBufferPtr" Collapsed="true">
+    <Position X="10.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MVertexShaderPtr" Collapsed="true">
+    <Position X="12" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PixelShaderPtr" Collapsed="true">
+    <Position X="13.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ResourcePtr" Collapsed="true">
+    <Position X="15.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TexturePtr" Collapsed="true">
+    <Position X="10.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MeshPtr" Collapsed="true">
+    <Position X="17.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MaterialPtr" Collapsed="true">
+    <Position X="15.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MStd.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="CULL_MODE" Collapsed="true">
+    <Position X="10.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Material.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="KeyType" Collapsed="true">
+    <Position X="12" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAgAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

@@ -22,10 +22,14 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 	bool hr = tinyobj::LoadObj(&attribs, &shapes, &materials, &warn, &err, str.c_str());
 	if (!err.empty())
 	{
+		assert(false);
 		throw std::exception("Mesh not Created Success");
 	}
-	if(shapes.size() >1)
+	if (shapes.size() > 1)
+	{
+		assert(false);
 		throw std::exception("Mesh not Created Success");
+	}
 
 	std::vector<VertexMesh> list_vertices;
 	std::vector<unsigned int> list_indices;
