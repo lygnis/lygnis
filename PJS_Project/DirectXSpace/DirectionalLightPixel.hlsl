@@ -30,7 +30,7 @@ float4 mainps(PS_INPUT input) : SV_TARGET
 	float4 color = Color.Sample(ColorSampler, float2(input.texcoord.x , 1.0 - input.texcoord.y));
 	
 	// ambient_light
-	float ka = 1.5f;
+	float ka = 8.5f;
 	// 하얀색으로 초기화
 	float3 ia = float3(0.09f, 0.082f, 0.082f);
 	// 지구 색상에 ia 곱한다.지구의 픽셀을 얻는다 구름의 픽셀을 얻는다.

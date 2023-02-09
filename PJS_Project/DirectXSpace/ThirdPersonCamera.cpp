@@ -12,7 +12,9 @@ bool ThirdPersonCamera::Frame()
         else if (m_fPitch <= -1.57f)
             m_fPitch = -1.57f;
     }
-    if (Input::get()->GetKey('W') == KEY_HOLD)
+    TVector3 cam_rot(m_fPitch, m_fYaw, m_fRoll);
+    //current_camera_rot = TVector3::Lerp(current_camera_rot, cam_rot, 2.f * Timer::get()->m_fDeltaTime);
+   /* if (Input::get()->GetKey('W') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vLook * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos += _v;
@@ -41,20 +43,18 @@ bool ThirdPersonCamera::Frame()
     {
         TBASIS_EX::TVector3 _v = m_vUp * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos -= _v;
-    }
+    }*/
 
     _matWorld.Identity;
-    //m_vCameraPos = target_pos_;
-    //TVector3 _pos = _matWorld.Backward() * (-target_distance_);
-    TVector3 _vPos = m_vCameraPos;
-
+   
     ////////////////////////////////////////////////////////
 
     TBASIS_EX::TMatrix matView;
     TBASIS_EX::TMatrix matProj;
     TBASIS_EX::TQuaternion qRotation;
+    //TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&qRotation, current_camera_rot.y, current_camera_rot.x, current_camera_rot.z);
     TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&qRotation, m_fYaw, m_fPitch, m_fRoll);
-    TBASIS_EX::D3DXMatrixAffineTransformation(&_matWorld, 1.0f, NULL, &qRotation, &_vPos);
+    TBASIS_EX::D3DXMatrixAffineTransformation(&_matWorld, 1.0f, NULL, &qRotation, &m_vCameraPos);
     TBASIS_EX::D3DXMatrixInverse(&matView, NULL, &_matWorld);
 
     m_matView = matView;
@@ -79,6 +79,7 @@ bool ThirdPersonCamera::Update()
     m_vRight.Normalize();
     m_vUp.Normalize();
     m_vLook.Normalize();
+   
 
     return true;
 }

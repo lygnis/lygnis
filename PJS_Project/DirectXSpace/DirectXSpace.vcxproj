@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BumpMapping.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="TMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BumpMapping.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="DeviceContext.h" />

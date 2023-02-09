@@ -11,7 +11,7 @@
 class MVertexBuffer;
 class MSwapChain;
 
-class SpaceShooterGame :public MWindow, public InputListener
+class SpaceShooterGame :public MWindow
 {
 public:
 	SpaceShooterGame() {}
@@ -27,6 +27,8 @@ public:
 	void UpdateLight();
 	void UpdateSpaceShip();
 	void Render();
+	void MoveSpaceShip();
+	float lerp(float start, float end, float delta);
 public:
 	// MWindow을(를) 통해 상속됨
 	virtual void OnCreate() override;
@@ -35,16 +37,6 @@ public:
 	virtual void OnFocus() override;
 	virtual void OnKillFocus() override;
 	virtual void OnSize() override;
-	// InputListener을(를) 통해 상속됨
-	virtual void onKeyDown(int key) override;
-	virtual void onKeyUp(int key) override;
-	virtual void OnMouseMove(const Point& delta_mouse_pos)override;
-
-	virtual void OnLeftMouseDown(const Point& delta_mouse_pos) override;
-	virtual void OnLeftMouseUp(const Point& delta_mouse_pos) override;
-
-	virtual void OnRightMouseDown(const Point& delta_mouse_pos)override;
-	virtual void OnRightMouseUp(const Point& delta_mouse_pos) override;
 private:
 	SwapChainPtr		_swapChain;
 
@@ -77,11 +69,22 @@ private:
 	// 포지션 라이트 위치
 	TVector4 _light_position;
 	TMatrix	_light_rot_matrix;
+	// 소행성
+	TVector3 asteroids_pos_[200];
+	TVector3 asteroids_rot_[200];
+	TVector3 asteroids_scale_[200];
 
 	TMatrix space_world;
 	TVector3 spaceship_rot_;
 	TVector3 spaceship_pos_;
 	TVector3 camera_rot_;
+	// 현재 우주손 위치
+	TVector3 current_spaceship_pos_;
+	TVector3 current_spaceship_rot_;
+	float spaceship_speed_ = 80.0f;
+	float cam_distance_ = 14.f;
+	float current_cam_distance_;
+	float forward_ = 0.0f;
 	std::vector<MaterialPtr> _list_materials;
 	bool _fullscreen_state = false;
 };

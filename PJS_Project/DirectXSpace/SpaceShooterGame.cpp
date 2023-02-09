@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "InputSystem.h"
 #include "Mesh.h"
+#include <time.h>
 struct vertex
 {
 	TVector3 position;
@@ -27,10 +28,10 @@ struct Constant
 
 void SpaceShooterGame::UpdateQuadPosition()
 {
+	UpdateSpaceShip();
 	UpdateThirdPersonCamera();
 	UpdateLight();
 	UpdateSkyBox();
-	UpdateSpaceShip();
 }
 
 void SpaceShooterGame::UpdateCamera()
@@ -41,8 +42,25 @@ void SpaceShooterGame::UpdateCamera()
 }
 void SpaceShooterGame::UpdateThirdPersonCamera()
 {
-	_camera->target_pos_ = spaceship_pos_;
 	_camera->Frame();
+	//_camera->m_vCameraPos = current_spaceship_pos_;
+	if (forward_)
+	{
+		if (forward_ > 0.f)
+		{
+			cam_distance_ = 16.0f;
+		}
+		else
+		{
+			cam_distance_ = 9.0f;
+		}
+	}
+	else
+	{
+		cam_distance_ = 14.0f;
+	}
+	current_cam_distance_ = lerp(current_cam_distance_, cam_distance_, 2.f * Timer::get()->m_fDeltaTime);
+
 	_view_cam = _camera->m_matView;
 	_proj_cam = _camera->m_matProj;
 }
@@ -62,11 +80,27 @@ void SpaceShooterGame::UpdateLight()
 
 void SpaceShooterGame::UpdateSpaceShip()
 {
+	if (Input::get()->GetKey(VK_RBUTTON) == KEY_HOLD)
+	{
+		spaceship_rot_.y += Input::get()->m_pOffset.x * 0.002;
+		spaceship_rot_.x += Input::get()->m_pOffset.y * 0.002;
+		// X 축 회전을 통해 상하가 반전되지 않게 방지한다.
+		if (spaceship_rot_.x >= 1.57f)
+			spaceship_rot_.x = 1.57f;
+		else if (spaceship_rot_.x <= -1.57f)
+			spaceship_rot_.x = -1.57f;
+	}
+	MoveSpaceShip();
 	space_world.Identity;
-	TVector3 _vPos = _camera->m_vCameraPos + space_world.Backward() * (_camera->target_distance_) + space_world.Up()* -5.0f;
+	//_camera->m_fYaw = spaceship_rot_.y; _camera->m_fPitch = spaceship_rot_.x; _camera->m_fRoll = spaceship_rot_.z;
+	current_spaceship_pos_ = TVector3::Lerp(current_spaceship_pos_, spaceship_pos_, 7.f *Timer::get()->m_fDeltaTime);
+	current_spaceship_rot_ = TVector3::Lerp(current_spaceship_rot_, spaceship_rot_, 3.f * Timer::get()->m_fDeltaTime);
+	space_world.Translation(current_spaceship_pos_);
+	TVector3 _vPos = spaceship_pos_;
 	::TQuaternion qRotation;
-	::D3DXQuaternionRotationYawPitchRoll(&qRotation, _camera->m_fYaw, _camera->m_fPitch, _camera->m_fRoll);
+	::D3DXQuaternionRotationYawPitchRoll(&qRotation, current_spaceship_rot_.y, current_spaceship_rot_.x, current_spaceship_rot_.z);
 	::D3DXMatrixAffineTransformation(&space_world, 1.0f, NULL, &qRotation, &_vPos);
+	_camera->m_vCameraPos = current_spaceship_pos_ +space_world.Backward() * -cam_distance_ + space_world.Up() * 5.0f;
 }
 
 void SpaceShooterGame::UpdateSkyBox()
@@ -74,7 +108,7 @@ void SpaceShooterGame::UpdateSkyBox()
 	// 스카이 박스 업데이트
 	Constant cc;
 	cc._world.Identity;
-	cc._world = TMatrix::CreateScale(TVector3(1000.f, 1000.f, 1000.f));
+	cc._world = TMatrix::CreateScale(TVector3(4000.f, 4000.f, 4000.f));
 	TVector3 camWorld = _camera->m_vCameraPos;
 	cc._world.Translation(camWorld);
 	cc._view = _view_cam;
@@ -87,24 +121,6 @@ void SpaceShooterGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>
 	Constant cc;
 	TMatrix mtemp;
 	cc._world.Identity;
-
-	//mtemp.Identity;
-	//mtemp = TMatrix::CreateScale(scale);
-	//cc._world *= mtemp;
-
-	//mtemp.Identity;
-	//mtemp = TMatrix::CreateRotationX(rotation.x);
-	//cc._world *= mtemp;
-	//mtemp.Identity;
-	//mtemp = TMatrix::CreateRotationY(rotation.y);
-	//cc._world *= mtemp;
-	//mtemp.Identity;
-	//mtemp = TMatrix::CreateRotationZ(rotation.z);
-	//cc._world *= mtemp;
-
-	//mtemp.Identity;
-	//mtemp.Translation(position);
-	//cc._world *= mtemp;
 	cc._world = world;
 	
 	TVector4 temp;
@@ -114,7 +130,7 @@ void SpaceShooterGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
 	
-	cc, _light_position = _light_position;
+	cc._light_position = _light_position;
 	cc._light_radius = 0.0f;
 	TVector3 temp_light = _light_rot_matrix.Backward();
 	cc._light_dir.x = temp_light.x; cc._light_dir.y = temp_light.y; cc._light_dir.z = temp_light.z; cc._light_dir.w = 1.0f;
@@ -151,16 +167,24 @@ void SpaceShooterGame::OnCreate()
 	// 타이머
 	Timer::get()->Init();
 	Input::get()->Init();
-	InputSystem::get()->addListener(this);
 
 	// 카메라 생성 및 초기화
 	_camera = std::make_shared<ThirdPersonCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
-	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
+	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 	// 스왑체인 생성
 	RECT rc = GetClientRect();
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right - rc.left, rc.bottom - rc.top);
-	
+	// 난수 생성
+	srand((UINT)time(NULL));
+	for (UINT i = 0; i < 200; i++)
+	{
+		asteroids_pos_[i] = TVector3(rand()%4000 + (-2000), rand() % 4000 + (-2000), rand() % 4000 + (-2000));
+		asteroids_rot_[i] = TVector3((rand() % 628)/100.f, (rand() % 628) / 100.f, (rand() % 628) / 100.f);
+		float scale = rand() % 10 + 1;
+		asteroids_scale_[i] = TVector3(scale, scale, scale);
+	}
+
 	// 텍스쳐 로딩
 	_sky_Tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
 	spaceship_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/spaceship.jpg");
@@ -227,14 +251,31 @@ void SpaceShooterGame::Render()
 	UpdateModel(space_world, _list_materials);
 	DrawMesh(spaceship_mesh_, _list_materials);
 
-	// 소행성 렌더
 	_list_materials.clear();
 	_list_materials.push_back(asteroid_mat_);
-	TMatrix temp;
-	temp.Identity;
-	temp.Translation(TVector3(15, 15, 0));
-	UpdateModel(temp, _list_materials);
-	DrawMesh(asteroid_mesh_, _list_materials);
+	
+	// 소행성 렌더
+	for (UINT i = 0; i < 200; i++)
+	{
+		TMatrix temp , worldpos;
+		temp.Identity;
+		worldpos.Identity;
+		temp = TMatrix::CreateScale(asteroids_scale_[i]);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationX(asteroids_rot_[i].x);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationY(asteroids_rot_[i].y);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationZ(asteroids_rot_[i].z);
+		worldpos = worldpos*temp;
+		temp.Translation(asteroids_pos_[i]);
+		worldpos = worldpos*temp;
+		UpdateModel(worldpos, _list_materials);
+		DrawMesh(asteroid_mesh_, _list_materials);
+	}
 
 	_list_materials.clear();
 	_list_materials.push_back(_skyMat);
@@ -246,6 +287,35 @@ void SpaceShooterGame::Render()
 	_time += Timer::get()->m_fDeltaTime;
 }
 
+void SpaceShooterGame::MoveSpaceShip()
+{
+	if (Input::get()->GetKey('W') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Backward() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ += _v;
+	}
+	if (Input::get()->GetKey('S') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Backward() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ -= _v;
+	}
+	if (Input::get()->GetKey('D') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Right() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ += _v;
+	}
+	if (Input::get()->GetKey('A') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Right() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ -= _v;
+	}
+}
+
+float SpaceShooterGame::lerp(float start, float end, float delta)
+{
+	return start * (1.f - delta) + end * (delta);
+}
+
 void SpaceShooterGame::OnDestroy()
 {
 	MWindow::OnDestroy();
@@ -254,44 +324,20 @@ void SpaceShooterGame::OnDestroy()
 
 void SpaceShooterGame::OnFocus()
 {
-	InputSystem::get()->addListener(this);
+	//InputSystem::get()->addListener(this);
 }
 
 void SpaceShooterGame::OnKillFocus()
 {
-	InputSystem::get()->removeListener(this);
+	//InputSystem::get()->removeListener(this);
 }
 void SpaceShooterGame::OnSize()
 {
 	RECT rc = this->GetClientRect();
 	_swapChain->Resize(rc.right, rc.bottom);
-	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
+	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
+	UpdateQuadPosition();
 	Render();
 }
 
 
-void SpaceShooterGame::onKeyDown(int key)
-{
-
-}
-
-void SpaceShooterGame::onKeyUp(int key)
-{
-
-}
-
-void SpaceShooterGame::OnMouseMove(const Point& delta_mouse_pos)
-{
-}
-void SpaceShooterGame::OnLeftMouseDown(const Point& delta_mouse_pos)
-{
-}
-void SpaceShooterGame::OnLeftMouseUp(const Point& delta_mouse_pos)
-{
-}
-void SpaceShooterGame::OnRightMouseDown(const Point& delta_mouse_pos)
-{
-}
-void SpaceShooterGame::OnRightMouseUp(const Point& delta_mouse_pos)
-{
-}
