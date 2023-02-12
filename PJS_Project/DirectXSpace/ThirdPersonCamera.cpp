@@ -4,48 +4,48 @@ bool ThirdPersonCamera::Frame()
 {
     if (Input::get()->GetKey(VK_RBUTTON) == KEY_HOLD)
     {
-        m_fYaw += Input::get()->m_pOffset.x * 0.002;
-        m_fPitch += Input::get()->m_pOffset.y * 0.002;
+        yaw_ += Input::get()->m_pOffset.x * 0.002;
+        pitch_ += Input::get()->m_pOffset.y * 0.002;
         // X 축 회전을 통해 상하가 반전되지 않게 방지한다.
-        if (m_fPitch >= 1.57f)
-            m_fPitch = 1.57f;
-        else if (m_fPitch <= -1.57f)
-            m_fPitch = -1.57f;
+        if (pitch_ >= 1.57f)
+            pitch_ = 1.57f;
+        else if (pitch_ <= -1.57f)
+            pitch_ = -1.57f;
     }
-    TVector3 cam_rot(m_fPitch, m_fYaw, m_fRoll);
+    TVector3 cam_rot(pitch_, yaw_, roll_);
     //current_camera_rot = TVector3::Lerp(current_camera_rot, cam_rot, 2.f * Timer::get()->m_fDeltaTime);
    /* if (Input::get()->GetKey('W') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vLook * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos += _v;
+        TBASIS_EX::TVector3 _v = v_look_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ += _v;
     }
     if (Input::get()->GetKey('S') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vLook * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos -= _v;
+        TBASIS_EX::TVector3 _v = v_look_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ -= _v;
     }
     if (Input::get()->GetKey('D') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vRight * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos += _v;
+        TBASIS_EX::TVector3 _v = v_right_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ += _v;
     }
     if (Input::get()->GetKey('A') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vRight * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos -= _v;
+        TBASIS_EX::TVector3 _v = v_right_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ -= _v;
     }
     if (Input::get()->GetKey('Q') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vUp * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos += _v;
+        TBASIS_EX::TVector3 _v = v_up_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ += _v;
     }
     if (Input::get()->GetKey('E') == KEY_HOLD)
     {
-        TBASIS_EX::TVector3 _v = m_vUp * 10 * Timer::get()->m_fDeltaTime;
-        m_vCameraPos -= _v;
+        TBASIS_EX::TVector3 _v = v_up_ * 10 * Timer::get()->m_fDeltaTime;
+        camera_pos_ -= _v;
     }*/
 
-    _matWorld.Identity;
+    mat_world_.Identity;
    
     ////////////////////////////////////////////////////////
 
@@ -53,32 +53,32 @@ bool ThirdPersonCamera::Frame()
     TBASIS_EX::TMatrix matProj;
     TBASIS_EX::TQuaternion qRotation;
     //TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&qRotation, current_camera_rot.y, current_camera_rot.x, current_camera_rot.z);
-    TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&qRotation, m_fYaw, m_fPitch, m_fRoll);
-    TBASIS_EX::D3DXMatrixAffineTransformation(&_matWorld, 1.0f, NULL, &qRotation, &m_vCameraPos);
-    TBASIS_EX::D3DXMatrixInverse(&matView, NULL, &_matWorld);
+    TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&qRotation, yaw_, pitch_, roll_);
+    TBASIS_EX::D3DXMatrixAffineTransformation(&mat_world_, 1.0f, NULL, &qRotation, &camera_pos_);
+    TBASIS_EX::D3DXMatrixInverse(&matView, NULL, &mat_world_);
 
-    m_matView = matView;
+    mat_view_ = matView;
     Update();
     return true;
 }
 
 bool ThirdPersonCamera::Update()
 {
-    m_vRight.x = m_matView._11;
-    m_vRight.y = m_matView._21;
-    m_vRight.z = m_matView._31;
+    v_right_.x = mat_view_._11;
+    v_right_.y = mat_view_._21;
+    v_right_.z = mat_view_._31;
 
-    m_vUp.x = m_matView._12;
-    m_vUp.y = m_matView._22;
-    m_vUp.z = m_matView._32;
+    v_up_.x = mat_view_._12;
+    v_up_.y = mat_view_._22;
+    v_up_.z = mat_view_._32;
 
-    m_vLook.x = m_matView._13;
-    m_vLook.y = m_matView._23;
-    m_vLook.z = m_matView._33;
+    v_look_.x = mat_view_._13;
+    v_look_.y = mat_view_._23;
+    v_look_.z = mat_view_._33;
 
-    m_vRight.Normalize();
-    m_vUp.Normalize();
-    m_vLook.Normalize();
+    v_right_.Normalize();
+    v_up_.Normalize();
+    v_look_.Normalize();
    
 
     return true;

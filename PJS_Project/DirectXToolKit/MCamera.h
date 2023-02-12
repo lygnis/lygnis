@@ -5,29 +5,31 @@
 class MCamera 
 {
 public:
-	TVector3		camera_pos_;
-	TVector3		target_ = { 0,0,0 };
-	//Vector3D		v_up_ = { 0,1,0 };
-	float			near_;
-	float			far_;
-	float			fov_Y_;
-	float			aspectratio_;
+	TVector3		m_vCameraPos;
+	TVector3		m_vTarget = { 0,0,0 };
+	//Vector3D		m_vUp = { 0,1,0 };
+	float			m_fNear;
+	float			m_fFar;
+	float			m_fFovY;
+	float			m_fAspectRatio;
 public:
-	TVector3		v_look_;
-	TVector3		v_up_;
-	TVector3		v_right_;
-	TMatrix			mat_view_;
-	TMatrix			mat_proj_;
-	TMatrix			mat_world_;
-	float			yaw_;
-	float			roll_;
-	float			pitch_;
-	float			distance_;
-	float			speed_ = 100.0f;
+	TVector3		m_vLook;
+	TVector3		m_vUp;
+	TVector3		m_vRight;
+	TMatrix			m_matView;
+	TMatrix			m_matProj;
+	TMatrix			_matWorld;
+	TMatrix			mat_ortho_;
+	float			m_fYaw;
+	float			m_fRoll;
+	float			m_fPitch;
+	float			m_fDistance;
+	float			m_fSpeed = 100.0f;
 public:
 	TMatrix GetCameraTraslation();
 	void CreateViewMatrix(TVector3 _vEye, TVector3 _vAt, TVector3 _vUp);
 	void CreateProjMatrix(float _fNear, float _fFar, float fFovY, float fAspecRatio);
+	void CreateOrthoLH(float view_right, float view_bottom, float near_z, float far_z);
 	virtual bool Frame();
 	TMatrix ViewLookAt(TVector3& _vPosition, TVector3& _vTarget, TVector3& _vUp);
 	TMatrix PerspectiveFovLH(TMatrix&_mat, float _fNearplane, float _fFarPlane, float _fOvy, float _Aspect);

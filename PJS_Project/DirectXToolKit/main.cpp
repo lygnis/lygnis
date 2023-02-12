@@ -1,10 +1,11 @@
-#include "SpaceShooterGame.h"
+#include "MAppWindow.h"
 #include "InputSystem.h"
 int main()
 {
 	try
 	{
 		MGraphicsEngine::Create();
+		InputSystem::Create();
 	}
 	catch (...)
 	{
@@ -14,7 +15,7 @@ int main()
 	{
 		try
 		{
-			SpaceShooterGame app;
+			MAppWindow app;
 			while (app.IsRun())
 			{
 			}

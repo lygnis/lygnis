@@ -37,13 +37,13 @@ void SpaceShooterGame::UpdateQuadPosition()
 void SpaceShooterGame::UpdateCamera()
 {
 	_camera->Frame();
-	_view_cam = _camera->m_matView;
-	_proj_cam = _camera->m_matProj;
+	_view_cam = _camera->mat_view_;
+	_proj_cam = _camera->mat_proj_;
 }
 void SpaceShooterGame::UpdateThirdPersonCamera()
 {
 	_camera->Frame();
-	//_camera->m_vCameraPos = current_spaceship_pos_;
+	//_camera->camera_pos_ = current_spaceship_pos_;
 	if (forward_)
 	{
 		if (forward_ > 0.f)
@@ -61,8 +61,8 @@ void SpaceShooterGame::UpdateThirdPersonCamera()
 	}
 	current_cam_distance_ = lerp(current_cam_distance_, cam_distance_, 2.f * Timer::get()->m_fDeltaTime);
 
-	_view_cam = _camera->m_matView;
-	_proj_cam = _camera->m_matProj;
+	_view_cam = _camera->mat_view_;
+	_proj_cam = _camera->mat_proj_;
 }
 void SpaceShooterGame::UpdateLight()
 {
@@ -92,7 +92,7 @@ void SpaceShooterGame::UpdateSpaceShip()
 	}
 	MoveSpaceShip();
 	space_world.Identity;
-	//_camera->m_fYaw = spaceship_rot_.y; _camera->m_fPitch = spaceship_rot_.x; _camera->m_fRoll = spaceship_rot_.z;
+	//_camera->yaw_ = spaceship_rot_.y; _camera->pitch_ = spaceship_rot_.x; _camera->roll_ = spaceship_rot_.z;
 	current_spaceship_pos_ = TVector3::Lerp(current_spaceship_pos_, spaceship_pos_, 7.f *Timer::get()->m_fDeltaTime);
 	current_spaceship_rot_ = TVector3::Lerp(current_spaceship_rot_, spaceship_rot_, 3.f * Timer::get()->m_fDeltaTime);
 	space_world.Translation(current_spaceship_pos_);
@@ -100,7 +100,7 @@ void SpaceShooterGame::UpdateSpaceShip()
 	::TQuaternion qRotation;
 	::D3DXQuaternionRotationYawPitchRoll(&qRotation, current_spaceship_rot_.y, current_spaceship_rot_.x, current_spaceship_rot_.z);
 	::D3DXMatrixAffineTransformation(&space_world, 1.0f, NULL, &qRotation, &_vPos);
-	_camera->m_vCameraPos = current_spaceship_pos_ +space_world.Backward() * -cam_distance_ + space_world.Up() * 5.0f;
+	_camera->camera_pos_ = current_spaceship_pos_ +space_world.Backward() * -cam_distance_ + space_world.Up() * 5.0f;
 }
 
 void SpaceShooterGame::UpdateSkyBox()
@@ -109,7 +109,7 @@ void SpaceShooterGame::UpdateSkyBox()
 	Constant cc;
 	cc._world.Identity;
 	cc._world = TMatrix::CreateScale(TVector3(4000.f, 4000.f, 4000.f));
-	TVector3 camWorld = _camera->m_vCameraPos;
+	TVector3 camWorld = _camera->camera_pos_;
 	cc._world.Translation(camWorld);
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
@@ -124,7 +124,7 @@ void SpaceShooterGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>
 	cc._world = world;
 	
 	TVector4 temp;
-	temp.x = _camera->m_vCameraPos.x; temp.y = _camera->m_vCameraPos.y; temp.z = _camera->m_vCameraPos.z; temp.w = 1.0f;
+	temp.x = _camera->camera_pos_.x; temp.y = _camera->camera_pos_.y; temp.z = _camera->camera_pos_.z; temp.w = 1.0f;
 
 	cc._cameraPos = temp;
 	cc._view = _view_cam;

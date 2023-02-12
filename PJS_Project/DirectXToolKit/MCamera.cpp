@@ -1,27 +1,34 @@
 #include "MCamera.h"
 TMatrix MCamera::GetCameraTraslation()
 {
-    return mat_world_;
+    return _matWorld;
 }
 void MCamera::CreateViewMatrix(TVector3 _vEye, TVector3 _vAt, TVector3 _vUp)
 {
-	camera_pos_ = _vEye;
-	target_ = _vAt;
-    v_up_ = _vUp;
-    mat_view_ = ViewLookAt(_vEye, _vAt, _vUp);
+	m_vCameraPos = _vEye;
+	m_vTarget = _vAt;
+    m_vUp.x = _vUp.x;
+    m_vUp.y = _vUp.y;
+    m_vUp.z = _vUp.z;
+    m_matView = ViewLookAt(_vEye, _vAt, _vUp);
 }
 
 void MCamera::CreateProjMatrix(float _fNear, float _fFar, float fFovY, float fAspecRatio)
 {
-    near_ = _fNear;
-    far_ = _fFar;
-    fov_Y_ = fFovY;
-    aspectratio_ = fAspecRatio;
+    m_fNear = _fNear;
+    m_fFar = _fFar;
+    m_fFovY = fFovY;
+    m_fAspectRatio = fAspecRatio;
     // 원근 투영
-    //mat_proj_.
-    mat_proj_ = PerspectiveFovLH(mat_proj_,_fNear, _fFar, fFovY, fAspecRatio);
-    //mat_proj_.OrthoLH(mat_proj_,800, 600, 0.0f, 100.0f);
-    //mat_proj_.OrthoOffCenterLH(mat_proj_, -400, 400, -300, 300,0.0f, 100.0f);
+    //m_matProj.
+    m_matProj = PerspectiveFovLH(m_matProj,_fNear, _fFar, fFovY, fAspecRatio);
+    //m_matProj.OrthoLH(m_matProj,800, 600, 0.0f, 100.0f);
+    //m_matProj.OrthoOffCenterLH(m_matProj, -400, 400, -300, 300,0.0f, 100.0f);
+}
+
+void MCamera::CreateOrthoLH(float view_right, float view_bottom, float near_z, float far_z)
+{
+    mat_ortho_ = TMatrix::CreateOrthographic(view_right, view_bottom, near_z, far_z);
 }
 
 bool MCamera::Frame()
@@ -35,25 +42,25 @@ bool MCamera::Frame()
     if (Input::get()->GetKey('W') == KEY_HOLD)
     {
         TVector3 _v = _vLook * 10 * Timer::get()->m_fDeltaTime;
-        camera_pos_ += _v;
+        m_vCameraPos += _v;
         //vTarget.z += 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('S') == KEY_HOLD)
     {
         TVector3 _v = _vLook * 10 * Timer::get()->m_fDeltaTime;
-        camera_pos_ -= _v;
+        m_vCameraPos -= _v;
         //vTarget.z -= 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('D') == KEY_HOLD)
     {
         TVector3 _v = _vRight * 10 * Timer::get()->m_fDeltaTime;
-        camera_pos_ -= _v;
+        m_vCameraPos -= _v;
         //vTarget.x -= 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('A') == KEY_HOLD)
     {
         TVector3 _v = _vRight * 10 * Timer::get()->m_fDeltaTime;
-        camera_pos_ += _v;
+        m_vCameraPos += _v;
         //vTarget.x += 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('Q') == KEY_HOLD)
@@ -71,10 +78,10 @@ bool MCamera::Frame()
     //_vLook = _vLook * dxCameraRotation;// cameraRotation matrix;
     //_vUp = _vUp * dxCameraRotation;
     //_vRight = _vRight * dxCameraRotation;
-    target_ = camera_pos_ + _vLook;
+    m_vTarget = m_vCameraPos + _vLook;
     TVector3 _vecUp;
-    _vecUp= v_up_;
-    mat_view_ = ViewLookAt(camera_pos_, target_ , _vecUp);
+    _vecUp= m_vUp;
+    m_matView = ViewLookAt(m_vCameraPos, m_vTarget , _vecUp);
 	return true;
 }
 

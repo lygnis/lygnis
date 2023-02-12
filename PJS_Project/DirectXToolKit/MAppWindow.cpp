@@ -3,12 +3,7 @@
 #include <Windows.h>
 #include "InputSystem.h"
 #include "Mesh.h"
-struct vertex
-{
-	TVector3 position;
-	//TVector3 position1;
-	TVector2 texcoord;
-};
+#include "Sprite.h"
 
 __declspec(align(16))
 struct Constant
@@ -35,8 +30,8 @@ void MAppWindow::UpdateQuadPosition()
 void MAppWindow::UpdateCamera()
 {
 	_camera->Frame();
-	_view_cam = _camera->mat_view_;
-	_proj_cam = _camera->mat_proj_;
+	_view_cam = _camera->m_matView;
+	_proj_cam = _camera->m_matProj;
 }
 void MAppWindow::UpdateLight()
 {
@@ -50,7 +45,7 @@ void MAppWindow::UpdateSkyBox()
 	Constant cc;
 	cc._world.Identity;
 	cc._world = TMatrix::CreateScale(TVector3(1000.f, 1000.f, 1000.f));
-	TVector3 camWorld = _camera->camera_pos_;
+	TVector3 camWorld = _camera->m_vCameraPos;
 	cc._world.Translation(camWorld);
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
@@ -69,7 +64,7 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 	TVector3 temp_light = _light_rot_mat.Backward();
 	cc._light_dir.x = temp_light.x; cc._light_dir.y = temp_light.y; cc._light_dir.z = temp_light.z; cc._light_dir.w = 1.0f;
 	TVector4 temp;
-	temp.x = _camera->camera_pos_.x; temp.y = _camera->camera_pos_.y; temp.z = _camera->camera_pos_.z; temp.w = 1.0f;
+	temp.x = _camera->m_vCameraPos.x; temp.y = _camera->m_vCameraPos.y; temp.z = _camera->m_vCameraPos.z; temp.w = 1.0f;
 
 	cc._cameraPos = temp;
 	cc._view = _view_cam;
@@ -82,6 +77,21 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 	{
 		list_material[m]->SetData(&cc, sizeof(Constant));
 	}
+}
+
+void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
+{
+	Constant cc;
+	cc._world.Identity;
+	cc._world.Translation(position);
+	TVector4 temp;
+	temp.x = _camera->m_vCameraPos.x; temp.y = _camera->m_vCameraPos.y; temp.z = _camera->m_vCameraPos.z; temp.w = 1.0f;
+	cc._cameraPos = temp;
+
+	cc._view = _view_cam;
+	cc._proj = _camera->mat_ortho_;
+	cc._cTime = _time;
+	spr->SetData(&cc, sizeof(Constant));
 }
 
 void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
@@ -99,11 +109,19 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 			break;
 		MaterialSlot mat = mesh->GetMaterialSlot(m);
 		// 머티리얼 설정 방법을 사용하여 머티리얼을 그래픽 파이프 라인에 바인딩 한다.
-		MGraphicsEngine::get()->SetMaterial(list_material[m]);
+		MGraphicsEngine::get()->SetMaterial(list_material[m], wireframe_);
 		
 		MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(mat.num_indices, 0, mat.start_index);
 
 	}
+}
+
+void MAppWindow::DrawSprite(const SpritePtr& spr)
+{
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
+	MGraphicsEngine::get()->SetSprite(spr, wireframe_);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
 
 void MAppWindow::OnCreate()
@@ -117,58 +135,25 @@ void MAppWindow::OnCreate()
 	_camera = std::make_shared<DebugCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
+	RECT rc = GetClientRect();
+	_camera->CreateOrthoLH((float)(this->GetClientRect().right - this->GetClientRect().left)/300, (float)(this->GetClientRect().bottom - this->GetClientRect().top)/300,0.f,10.f);
+	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
 	// 텍스쳐 로딩
-	//_wall_tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/wall.jpg");
-	//_bricks_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick.png");
-	//_earth_color_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/earth_color.jpg");
 	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
-	_sand_tex =		MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sand.jpg");
-	_barrel_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/barrel.jpg");
-	_bricks_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/house_brick.jpg");
-	_window_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/house_windows.jpg");
-	_wood_tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/house_wood.jpg");
+	sprite_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sand.jpg");
 
-	// 오브젝트 로딩
-	//_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/scene.obj");
-	//_mesh_torus = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/torus.obj");
-	//_mesh_suzanne = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/suzanne.obj");
-	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
-	_terrain_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/terrain.obj");
-	_house_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/house.obj");
-
+	test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"UIVertexShader.hlsl", L"PixelShader.hlsl");
+	
 	// 스왑체인 생성
-	RECT rc = GetClientRect();
-	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
+	// 스카이 박스 메쉬
+	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/meshes/sphere.obj");
 
 	// 머티리얼 생성
 	_mater = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"PointLightShader.hlsl");
-	_mater->AddTexture(_wall_tex);
+	_mater->AddTexture(_sky_Tex);
 	_mater->SetCullMode(CULL_MODE_BACK);
 
-	_terrain_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	_terrain_mat->AddTexture(_sand_tex);
-	_terrain_mat->SetCullMode(CULL_MODE_BACK);
-
-	_barrel_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	_barrel_mat->AddTexture(_barrel_tex);
-	_barrel_mat->SetCullMode(CULL_MODE_BACK);
-
-	_bricks_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	_bricks_mat->AddTexture(_bricks_tex);
-	_bricks_mat->SetCullMode(CULL_MODE_BACK);
-
-	_window_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	_window_mat->AddTexture(_window_tex);
-	_window_mat->SetCullMode(CULL_MODE_BACK);
-
-	_wood_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	_wood_mat->AddTexture(_wood_tex);
-	_wood_mat->SetCullMode(CULL_MODE_BACK);
-
-	//_bricks_mat = MGraphicsEngine::get()->CreateMaterial(_mater);
-	//_bricks_mat->AddTexture(_bricks_tex);
-	//_bricks_mat->SetCullMode(CULL_MODE_BACK);
 
 	// 스카이 박스
 	_skyMat = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"SkyBoxShader.hlsl");
@@ -189,14 +174,10 @@ void MAppWindow::OnUpdate()
 
 		_swapChain->SetFullScreen(_fullscreen_state, size_screen.right, size_screen.bottom);
 	}
-	if (Input::get()->GetKey(VK_F10) == KEY_HOLD)
-	{
-		_light_radius -= 1.0f * Timer::get()->m_fDeltaTime;
-	}
-	if (Input::get()->GetKey(VK_F11) == KEY_HOLD)
-	{
-		_light_radius += 1.0f * Timer::get()->m_fDeltaTime;
-	}
+	if (Input::get()->GetKey('V') == KEY_UP)
+		wireframe_ = !wireframe_;
+	if(Input::get()->GetKey('G') == KEY_UP)
+		test_sprite_->AddTexture(sprite_tex_);
 	this->Render();
 }
 
@@ -212,49 +193,14 @@ void MAppWindow::Render()
 
 	// 카메라 라이트 스카이 박스 업데이트
 	UpdateQuadPosition();
-
-	// 렌더 .모델링
-	// 밖에서 렌더링
-	//UpdateModel(TVector3(0,0,0), _mater);
-	//DrawMesh(_sky_mesh, _mater);
-	//// 스카이 박스 그리기
-	//// 안쪽에서도 렌더링
-
-	//UpdateModel(TVector3(4, 0, 0), _earth_mat);
-	//DrawMesh(_sky_mesh, _earth_mat);
-
-	//UpdateModel(TVector3(-4, 0, 0), _bricks_mat);
-	//DrawMesh(_sky_mesh, _bricks_mat);
-
-	//UpdateModel(TVector3(-6, 0, 0), _bricks_mat);
-	//DrawMesh(_mesh_torus, _bricks_mat);
-
-	//UpdateModel(TVector3(6, 0, 0), _bricks_mat);
-	//DrawMesh(_mesh_suzanne, _bricks_mat);
-
-	_list_materials.clear();
-	_list_materials.push_back(_barrel_mat);
-	_list_materials.push_back(_bricks_mat);
-	_list_materials.push_back(_window_mat);
-	_list_materials.push_back(_wood_mat);
-	_list_materials.push_back(_terrain_mat);
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			UpdateModel(TVector3(-14.0f +14.0f *i, 0, -14.0f + 14.0f * j), _list_materials);
-			DrawMesh(_house_mesh, _list_materials);
-		}
-	}
-	_list_materials.clear();
-	_list_materials.push_back(_terrain_mat);
-	UpdateModel(TVector3(0, 0, 0), _list_materials);
-	DrawMesh(_terrain_mesh, _list_materials);
-
 	_list_materials.clear();
 	_list_materials.push_back(_skyMat);
 	DrawMesh(_sky_mesh, _list_materials);
 
+	if (!test_sprite_->_vec_textures.empty())
+		test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
+	UpdateUI(TVector3(0,0,0), test_sprite_);
+	DrawSprite(test_sprite_);
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
 	// 상수버퍼 시간 갱신
