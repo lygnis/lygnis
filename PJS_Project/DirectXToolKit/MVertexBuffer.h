@@ -9,13 +9,13 @@ public:
 	~MVertexBuffer() {};
 public:
 	UINT GetSizeVertexList();
+	ComPtr<ID3D11Buffer> _buffer;
 private:
 	UINT _size_vertex;
 	UINT _size_list;
 private:
 	RenderSystem* _system = nullptr;
 private:
-	ComPtr<ID3D11Buffer> _buffer;
 	ComPtr<ID3D11InputLayout> _layout;
 private:
 	friend class DeviceContext;

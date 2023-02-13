@@ -66,7 +66,6 @@ Sprite::Sprite(const SpritePtr& sprite)
 
 Sprite::~Sprite()
 {
-
 }
 
 void Sprite::AddTexture(const TexturePtr& texture)
@@ -83,10 +82,17 @@ void Sprite::RemoveTexture(UINT index)
 
 void Sprite::SetRect(RECT rt, UINT tex_num_size)
 {
+	// 스프라이트 크기 초기화 및 텍스쳐 크기
+	sprite_rect_ = rt;
+	image_size_.resize(tex_num_size);
+	uv_rect_.resize(tex_num_size);
+
 	for (int i = 0; i < tex_num_size; i++)
 	{
-		_vec_textures[i]->GetImageDesc().Width;
-		_vec_textures[i]->GetImageDesc().Height;
+		image_size_[i].x=_vec_textures[i]->GetImageDesc().Width;
+		image_size_[i].y=_vec_textures[i]->GetImageDesc().Height;
+		uv_rect_[i].left = sprite_rect_.left / image_size_[i].x;
+		uv_rect_[i].top = sprite_rect_.top / image_size_[i].y;
 	}
 }
 
@@ -103,12 +109,15 @@ void Sprite::ReCompilePixelShader(const wchar_t* pixel_shader_path)
 
 void Sprite::SetData(void* data, UINT size)
 {
+
 	if (!_constant_buffer)
 		_constant_buffer = MGraphicsEngine::get()->getRenderSystem()->CreateConstantBuffer(data, size);
 	else
 	{
 		_constant_buffer->Update(MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), data);
 	}
+	/*MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->GetDeviceContext()->UpdateSubresource(vertex_buffer_->_buffer.Get(),
+		NULL,NULL,&data,0,0 );*/
 }
 
 MVertexBufferPtr Sprite::GetVertexBuffer()
@@ -121,3 +130,14 @@ IndexBufferPtr Sprite::GetIndexBuffer()
 	return index_buffer_;
 }
 
+void Sprite::Scale(float x, float y, float z)
+{
+	spr_scale_.x += x;
+	spr_scale_.y += y;
+	spr_scale_.z += z;
+}
+
+TVector3 Sprite::GetSclae()
+{
+	return spr_scale_;
+}

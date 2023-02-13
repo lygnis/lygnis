@@ -16,15 +16,16 @@ public:
 	RenderSystem* getRenderSystem();
 	TextureManager* getTextureManager();
 	MeshManager* getMeshManager();
-	void GetVertexMeshLayoutShader(void** byte_code, size_t* size);
+	void		GetVertexMeshLayoutShader(void** byte_code, size_t* size);
 public:
+	// ∏”∆º∏ÆæÛ ∑ª¥ı∏µ
 	MaterialPtr CreateMaterial(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
 	MaterialPtr CreateMaterial(const MaterialPtr& material);
-	void SetMaterial(const MaterialPtr& material, const bool wire_frame);
-
-	SpritePtr CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
-	SpritePtr CreateSprite(const SpritePtr& sprite);
-	void SetSprite(const SpritePtr& material, const bool wire_frame);
+	void		SetMaterial(const MaterialPtr& material, const bool wire_frame);
+	// Ω∫«¡∂Û¿Ã∆Æ ∑ª¥ı∏µ
+	SpritePtr	CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
+	SpritePtr	CreateSprite(const SpritePtr& sprite);
+	void		SetSprite(const SpritePtr& material, const bool wire_frame, bool tex_anim, UINT anim_count);
 public:
 	// ΩÃ±€≈Ê
 	static MGraphicsEngine* get();

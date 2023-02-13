@@ -17,8 +17,11 @@ struct Constant
 	float _light_radius;
 	float _cTime = 0.0f;
 };
-
-
+struct UIConstant
+{
+	TVector3 position;
+	TVector2 texcoord;
+};
 
 void MAppWindow::UpdateQuadPosition()
 {
@@ -81,16 +84,40 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 
 void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
 {
-	Constant cc;
-	cc._world.Identity;
-	cc._world.Translation(position);
-	TVector4 temp;
-	temp.x = _camera->m_vCameraPos.x; temp.y = _camera->m_vCameraPos.y; temp.z = _camera->m_vCameraPos.z; temp.w = 1.0f;
-	cc._cameraPos = temp;
+	//RECT rt = { (LONG)0,(LONG)0,(LONG)100,(LONG)400 };
+	//spr->SetRect(rt,0);
+	//TVector2 drawpos, drawsize;
+	//drawpos.x = (spr->position_.x / (float)(this->GetClientRect().right)*2.0f - 1.0f);
+	//drawpos.y = (spr->position_.y / (float)(this->GetClientRect().bottom)*2.0f - 1.0f);
+	//drawsize.x = (spr->sprite_rect_.right / (float)(this->GetClientRect().right) * 2);
+	//drawsize.y = (spr->sprite_rect_.bottom / (float)(this->GetClientRect().bottom) * 2);
+	//TVector3 position_list[] =
+	//{
+	//	{ TVector3(drawpos.x,drawpos.y,0.f)},
+	//	{ TVector3(drawpos.x+ drawsize.x,drawpos.y,0.f) },
+	//	{ TVector3(drawpos.x, drawpos.y - drawsize.y,0.f) },
+	//	{ TVector3(drawpos.x+ drawsize.x ,drawpos.y - drawsize.y ,0.f)},
+	//};
+	//TVector2 texcoord_list[] =
+	//{
+	//	{ TVector2(0.0f,0.0f) },
+	//	{ TVector2(0.0f,1.0f) },
+	//	{ TVector2(1.0f,0.0f) },
+	//	{ TVector2(1.0f,1.0f) }
+	//};
+	//UIConstant as [] =
+	//{
+	//	{position_list[0],texcoord_list[1]},
+	//	{position_list[1],texcoord_list[0]},
+	//	{position_list[2],texcoord_list[2]},
+	//	{position_list[3],texcoord_list[3]}
+	//};
 
-	cc._view = _view_cam;
+	Constant cc;
+	cc._world = TMatrix::CreateScale(spr->GetSclae());
+	cc._view = _camera->mat_ui_view_;
 	cc._proj = _camera->mat_ortho_;
-	cc._cTime = _time;
+
 	spr->SetData(&cc, sizeof(Constant));
 }
 
@@ -118,9 +145,10 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 
 void MAppWindow::DrawSprite(const SpritePtr& spr)
 {
+	UINT animcount = (UINT)Timer::get()->m_fGameTime % list_texture_.size();
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
-	MGraphicsEngine::get()->SetSprite(spr, wireframe_);
+	MGraphicsEngine::get()->SetSprite(spr, wireframe_, true, animcount);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
 
@@ -136,15 +164,21 @@ void MAppWindow::OnCreate()
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 	RECT rc = GetClientRect();
-	_camera->CreateOrthoLH((float)(this->GetClientRect().right - this->GetClientRect().left)/300, (float)(this->GetClientRect().bottom - this->GetClientRect().top)/300,0.f,10.f);
+	_camera->CreateOrthoLH((float)(this->GetClientRect().right), (float)(this->GetClientRect().bottom),0.f,1000.f);
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
 	// 텍스쳐 로딩
 	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
 	sprite_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sand.jpg");
+	list_texture_.push_back(sprite_tex_);
+	sprite_tex1_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/grass.jpg");
+	list_texture_.push_back(sprite_tex1_);
+	sprite_tex2_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/ground.jpg");
+	list_texture_.push_back(sprite_tex2_);
 
-	test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"UIVertexShader.hlsl", L"PixelShader.hlsl");
-	
+	test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+	test_sprite_->Scale(50,50,1);
+
 	// 스왑체인 생성
 	// 스카이 박스 메쉬
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/meshes/sphere.obj");
@@ -176,8 +210,15 @@ void MAppWindow::OnUpdate()
 	}
 	if (Input::get()->GetKey('V') == KEY_UP)
 		wireframe_ = !wireframe_;
-	if(Input::get()->GetKey('G') == KEY_UP)
-		test_sprite_->AddTexture(sprite_tex_);
+	if (Input::get()->GetKey('G') == KEY_UP)
+	{
+		test_sprite_->_vec_textures.clear();
+		for (int i = 0; i<list_texture_.size(); i++)
+		{
+			test_sprite_->AddTexture(list_texture_[i]);
+		}
+	}
+
 	this->Render();
 }
 
@@ -227,6 +268,7 @@ void MAppWindow::OnSize()
 	RECT rc = this->GetClientRect();
 	_swapChain->Resize(rc.right, rc.bottom);
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
+	_camera->CreateOrthoLH((float)(rc.right), (float)(rc.bottom),0.f,1000.f);
 	Render();
 }
 

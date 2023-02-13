@@ -20,6 +20,7 @@ public:
 	TMatrix			m_matProj;
 	TMatrix			_matWorld;
 	TMatrix			mat_ortho_;
+	TMatrix			mat_ui_view_;
 	float			m_fYaw;
 	float			m_fRoll;
 	float			m_fPitch;

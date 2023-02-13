@@ -16,15 +16,16 @@ struct VS_OUTPUT
 };
 cbuffer constant : register(b0)
 {
-	
+	float3 position;
+	float2 texcoord;
 }
 
 VS_OUTPUT mainvs(VS_INPUT  input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
-	output.position = float4(input.position, 1.0);
+	output.position = float4(position, 1.0);
 	output.color = input.color;
-	output.texcoord = input.texcoord;
+	output.texcoord = texcoord;
 
 	return output;
 }

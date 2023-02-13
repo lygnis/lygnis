@@ -27,13 +27,24 @@ public:
 	// 버텍스 인덱스 정보 가져오기
 	MVertexBufferPtr	GetVertexBuffer();
 	IndexBufferPtr		GetIndexBuffer();
+	// 크기 조정
+	void Scale(float x, float y, float z);
+	TVector3 GetSclae();
 	std::vector<TexturePtr> _vec_textures;
+	// 스프라이트 크기 조정
+	RECT			sprite_rect_;
 private:
+	// 크기
+	TVector3 spr_scale_;
+
 	MVertexBufferPtr vertex_buffer_;
 	IndexBufferPtr index_buffer_;
 	ConstantBufferPtr _constant_buffer;
 	MVertexShaderPtr _vertex_shader;
 	PixelShaderPtr  _pixel_shader;
+	// 텍스쳐 사이즈
+	std::vector<RECT>			uv_rect_;
+	std::vector<POINT>			image_size_;
 private:
 	friend class MGraphicsEngine;
 };

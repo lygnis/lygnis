@@ -28,7 +28,9 @@ void MCamera::CreateProjMatrix(float _fNear, float _fFar, float fFovY, float fAs
 
 void MCamera::CreateOrthoLH(float view_right, float view_bottom, float near_z, float far_z)
 {
-    mat_ortho_ = TMatrix::CreateOrthographic(view_right, view_bottom, near_z, far_z);
+    view_right = view_right / 2.f;
+    view_bottom = view_bottom / 2.f;
+    mat_ortho_ = TMatrix::CreateOrthographicOffCenter(-view_right, view_right,-view_bottom, view_bottom,  near_z, far_z);
 }
 
 bool MCamera::Frame()

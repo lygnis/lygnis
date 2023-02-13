@@ -51,6 +51,8 @@ private:
 
 	TexturePtr			_sky_Tex;
 	TexturePtr			sprite_tex_;
+	TexturePtr			sprite_tex1_;
+	TexturePtr			sprite_tex2_;
 
 	MeshPtr				_sky_mesh;
 	SpritePtr			test_sprite_;
@@ -74,7 +76,9 @@ private:
 	TVector4 _light_position;
 
 	std::vector<MaterialPtr> _list_materials;
+	std::vector<TexturePtr>	list_texture_;
 	bool _fullscreen_state = false;
 	bool wireframe_ = false;
+	UINT tex_count_;
 };
 

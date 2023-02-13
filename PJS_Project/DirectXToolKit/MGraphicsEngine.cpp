@@ -102,7 +102,7 @@ SpritePtr MGraphicsEngine::CreateSprite(const SpritePtr& sprite)
 	return spr;
 }
 
-void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame)
+void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame, bool tex_anim, UINT anim_count)
 {
 	// 레스터 라이스 컬링 모드 설정
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(false, wire_frame);
@@ -113,8 +113,13 @@ void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame)
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
 
-	if(!sprite->_vec_textures.empty())
-		MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[0], sprite->_vec_textures.size());
+	if (!sprite->_vec_textures.empty())
+	{
+		if(tex_anim)
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[anim_count],1);
+		else
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[0], 1);
+	}
 }
 
 MGraphicsEngine* MGraphicsEngine::get()
