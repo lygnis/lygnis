@@ -4,6 +4,10 @@
 #include "InputSystem.h"
 #include "Mesh.h"
 #include "Sprite.h"
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "ImFileDialog.h"
 
 __declspec(align(16))
 struct Constant
@@ -187,6 +191,8 @@ void MAppWindow::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
+
+
 	if (Input::get()->GetKey('F') == KEY_UP)
 	{
 		_fullscreen_state = !_fullscreen_state;
@@ -228,6 +234,9 @@ void MAppWindow::Render()
 		test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
 	UpdateUI(TVector3(0,0,0), test_sprite_);
 	DrawSprite(test_sprite_);
+
+	// imgui stuff
+	ImGuiStuff();
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
 	// 상수버퍼 시간 갱신
@@ -258,6 +267,55 @@ void MAppWindow::OnSize()
 	Render();
 }
 
+void MAppWindow::ImGuiStuff()
+{
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("New")) {
+				// Handle new file
+			}
+			if (ImGui::MenuItem("Open")) 
+			{
+				const char* filters[] = { "*.png", "*.jpg", "*.bmp", "*.tga", "*.gif", 0 };
+				ifd::FileDialog::Instance().Open("Choose an image", "open texture",
+					"(*.png, *.jpg, *.bmp, *.tga, *.gif)", filters);
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo")) {
+				// Handle undo
+			}
+			if (ImGui::MenuItem("Redo"))
+			{
+				// Handle redo
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
+
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//static bool show_demo_window = true;
+	//if (show_demo_window)
+	//ImGui::ShowDemoWindow(&show_demo_window);
+	//ImGui::Begin("UI Controller");
+	//if (ImGui::Button("Wire_Frame"))
+	//	wireframe_ = !wireframe_;
+	//ImGui::End();
+}
+
+
+
+
+
 
 void MAppWindow::onKeyDown(int key)
 {
@@ -282,5 +340,9 @@ void MAppWindow::OnRightMouseDown(const Point& delta_mouse_pos)
 {
 }
 void MAppWindow::OnRightMouseUp(const Point& delta_mouse_pos)
+{
+}
+
+MAppWindow::~MAppWindow()
 {
 }
