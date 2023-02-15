@@ -32,14 +32,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,  WPARAM wparam, LPARAM lparam)
 		// 윈도우 클릭시
 		MWindow* window = (MWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (window)
-			window->OnFocus();
+			//window->OnFocus();
 		break;
 	}
 	case WM_KILLFOCUS:
 	{
 		// 윈도우 클릭 안할시
 		MWindow* window = (MWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-		window->OnKillFocus();
+		//window->OnKillFocus();
 		break;
 	}
 	case WM_DESTROY:

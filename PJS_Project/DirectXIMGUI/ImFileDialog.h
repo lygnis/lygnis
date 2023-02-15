@@ -47,14 +47,14 @@ namespace ifd {
 		}
 		inline float GetZoom() { return m_zoom; }
 
-		std::function<void*(uint8_t*, int, int, char)> CreateTexture; // char -> fmt -> { 0 = BGRA, 1 = RGBA }
+		//std::function<void*(uint8_t*, int, int, char)> CreateTexture; // char -> fmt -> { 0 = BGRA, 1 = RGBA }
 		std::function<void* (uint8_t*, int, int, char)> CreateTexture = [](uint8_t* data, int w, int h, char fmt) -> void* {return nullptr; }; // char -> fmt -> { 0 = BGRA, 1 = RGBA }
 
 		std::function<void(void*)> DeleteTexture = [](void* tex) {};
-		std::function<void(void*)> DeleteTexture;
-		std::function<void* (uint8_t*, int, int, char)> CreateTexture = [](uint8_t* data, int w, int h, char fmt) -> void* {return nullptr; }; // char -> fmt -> { 0 = BGRA, 1 = RGBA }
+		//std::function<void(void*)> DeleteTexture;
+		//std::function<void* (uint8_t*, int, int, char)> CreateTexture = [](uint8_t* data, int w, int h, char fmt) -> void* {return nullptr; }; // char -> fmt -> { 0 = BGRA, 1 = RGBA }
 
-		std::function<void(void*)> DeleteTexture = [](void* tex) {};
+		//std::function<void(void*)> DeleteTexture = [](void* tex) {};
 
 		class FileTreeNode {
 		public:

@@ -14,22 +14,18 @@ int main()
 	}
 
 	{
-		try
-		{
+
 			
-			MAppWindow app;
-			while (app.IsRun())
-			{
-			}
-		}
-		catch (...)
+		MAppWindow app;
+		while (app.IsRun())
 		{
-
-			InputSystem::Release();
-			MGraphicsEngine::Release();
-
-			return -1;
 		}
+
+		InputSystem::Release();
+		MGraphicsEngine::Release();
+
+		return -1;
+
 	}
 	InputSystem::Release();
 	MGraphicsEngine::Release();

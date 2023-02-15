@@ -8,6 +8,8 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "ImFileDialog.h"
+#include <filesystem>
+#include <Commdlg.h>
 
 __declspec(align(16))
 struct Constant
@@ -104,7 +106,13 @@ void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
 	//};
 
 	Constant cc;
-	cc._world = TMatrix::CreateScale(spr->GetSclae());
+	TMatrix temp;
+	temp.Identity;
+	temp = TMatrix::CreateScale(spr->GetSclae());
+	cc._world *= temp;
+	temp.Identity;
+	temp.Translation(position);
+	cc._world *= temp;
 	cc._view = _camera->mat_ui_view_;
 	cc._proj = _camera->mat_ortho_;
 
@@ -135,7 +143,11 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 
 void MAppWindow::DrawSprite(const SpritePtr& spr)
 {
-	UINT animcount = (UINT)Timer::get()->m_fGameTime % list_texture_.size();
+	UINT animcount;
+	if (!list_texture_.empty())
+		animcount = (UINT)Timer::get()->m_fGameTime % list_texture_.size();
+	else
+		animcount = 0;
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
 	MGraphicsEngine::get()->SetSprite(spr, wireframe_, true, animcount);
@@ -159,15 +171,7 @@ void MAppWindow::OnCreate()
 
 	// 텍스쳐 로딩
 	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
-	sprite_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sand.jpg");
-	list_texture_.push_back(sprite_tex_);
-	sprite_tex1_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/grass.jpg");
-	list_texture_.push_back(sprite_tex1_);
-	sprite_tex2_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/ground.jpg");
-	list_texture_.push_back(sprite_tex2_);
 
-	test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
-	test_sprite_->Scale(50,50,1);
 
 	// 스왑체인 생성
 	// 스카이 박스 메쉬
@@ -202,14 +206,6 @@ void MAppWindow::OnUpdate()
 	}
 	if (Input::get()->GetKey('V') == KEY_UP)
 		wireframe_ = !wireframe_;
-	if (Input::get()->GetKey('G') == KEY_UP)
-	{
-		test_sprite_->_vec_textures.clear();
-		for (int i = 0; i<list_texture_.size(); i++)
-		{
-			test_sprite_->AddTexture(list_texture_[i]);
-		}
-	}
 
 	this->Render();
 }
@@ -230,10 +226,13 @@ void MAppWindow::Render()
 	_list_materials.push_back(_skyMat);
 	DrawMesh(_sky_mesh, _list_materials);
 
-	if (!test_sprite_->_vec_textures.empty())
-		test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
-	UpdateUI(TVector3(0,0,0), test_sprite_);
-	DrawSprite(test_sprite_);
+	if (test_sprite_ != NULL)
+	{
+		if (!test_sprite_->_vec_textures.empty())
+			test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
+		UpdateUI(test_sprite_->GetPosition(), test_sprite_);
+		DrawSprite(test_sprite_);
+	}
 
 	// imgui stuff
 	ImGuiStuff();
@@ -272,33 +271,108 @@ void MAppWindow::ImGuiStuff()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	if (ImGui::BeginMainMenuBar())
+	
+	if (ImGui::BeginMainMenuBar()) 
 	{
-		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("New")) {
-				// Handle new file
-			}
-			if (ImGui::MenuItem("Open")) 
-			{
-				const char* filters[] = { "*.png", "*.jpg", "*.bmp", "*.tga", "*.gif", 0 };
-				ifd::FileDialog::Instance().Open("Choose an image", "open texture",
-					"(*.png, *.jpg, *.bmp, *.tga, *.gif)", filters);
-			}
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Undo")) {
-				// Handle undo
-			}
-			if (ImGui::MenuItem("Redo"))
+			if (ImGui::Button("Open a texture"))
 			{
-				// Handle redo
+				ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
+			}
+
+			if (ImGui::Button("Save a texture"))
+			{
+				ifd::FileDialog::Instance().Save("TextureSaveDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
+			}
+			if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog"))
+			{
+
+				if (ifd::FileDialog::Instance().HasResult())
+				{
+					std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
+					sprite_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
+					list_texture_.push_back(sprite_tex_);
+				}
+				ifd::FileDialog::Instance().Close();
+			}
+			if (ifd::FileDialog::Instance().IsDone("TextureSaveDialog"))
+			{
+				if (ifd::FileDialog::Instance().HasResult())
+				{
+					std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
+					
+					//printf("SAVE[%s]\n", res.c_str());//콘솔
+					//OutputDebugStringA(res.c_str());//스튜디오
+				}
+				ifd::FileDialog::Instance().Close();
 			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
+
+
+	ImGui::Begin("Make Sprite");
+	ImGui::Text("Value: %d", result_value_);
+
+	if (showButton)
+	{
+		if (ImGui::Button("Enter Value"))
+		{
+		showButton = false;
+		showMakeButton = true;
+		}
+	}
+
+	if (showMakeButton)
+	{
+		ImGui::Text("Scale");
+		ImGui::InputInt("scale X", &scale_valuex_);
+		ImGui::InputInt("scale Y", &scale_valuey_);
+		ImGui::Separator();
+		ImGui::Text("Position");
+		ImGui::InputInt("position X", &position_valuex_);
+		ImGui::InputInt("position Y", &position_valuey_);
+		ImGui::Separator();
+		if (ImGui::Button("Make"))
+		{
+			test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+			test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
+			test_sprite_->Position(position_valuex_, position_valuex_, 1);
+			showButton = true;
+			showMakeButton = false;
+		}	
+	}
+	ImGui::End();
+
+	
+
+
+	/*if (ImGui::Button("Click me!"))
+	{
+		test_sprite_->_vec_textures.clear();
+		if (list_texture_.empty())
+		{
+			ImGui::OpenPopup("My Popup");
+			static bool popup = false;
+			if (ImGui::BeginPopupModal("No Image", &popup))
+			{
+				if (ImGui::Button("close", {20,20}))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+		}
+		else
+		{
+			for (int i = 0; i < list_texture_.size(); i++)
+			{
+				test_sprite_->AddTexture(list_texture_[i]);
+			}
+		}*/
+		
 
 
 	ImGui::Render();

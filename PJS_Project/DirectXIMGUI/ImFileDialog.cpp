@@ -6,9 +6,12 @@
 #include <fstream>
 #include <algorithm>
 #include <sys/stat.h>
+#include <string.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
 #include "imgui_internal.h"
+
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -16,7 +19,7 @@
 #include <windows.h>
 #ifdef max
 
-#undef max//for use std::max
+#undef max	//for use std::max
 
 #endif
 
@@ -130,8 +133,12 @@ namespace ifd {
 			// fetch the buttons (so that we can throw some away if needed)
 			std::vector<std::string> btnList;
 			float totalWidth = 0.0f;
+
+			//std::u8string_to_string()
 			for (auto comp : path) {
+
 				std::string section = comp.u8string();
+
 				if (section.size() == 1 && (section[0] == '\\' || section[0] == '/'))
 					continue;
 
@@ -184,7 +191,7 @@ namespace ifd {
 			}
 			ImGui::PopStyleVar(2);
 
-
+			
 			// click state
 			if (!anyOtherHC && clicked) {
 				strcpy(pathBuffer, path.u8string().c_str());
@@ -1411,10 +1418,10 @@ namespace ifd {
 				m_finalize();
 		}
 
-		int escapeKey = ImGui::GetIO().KeyMap[ImGuiKey_Escape];
+	/*	int escapeKey = ImGui::GetIO().KeyMap[ImGuiKey_Escape];
 		if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
 			 escapeKey >= 0 && ImGui::IsKeyPressed(escapeKey))
-			m_isOpen = false;
+			m_isOpen = false;*/
 	}
 }
 

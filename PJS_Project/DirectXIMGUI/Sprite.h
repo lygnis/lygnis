@@ -30,6 +30,8 @@ public:
 	// 크기 조정
 	void Scale(float x, float y, float z);
 	TVector3 GetSclae();
+	void Position(float x, float y, float z);
+	TVector3 GetPosition();
 public:
 	// 
 	std::vector<TexturePtr> _vec_textures;
@@ -38,6 +40,7 @@ public:
 private:
 	// 크기
 	TVector3 spr_scale_;
+	TVector3 spr_position_;
 
 	MVertexBufferPtr vertex_buffer_;
 	IndexBufferPtr index_buffer_;

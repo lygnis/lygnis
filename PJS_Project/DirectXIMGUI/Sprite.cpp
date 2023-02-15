@@ -141,3 +141,15 @@ TVector3 Sprite::GetSclae()
 {
 	return spr_scale_;
 }
+
+void Sprite::Position(float x, float y, float z)
+{
+	spr_position_.x = x;
+	spr_position_.y = y;
+	spr_position_.z = z;
+}
+
+TVector3 Sprite::GetPosition()
+{
+	return spr_position_;
+}
