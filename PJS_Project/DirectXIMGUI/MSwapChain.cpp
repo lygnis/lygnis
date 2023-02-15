@@ -47,7 +47,6 @@ void MSwapChain::Resize(UINT width, UINT height)
 		return;
 	_Dsv.ReleaseAndGetAddressOf();
 	
-
 	//hr = _gi_swapChain->ResizeBuffers(CurrentSD.BufferCount, width, height,CurrentSD.BufferDesc.Format, 0);
 	hr = _gi_swapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 	ReloadBuffers(width, height);
@@ -83,6 +82,7 @@ void MSwapChain::ReloadBuffers(UINT width, UINT height)
 		throw std::exception("RenderTarget not create successfully");
 	}
 	// 깊이버퍼 설정
+
 	D3D11_TEXTURE2D_DESC tex_desc = {};
 	tex_desc.Width = width;
 	tex_desc.Height = height;

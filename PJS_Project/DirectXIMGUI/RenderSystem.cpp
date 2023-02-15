@@ -46,6 +46,7 @@ D3D_DRIVER_TYPE driver_type[] =
 	_dxgi_Adapter->GetParent(__uuidof(IDXGIFactory), (void**)_dxgi_Factory.GetAddressOf());
 
 	InitRasterizerState();
+	InitDepthStencilState();
 	// Init imgui d3d impl
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -148,6 +149,14 @@ void RenderSystem::SetRaterizerState(bool cull_front, bool wire_frame)
 
 }
 
+void RenderSystem::SetDepthStencilState()
+{
+	UINT ref = 0x01;
+	// 깊이 활성화
+	_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_enable_.Get(), ref);
+	
+}
+
 void RenderSystem::InitRasterizerState()
 {
 	D3D11_RASTERIZER_DESC desc = {};
@@ -164,6 +173,56 @@ void RenderSystem::InitRasterizerState()
 	_d3d_Device->CreateRasterizerState(&desc, _cull_back_state.GetAddressOf());
 	desc.CullMode = D3D11_CULL_FRONT;
 	_d3d_Device->CreateRasterizerState(&desc, _cull_front_state.GetAddressOf());
+}
+
+void RenderSystem::InitDepthStencilState()
+{
+	HRESULT hr;
+	// 깊이 버퍼 상태값 세팅
+	D3D11_DEPTH_STENCIL_DESC dsDescDepth;
+	ZeroMemory(&dsDescDepth, sizeof(D3D11_DEPTH_STENCIL_DESC));
+	dsDescDepth.DepthEnable = TRUE;
+	dsDescDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDescDepth.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDescDepth.StencilEnable = FALSE;
+	dsDescDepth.StencilReadMask = 1;
+	dsDescDepth.StencilWriteMask = 1;
+	dsDescDepth.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	dsDescDepth.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	dsDescDepth.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDescDepth.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	// 디폴트 세팅
+	// 깊이 버퍼 활성화
+	dsDescDepth.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	dsDescDepth.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	dsDescDepth.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDescDepth.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	if (FAILED(hr = _d3d_Device->CreateDepthStencilState(&dsDescDepth, &dss_depth_enable_)))
+	{
+		assert(false);
+	}
+	// 깊이 버퍼 비교 비 활성화
+	dsDescDepth.DepthEnable = FALSE;
+	if (FAILED(hr = _d3d_Device->CreateDepthStencilState(&dsDescDepth, &dss_depth_disable_)))
+	{
+		assert(false);
+	}
+	// 깊이 버퍼 활성화, 마스크 쓰지 않기
+	dsDescDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	dsDescDepth.DepthEnable = TRUE;
+	dsDescDepth.StencilEnable = FALSE;
+	if (FAILED(hr = _d3d_Device->CreateDepthStencilState(&dsDescDepth, &dss_depth_enable_no_write_)))
+	{
+		assert(false);
+	}
+	// 깊이 버퍼 비 활성화, 마스크 쓰지 않기
+	dsDescDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	dsDescDepth.DepthEnable = FALSE;
+	dsDescDepth.StencilEnable = FALSE;
+	if (FAILED(hr = _d3d_Device->CreateDepthStencilState(&dsDescDepth, &dss_depth_disable_no_write)))
+	{
+		assert(false);
+	}
 }
 
 

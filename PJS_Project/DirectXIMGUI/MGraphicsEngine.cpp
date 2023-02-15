@@ -107,7 +107,8 @@ void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame, 
 {
 	// 레스터 라이스 컬링 모드 설정
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(false, wire_frame);
-
+	// 깊이 상태값 설정
+	MGraphicsEngine::get()->getRenderSystem()->SetDepthStencilState();
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
 	// 쉐이더 설정

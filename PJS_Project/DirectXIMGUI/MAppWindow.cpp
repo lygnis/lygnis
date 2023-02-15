@@ -107,12 +107,13 @@ void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
 
 	Constant cc;
 	TMatrix temp;
-	temp.Identity;
+	temp = temp.Identity;
+	cc._world.Identity;
 	temp = TMatrix::CreateScale(spr->GetSclae());
-	cc._world *= temp;
-	temp.Identity;
+	cc._world = cc._world*temp;
+	temp= temp.Identity;
 	temp.Translation(position);
-	cc._world *= temp;
+	cc._world = cc._world*temp;
 	cc._view = _camera->mat_ui_view_;
 	cc._proj = _camera->mat_ortho_;
 
@@ -230,7 +231,7 @@ void MAppWindow::Render()
 	{
 		if (!test_sprite_->_vec_textures.empty())
 			test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
-		UpdateUI(test_sprite_->GetPosition(), test_sprite_);
+		UpdateUI(TVector3(-400,100,0), test_sprite_);
 		DrawSprite(test_sprite_);
 	}
 
@@ -280,14 +281,12 @@ void MAppWindow::ImGuiStuff()
 			{
 				ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
 			}
-
 			if (ImGui::Button("Save a texture"))
 			{
 				ifd::FileDialog::Instance().Save("TextureSaveDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
 			}
 			if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog"))
 			{
-
 				if (ifd::FileDialog::Instance().HasResult())
 				{
 					std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
@@ -309,42 +308,64 @@ void MAppWindow::ImGuiStuff()
 			}
 			ImGui::EndMenu();
 		}
-		ImGui::EndMainMenuBar();
-	}
-
-
-	ImGui::Begin("Make Sprite");
-	ImGui::Text("Value: %d", result_value_);
-
-	if (showButton)
-	{
-		if (ImGui::Button("Enter Value"))
+		if (ImGui::BeginMenu("Make Sprite"))
 		{
-		showButton = false;
-		showMakeButton = true;
+			ImGui::Begin("Make Sprite");
+			ImGui::Text("Set Scale and Position");
+
+			if (showButton)
+			{
+				if (ImGui::Button("Enter Value"))
+				{
+					showButton = false;
+					showMakeButton = true;
+				}
+			}
+
+			if (showMakeButton)
+			{
+				ImGui::Text("Scale");
+				ImGui::InputInt("scale X", &scale_valuex_);
+				ImGui::InputInt("scale Y", &scale_valuey_);
+				ImGui::Separator();
+				ImGui::Text("Position");
+				ImGui::InputInt("position X", &position_valuex_);
+				ImGui::InputInt("position Y", &position_valuey_);
+				ImGui::Separator();
+				if (ImGui::Button("Make"))
+				{
+					test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
+					test_sprite_->Position(position_valuex_, position_valuex_, 0);
+					showButton = true;
+					showMakeButton = false;
+				}
+				ImGui::Separator();
+				ImGui::Spacing();
+				if (ImGui::Button("Random Position"))
+				{
+					test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
+					test_sprite_->Position(position_valuex_, position_valuex_, 0);
+					showButton = true;
+					showMakeButton = false;
+				}
+			}
+			ImGui::End();
+			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Set State"))
+		{
+			ImGui::Begin("Make Sprite");
+			ImGui::End();
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+
 	}
 
-	if (showMakeButton)
-	{
-		ImGui::Text("Scale");
-		ImGui::InputInt("scale X", &scale_valuex_);
-		ImGui::InputInt("scale Y", &scale_valuey_);
-		ImGui::Separator();
-		ImGui::Text("Position");
-		ImGui::InputInt("position X", &position_valuex_);
-		ImGui::InputInt("position Y", &position_valuey_);
-		ImGui::Separator();
-		if (ImGui::Button("Make"))
-		{
-			test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
-			test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
-			test_sprite_->Position(position_valuex_, position_valuex_, 1);
-			showButton = true;
-			showMakeButton = false;
-		}	
-	}
-	ImGui::End();
+
+	
 
 	
 

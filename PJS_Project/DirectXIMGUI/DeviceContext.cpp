@@ -17,6 +17,7 @@ bool DeviceContext::ClearRenderTargetColor(const SwapChainPtr &swap_chain, float
     FLOAT clear_color[] = {r,g,b,a};
     _deviceContex->ClearRenderTargetView(swap_chain->_Rtv.Get(), clear_color);
     _deviceContex->ClearDepthStencilView(swap_chain->_Dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+
     _deviceContex->OMSetRenderTargets(1, swap_chain->_Rtv.GetAddressOf(), swap_chain->_Dsv.Get());
 
     return true;

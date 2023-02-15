@@ -31,8 +31,10 @@ public:
 	bool				CompileVertexShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool				CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 	void SetRaterizerState(bool cull_front, bool wire_frame);
+	void SetDepthStencilState();
 private:
 	void InitRasterizerState();
+	void InitDepthStencilState();
 private:
 	ComPtr<ID3D11Device>		_d3d_Device;
 	ComPtr<IDXGIDevice>			_dxgi;
@@ -44,6 +46,11 @@ private:
 	ComPtr<ID3D11RasterizerState> _cull_back_state;
 	ComPtr<ID3D11RasterizerState> fill_wireframe_front_;
 	ComPtr<ID3D11RasterizerState> fill_wireframe_back_;
+private:
+	ComPtr<ID3D11DepthStencilState> dss_depth_enable_;
+	ComPtr<ID3D11DepthStencilState> dss_depth_disable_;
+	ComPtr<ID3D11DepthStencilState> dss_depth_enable_no_write_;
+	ComPtr<ID3D11DepthStencilState> dss_depth_disable_no_write;
 private:
 	friend class MSwapChain;
 	friend class MVertexBuffer;

@@ -82,7 +82,6 @@ private:
 	bool showButton = true;
 	bool showMakeButton = false;
 
-	int result_value_ = 0;
 	int scale_valuex_ = 0;
 	int scale_valuey_ = 0;
 	int position_valuex_ = 0;
