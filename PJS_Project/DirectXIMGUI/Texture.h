@@ -9,6 +9,7 @@ public:
 	~Texture();
 	D3D11_TEXTURE2D_DESC GetImageDesc();
 	std::string tex_name_;
+	UINT texture_ID_;
 private:
 	D3D11_TEXTURE2D_DESC   tex_desc_;
 	ComPtr<ID3D11Texture2D> _texture = nullptr;

@@ -47,6 +47,7 @@ D3D_DRIVER_TYPE driver_type[] =
 
 	InitRasterizerState();
 	InitDepthStencilState();
+	InitAlphaBelnd();
 	// Init imgui d3d impl
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -146,12 +147,10 @@ void RenderSystem::SetRaterizerState(bool cull_front, bool wire_frame)
 		else
 			_immContext->GetDeviceContext()->RSSetState(_cull_back_state.Get());
 	}
-
 }
 
-void RenderSystem::SetDepthStencilState(bool on_z_buffer, bool z_buffer_write)
+void RenderSystem::SetDepthStencilState(bool on_z_buffer, bool z_buffer_write, UINT ref)
 {
-	UINT ref = 0x01;
 	// ±íÀÌ È°¼ºÈ­
 	if(on_z_buffer&& z_buffer_write)
 		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_enable_.Get(), ref);
@@ -161,6 +160,14 @@ void RenderSystem::SetDepthStencilState(bool on_z_buffer, bool z_buffer_write)
 		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_disable_.Get(), ref);
 	if (!on_z_buffer && !z_buffer_write)
 		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_disable_no_write.Get(), ref);
+}
+
+void RenderSystem::SetBlendState(bool on_blendstate, const FLOAT blendfactor[], UINT mask)
+{
+	if (on_blendstate)
+		_immContext->GetDeviceContext()->OMSetBlendState(alpha_blend_.Get(), blendfactor, mask);
+	else
+		_immContext->GetDeviceContext()->OMSetBlendState(no_alpha_blend_.Get(), blendfactor, mask);
 }
 
 void RenderSystem::InitRasterizerState()

@@ -42,6 +42,7 @@ public:
 	// ID
 	UINT			SpriteID_;
 	bool			anim_loop_ = false;
+	UINT			texture_index_=0;
 private:
 	// Å©±â
 	TVector3 spr_scale_;

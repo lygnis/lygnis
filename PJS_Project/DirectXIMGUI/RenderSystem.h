@@ -31,7 +31,8 @@ public:
 	bool				CompileVertexShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool				CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size);
 	void SetRaterizerState(bool cull_front, bool wire_frame);
-	void SetDepthStencilState(bool on_z_buffer, bool z_buffer_write);
+	void SetDepthStencilState(bool on_z_buffer, bool z_buffer_write, UINT ref = 0x01);
+	void SetBlendState(bool on_blendstate, const FLOAT blendfactor[]= 0 , UINT mask = 0xffffffff);
 private:
 	void InitRasterizerState();
 	void InitDepthStencilState();

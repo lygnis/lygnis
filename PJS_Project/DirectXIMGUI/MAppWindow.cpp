@@ -130,18 +130,22 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 
 void MAppWindow::DrawSprite(const SpritePtr& spr)
 {
-	int animcount;
 	if (spr->anim_loop_)
-		animcount = (UINT)Timer::get()->m_fGameTime % spr->_vec_textures.size();
+		animcount_ = (UINT)Timer::get()->m_fGameTime % spr->_vec_textures.size();
 	else
 	{
 		if(spr->SpriteID_ == selected_texture_index_)
-			animcount = selected_image_index_;
+			animcount_ = selected_image_index_;
 	}
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
+	MGraphicsEngine::get()->SetState(wireframe_, on_z_buffer_, z_buffer_write_, on_blend_state);
+	if (on_blend_testing && !spr->_vec_textures.empty())
+		MGraphicsEngine::get()->SetTesttingSprite(spr, spr->anim_loop_, animcount_);
+	else
+		MGraphicsEngine::get()->SetSprite(spr, spr->anim_loop_, animcount_);
 
-	MGraphicsEngine::get()->SetSprite(spr, wireframe_, true, animcount, on_z_buffer_, z_buffer_write_);
+	
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
 
@@ -269,13 +273,13 @@ void MAppWindow::ImGuiStuff()
 		if (ImGui::Selectable(texture_name, is_selected))
 		{
 			selected_texture_index_ = i;
-			//selected_image_index_ = -1;
+			selected_image_index_ = -1;
 		}
 	}
 	ImGui::ListBoxFooter();
 	if (selected_texture_index_ >= 0 && selected_texture_index_ < list_sprite_.size())
 	{
-		const SpritePtr& selected_sprite = list_sprite_[selected_texture_index_];
+		SpritePtr& selected_sprite = list_sprite_[selected_texture_index_];
 		ImGui::Text("Name: %s", selected_sprite->names_.c_str());
 		ImGui::Text("Position x , y: %d, %d", selected_sprite->GetPosition().x, selected_sprite->GetPosition().y);
 		ImGui::Separator();
@@ -294,11 +298,13 @@ void MAppWindow::ImGuiStuff()
 		if (selected_image_index_ >= 0 && selected_image_index_ < selected_sprite->_vec_textures.size())
 		{
 			const TexturePtr& selected_texture = selected_sprite->_vec_textures[selected_image_index_];
+			// 텍스쳐 인덱스
+			selected_sprite->texture_index_ = selected_image_index_;
 			ImGui::Text("Name: %s", selected_texture->tex_name_.c_str());
 		}
 		if (ImGui::Button("Load a texture"))
 		{
-			ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
+			ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga*.dds;){.png,.jpg,.jpeg,.bmp,.tgam,.dds},.*");
 		}
 		if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog"))
 		{
@@ -306,7 +312,6 @@ void MAppWindow::ImGuiStuff()
 			{
 				std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
 				TexturePtr load_texture = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
-
 				selected_sprite->AddTexture(load_texture);
 			}
 			ifd::FileDialog::Instance().Close();
@@ -314,7 +319,6 @@ void MAppWindow::ImGuiStuff()
 		ImGui::SameLine(100.0f, 30.f);
 		if(!selected_sprite->_vec_textures.empty())
 			ImGui::Checkbox("on loop animation", &selected_sprite->anim_loop_);
-
 	}
 	//
 	ImGui::Render();
@@ -381,12 +385,13 @@ void MAppWindow::ImGuiMainMenuBar()
 				ImGui::Text("Position");
 				ImGui::InputInt("position X", &position_valuex_);
 				ImGui::InputInt("position Y", &position_valuey_);
+				ImGui::InputInt("position Z", &position_valuez_);
 				ImGui::Separator();
 				if (ImGui::Button("Make"))
 				{
 					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
 					spr->Scale(scale_valuex_, scale_valuey_, 1);
-					spr->Position(position_valuex_, position_valuex_, 0);
+					spr->Position(position_valuex_, position_valuex_, position_valuez_);
 					spr->names_ = "Sprite" + std::to_string(sprite_count_);
 					spr->SpriteID_ = sprite_count_;
 					list_sprite_.push_back(spr);
@@ -429,6 +434,10 @@ void MAppWindow::ImGuiMainMenuBar()
 			ImGui::Checkbox("Z buffer On", &on_z_buffer_);
 			ImGui::SameLine(100.0f, 15.f);
 			ImGui::Checkbox("Z buffer Write On", &z_buffer_write_);
+			ImGui::Separator();
+			ImGui::Checkbox("Blend State On", &on_blend_state);
+			ImGui::SameLine(100.0f, 40.f);
+			ImGui::Checkbox("Blend testting On", &on_blend_testing);
 			ImGui::End();
 			ImGui::EndMenu();
 		}

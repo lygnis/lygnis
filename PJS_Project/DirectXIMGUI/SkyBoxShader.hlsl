@@ -15,3 +15,10 @@ float4 mainps(PS_INPUT input) : SV_TARGET
 {
 	return Texture.Sample(TextureSampler, 1.0 - input.texcoord);
 }
+
+float4 ps_testing(PS_INPUT input) : SV_TARGET
+{
+	float4 color = Texture.Sample(TextureSampler, 1.0 - input.texcoord);// *input.c;
+	if (color.a < 0.7)        discard;
+	return color;
+}

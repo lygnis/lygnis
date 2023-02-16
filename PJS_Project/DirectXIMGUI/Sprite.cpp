@@ -119,6 +119,10 @@ void Sprite::ReCompilePixelShader(const wchar_t* pixel_shader_path)
 
 	if (!_pixel_shader)
 		throw std::runtime_error("Material not created successfully");
+	MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(pixel_shader_path, "ps_testing", &shader_byte_code, &size_shader);
+	_pixel_shader_discard = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
+	if (!_pixel_shader)
+		throw std::runtime_error("Material not created successfully");
 }
 
 void Sprite::SetData(void* data, UINT size)

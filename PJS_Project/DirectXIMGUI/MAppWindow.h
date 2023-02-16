@@ -81,6 +81,8 @@ private:
 	bool wireframe_ = false;
 	bool on_z_buffer_ = true;
 	bool z_buffer_write_ = true;
+	bool on_blend_state = true;
+	bool on_blend_testing = false;
 	UINT tex_count_;
 
 	bool showButton = true;
@@ -90,8 +92,11 @@ private:
 	int scale_valuey_ = 0;
 	int position_valuex_ = 0;
 	int position_valuey_ = 0;
+	int position_valuez_ = 0;
 	int selected_texture_index_ =0;
-	int selected_image_index_ = -1;
+	int selected_image_index_ = 0;
 	UINT sprite_count_ = 0;
+	UINT texture_count_ = 0;
+	int animcount_=0;
 };
 
