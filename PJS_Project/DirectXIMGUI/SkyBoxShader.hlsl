@@ -13,6 +13,5 @@ struct PS_INPUT
 
 float4 mainps(PS_INPUT input) : SV_TARGET
 {
-
 	return Texture.Sample(TextureSampler, 1.0 - input.texcoord);
 }

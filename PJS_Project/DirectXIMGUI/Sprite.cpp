@@ -43,7 +43,7 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 	MGraphicsEngine::get()->getRenderSystem()->CompileVertexShader(vertex_shader_path, "mainvs", &shader_byte_code, &size_shader);
-	_vertex_shader = std::move(MGraphicsEngine::get()->getRenderSystem()->CreateVertexShader(shader_byte_code, size_shader));
+	_vertex_shader = MGraphicsEngine::get()->getRenderSystem()->CreateVertexShader(shader_byte_code, size_shader);
 
 	if (!_vertex_shader)
 		throw std::runtime_error("Material not created successfully");
@@ -51,11 +51,16 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 
 
 	MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(pixel_shader_path, "mainps", &shader_byte_code, &size_shader);
-	_pixel_shader = std::move(MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader));
+	_pixel_shader = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
 
 	if (!_pixel_shader)
 		throw std::runtime_error("Material not created successfully");
+	//MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(pixel_shader_path, "mainps_discard", &shader_byte_code, &size_shader);
+	//_pixel_shader_discard = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
+	//if (!_pixel_shader_discard)
+	// throw std::runtime_error("Material not created successfully");
 	index_buffer_ = MGraphicsEngine::get()->getRenderSystem()->CreateIndexBuffer(index_list, size_index_list);
+	names_ = "Sprite1";
 }
 
 Sprite::Sprite(const SpritePtr& sprite)
@@ -71,6 +76,15 @@ Sprite::~Sprite()
 void Sprite::AddTexture(const TexturePtr& texture)
 {
 	_vec_textures.push_back(texture);
+	if (!_vec_textures.empty())
+	{
+		recompile_shader_ = true;
+		if (recompile_shader_)
+		{
+			ReCompilePixelShader(L"SkyBoxShader.hlsl");
+			recompile_shader_ = false;
+		}
+	}
 }
 
 void Sprite::RemoveTexture(UINT index)

@@ -18,11 +18,12 @@ public:
 	void DrawSprite(const SpritePtr& spr);
 	void UpdateCamera();
 	void UpdateModel(TVector3 position, const std::vector<MaterialPtr>& list_material);
-	void UpdateUI(TVector3 position, SpritePtr& spr);
+	void UpdateUI(SpritePtr& spr);
 	void UpdateSkyBox();
 	void UpdateLight();
 	void Render();
 	void ImGuiStuff();
+	void ImGuiMainMenuBar();
 public:
 	// MWindow을(를) 통해 상속됨
 	virtual void OnCreate() override;
@@ -75,8 +76,11 @@ private:
 
 	std::vector<MaterialPtr> _list_materials;
 	std::vector<TexturePtr>	list_texture_;
+	std::vector<SpritePtr>  list_sprite_;
 	bool _fullscreen_state = false;
 	bool wireframe_ = false;
+	bool on_z_buffer_ = true;
+	bool z_buffer_write_ = true;
 	UINT tex_count_;
 
 	bool showButton = true;
@@ -86,5 +90,8 @@ private:
 	int scale_valuey_ = 0;
 	int position_valuex_ = 0;
 	int position_valuey_ = 0;
+	int selected_texture_index_ =0;
+	int selected_image_index_ = -1;
+	UINT sprite_count_ = 0;
 };
 

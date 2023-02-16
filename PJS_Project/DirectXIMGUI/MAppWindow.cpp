@@ -10,6 +10,8 @@
 #include "ImFileDialog.h"
 #include <filesystem>
 #include <Commdlg.h>
+#include "Texture.h"
+#include <random>
 
 __declspec(align(16))
 struct Constant
@@ -44,7 +46,6 @@ void MAppWindow::UpdateCamera()
 }
 void MAppWindow::UpdateLight()
 {
-	//_light_tor_y += 1.807f * Timer::get()->m_fDeltaTime;
 	_light_position = TVector4(180,140,70,1.0f);
 }
 
@@ -88,23 +89,8 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 	}
 }
 
-void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
+void MAppWindow::UpdateUI(SpritePtr& spr)
 {
-	//RECT rt = { (LONG)0,(LONG)0,(LONG)100,(LONG)400 };
-	//spr->SetRect(rt,0);
-	//TVector2 drawpos, drawsize;
-	//drawpos.x = (spr->position_.x / (float)(this->GetClientRect().right)*2.0f - 1.0f);
-	//drawpos.y = (spr->position_.y / (float)(this->GetClientRect().bottom)*2.0f - 1.0f);
-	//drawsize.x = (spr->sprite_rect_.right / (float)(this->GetClientRect().right) * 2);
-	//drawsize.y = (spr->sprite_rect_.bottom / (float)(this->GetClientRect().bottom) * 2);
-	//TVector3 position_list[] =
-	//{
-	//	{ TVector3(drawpos.x,drawpos.y,0.f)},
-	//	{ TVector3(drawpos.x+ drawsize.x,drawpos.y,0.f) },
-	//	{ TVector3(drawpos.x, drawpos.y - drawsize.y,0.f) },
-	//	{ TVector3(drawpos.x+ drawsize.x ,drawpos.y - drawsize.y ,0.f)},
-	//};
-
 	Constant cc;
 	TMatrix temp;
 	temp = temp.Identity;
@@ -112,7 +98,7 @@ void MAppWindow::UpdateUI(TVector3 position, SpritePtr& spr)
 	temp = TMatrix::CreateScale(spr->GetSclae());
 	cc._world = cc._world*temp;
 	temp= temp.Identity;
-	temp.Translation(position);
+	temp.Translation(spr->GetPosition());
 	cc._world = cc._world*temp;
 	cc._view = _camera->mat_ui_view_;
 	cc._proj = _camera->mat_ortho_;
@@ -144,14 +130,18 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 
 void MAppWindow::DrawSprite(const SpritePtr& spr)
 {
-	UINT animcount;
-	if (!list_texture_.empty())
-		animcount = (UINT)Timer::get()->m_fGameTime % list_texture_.size();
+	int animcount;
+	if (spr->anim_loop_)
+		animcount = (UINT)Timer::get()->m_fGameTime % spr->_vec_textures.size();
 	else
-		animcount = 0;
+	{
+		if(spr->SpriteID_ == selected_texture_index_)
+			animcount = selected_image_index_;
+	}
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
-	MGraphicsEngine::get()->SetSprite(spr, wireframe_, true, animcount);
+
+	MGraphicsEngine::get()->SetSprite(spr, wireframe_, true, animcount, on_z_buffer_, z_buffer_write_);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
 
@@ -161,7 +151,6 @@ void MAppWindow::OnCreate()
 	Timer::get()->Init();
 	Input::get()->Init();
 	InputSystem::get()->addListener(this);
-
 	// 카메라 생성 및 초기화
 	_camera = std::make_shared<DebugCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
@@ -171,8 +160,7 @@ void MAppWindow::OnCreate()
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
 	// 텍스쳐 로딩
-	_sky_Tex =			MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
-
+	_sky_Tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
 
 	// 스왑체인 생성
 	// 스카이 박스 메쉬
@@ -182,7 +170,6 @@ void MAppWindow::OnCreate()
 	_mater = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"PointLightShader.hlsl");
 	_mater->AddTexture(_sky_Tex);
 	_mater->SetCullMode(CULL_MODE_BACK);
-
 
 	// 스카이 박스
 	_skyMat = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"SkyBoxShader.hlsl");
@@ -197,7 +184,6 @@ void MAppWindow::OnUpdate()
 	Timer::get()->Frame();
 	Input::get()->Frame();
 
-
 	if (Input::get()->GetKey('F') == KEY_UP)
 	{
 		_fullscreen_state = !_fullscreen_state;
@@ -205,9 +191,6 @@ void MAppWindow::OnUpdate()
 
 		_swapChain->SetFullScreen(_fullscreen_state, size_screen.right, size_screen.bottom);
 	}
-	if (Input::get()->GetKey('V') == KEY_UP)
-		wireframe_ = !wireframe_;
-
 	this->Render();
 }
 
@@ -227,12 +210,14 @@ void MAppWindow::Render()
 	_list_materials.push_back(_skyMat);
 	DrawMesh(_sky_mesh, _list_materials);
 
-	if (test_sprite_ != NULL)
+
+	if (!list_sprite_.empty())
 	{
-		if (!test_sprite_->_vec_textures.empty())
-			test_sprite_->ReCompilePixelShader(L"SkyBoxShader.hlsl");
-		UpdateUI(TVector3(-400,100,0), test_sprite_);
-		DrawSprite(test_sprite_);
+		for (int i = 0; i < list_sprite_.size(); i++)
+		{
+			UpdateUI(list_sprite_[i]);
+			DrawSprite(list_sprite_[i]);
+		}
 	}
 
 	// imgui stuff
@@ -272,8 +257,73 @@ void MAppWindow::ImGuiStuff()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	//
+	ImGuiMainMenuBar();
 	
-	if (ImGui::BeginMainMenuBar()) 
+	ImGui::ListBoxHeader("Sprites");
+	for (int i = 0; i < list_sprite_.size(); i++)
+	{
+		const char* texture_name = list_sprite_[i]->names_.c_str();
+		bool is_selected = (i == selected_texture_index_);
+
+		if (ImGui::Selectable(texture_name, is_selected))
+		{
+			selected_texture_index_ = i;
+			//selected_image_index_ = -1;
+		}
+	}
+	ImGui::ListBoxFooter();
+	if (selected_texture_index_ >= 0 && selected_texture_index_ < list_sprite_.size())
+	{
+		const SpritePtr& selected_sprite = list_sprite_[selected_texture_index_];
+		ImGui::Text("Name: %s", selected_sprite->names_.c_str());
+		ImGui::Text("Position x , y: %d, %d", selected_sprite->GetPosition().x, selected_sprite->GetPosition().y);
+		ImGui::Separator();
+		ImGui::ListBoxHeader("Texture");
+		for (int i = 0; i < selected_sprite->_vec_textures.size(); i++)
+		{
+			const char* texture_name = selected_sprite->_vec_textures[i]->tex_name_.c_str();
+			bool is_selected = (i == selected_image_index_);
+			if (ImGui::Selectable(texture_name, is_selected))
+			{
+				selected_image_index_ = i;
+			}
+		}
+
+		ImGui::ListBoxFooter();
+		if (selected_image_index_ >= 0 && selected_image_index_ < selected_sprite->_vec_textures.size())
+		{
+			const TexturePtr& selected_texture = selected_sprite->_vec_textures[selected_image_index_];
+			ImGui::Text("Name: %s", selected_texture->tex_name_.c_str());
+		}
+		if (ImGui::Button("Load a texture"))
+		{
+			ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
+		}
+		if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog"))
+		{
+			if (ifd::FileDialog::Instance().HasResult())
+			{
+				std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
+				TexturePtr load_texture = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
+
+				selected_sprite->AddTexture(load_texture);
+			}
+			ifd::FileDialog::Instance().Close();
+		}
+		ImGui::SameLine(100.0f, 30.f);
+		if(!selected_sprite->_vec_textures.empty())
+			ImGui::Checkbox("on loop animation", &selected_sprite->anim_loop_);
+
+	}
+	//
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void MAppWindow::ImGuiMainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -300,7 +350,7 @@ void MAppWindow::ImGuiStuff()
 				if (ifd::FileDialog::Instance().HasResult())
 				{
 					std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
-					
+
 					//printf("SAVE[%s]\n", res.c_str());//콘솔
 					//OutputDebugStringA(res.c_str());//스튜디오
 				}
@@ -315,7 +365,7 @@ void MAppWindow::ImGuiStuff()
 
 			if (showButton)
 			{
-				if (ImGui::Button("Enter Value"))
+				if (ImGui::Button("Sprite Setting"))
 				{
 					showButton = false;
 					showMakeButton = true;
@@ -334,21 +384,36 @@ void MAppWindow::ImGuiStuff()
 				ImGui::Separator();
 				if (ImGui::Button("Make"))
 				{
-					test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
-					test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
-					test_sprite_->Position(position_valuex_, position_valuex_, 0);
+					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					spr->Scale(scale_valuex_, scale_valuey_, 1);
+					spr->Position(position_valuex_, position_valuex_, 0);
+					spr->names_ = "Sprite" + std::to_string(sprite_count_);
+					spr->SpriteID_ = sprite_count_;
+					list_sprite_.push_back(spr);
 					showButton = true;
 					showMakeButton = false;
+					sprite_count_++;
 				}
 				ImGui::Separator();
 				ImGui::Spacing();
-				if (ImGui::Button("Random Position"))
+				if (ImGui::Button("Random"))
 				{
-					test_sprite_ = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
-					test_sprite_->Scale(scale_valuex_, scale_valuey_, 1);
-					test_sprite_->Position(position_valuex_, position_valuex_, 0);
+					RECT rc = this->GetClientRect();
+					std::random_device rd;
+					std::mt19937 gen(rd());
+					std::uniform_int_distribution<> dis(-(rc.right/2), rc.right / 2);
+					TVector3 rand_pos; rand_pos.x = dis(gen);
+					std::uniform_int_distribution<> disy(-(rc.bottom / 2), rc.bottom / 2);
+					rand_pos.y = disy(gen); rand_pos.z = 0;
+					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					spr->Scale(50, 50, 1);
+					spr->Position(rand_pos.x, rand_pos.y, rand_pos.z);
+					spr->names_ = "Sprite" + std::to_string(sprite_count_);
+					spr->SpriteID_ = sprite_count_;
+					list_sprite_.push_back(spr);
 					showButton = true;
 					showMakeButton = false;
+					sprite_count_++;
 				}
 			}
 			ImGui::End();
@@ -356,55 +421,19 @@ void MAppWindow::ImGuiStuff()
 		}
 		if (ImGui::BeginMenu("Set State"))
 		{
-			ImGui::Begin("Make Sprite");
+			ImGui::Begin("Set State");
+			ImGui::Text("Set Culling Mode");
+			ImGui::Checkbox("On Wire Frame", &wireframe_);
+			ImGui::Separator();
+			ImGui::Text("Set Z Buffer Setting");
+			ImGui::Checkbox("Z buffer On", &on_z_buffer_);
+			ImGui::SameLine(100.0f, 15.f);
+			ImGui::Checkbox("Z buffer Write On", &z_buffer_write_);
 			ImGui::End();
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
-
 	}
-
-
-	
-
-	
-
-
-	/*if (ImGui::Button("Click me!"))
-	{
-		test_sprite_->_vec_textures.clear();
-		if (list_texture_.empty())
-		{
-			ImGui::OpenPopup("My Popup");
-			static bool popup = false;
-			if (ImGui::BeginPopupModal("No Image", &popup))
-			{
-				if (ImGui::Button("close", {20,20}))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndPopup();
-			}
-		}
-		else
-		{
-			for (int i = 0; i < list_texture_.size(); i++)
-			{
-				test_sprite_->AddTexture(list_texture_[i]);
-			}
-		}*/
-		
-
-
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//static bool show_demo_window = true;
-	//if (show_demo_window)
-	//ImGui::ShowDemoWindow(&show_demo_window);
-	//ImGui::Begin("UI Controller");
-	//if (ImGui::Button("Wire_Frame"))
-	//	wireframe_ = !wireframe_;
-	//ImGui::End();
 }
 
 

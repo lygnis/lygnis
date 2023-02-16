@@ -103,12 +103,12 @@ SpritePtr MGraphicsEngine::CreateSprite(const SpritePtr& sprite)
 	return spr;
 }
 
-void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame, bool tex_anim, UINT anim_count)
+void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame, bool tex_anim, int anim_count, bool on_z_buffer, bool z_buffer_write)
 {
 	// 레스터 라이스 컬링 모드 설정
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState(false, wire_frame);
 	// 깊이 상태값 설정
-	MGraphicsEngine::get()->getRenderSystem()->SetDepthStencilState();
+	MGraphicsEngine::get()->getRenderSystem()->SetDepthStencilState(on_z_buffer, z_buffer_write);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
 	// 쉐이더 설정
@@ -117,7 +117,7 @@ void MGraphicsEngine::SetSprite(const SpritePtr& sprite, const bool wire_frame, 
 
 	if (!sprite->_vec_textures.empty())
 	{
-		if(tex_anim)
+		if(tex_anim )
 			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[anim_count],1);
 		else
 			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[0], 1);

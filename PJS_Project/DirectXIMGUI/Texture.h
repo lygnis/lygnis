@@ -8,6 +8,7 @@ public:
 	Texture(const wchar_t* full_path);
 	~Texture();
 	D3D11_TEXTURE2D_DESC GetImageDesc();
+	std::string tex_name_;
 private:
 	D3D11_TEXTURE2D_DESC   tex_desc_;
 	ComPtr<ID3D11Texture2D> _texture = nullptr;

@@ -36,6 +36,7 @@ Texture::Texture(const wchar_t* full_path) : Resource(full_path)
 		hr = MGraphicsEngine::get()->getRenderSystem()->_d3d_Device->CreateShaderResourceView(_texture.Get(), &desc, &_srview);
 		if (FAILED(hr))
 			assert(false);
+		tex_name_ = wtm(full_path);
 	}
 	else
 	{

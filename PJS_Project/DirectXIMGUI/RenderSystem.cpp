@@ -149,12 +149,18 @@ void RenderSystem::SetRaterizerState(bool cull_front, bool wire_frame)
 
 }
 
-void RenderSystem::SetDepthStencilState()
+void RenderSystem::SetDepthStencilState(bool on_z_buffer, bool z_buffer_write)
 {
 	UINT ref = 0x01;
 	// 깊이 활성화
-	_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_enable_.Get(), ref);
-	
+	if(on_z_buffer&& z_buffer_write)
+		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_enable_.Get(), ref);
+	if(on_z_buffer&& !z_buffer_write)
+		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_enable_no_write_.Get(), ref);
+	if (!on_z_buffer && z_buffer_write)
+		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_disable_.Get(), ref);
+	if (!on_z_buffer && !z_buffer_write)
+		_immContext->GetDeviceContext()->OMSetDepthStencilState(dss_depth_disable_no_write.Get(), ref);
 }
 
 void RenderSystem::InitRasterizerState()
@@ -223,6 +229,28 @@ void RenderSystem::InitDepthStencilState()
 	{
 		assert(false);
 	}
+}
+
+void RenderSystem::InitAlphaBelnd()
+{
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
+	// 멀티 샘플링에서 사용
+	blendDesc.AlphaToCoverageEnable = FALSE;
+	// 블렌딩을 사용할지 안할지 결정
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	_d3d_Device->CreateBlendState(&blendDesc, &alpha_blend_);
+	blendDesc.RenderTarget[0].BlendEnable = FALSE;
+	_d3d_Device->CreateBlendState(&blendDesc, &no_alpha_blend_);
 }
 
 

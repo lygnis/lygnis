@@ -25,7 +25,7 @@ public:
 	// Ω∫«¡∂Û¿Ã∆Æ ∑ª¥ı∏µ
 	SpritePtr	CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
 	SpritePtr	CreateSprite(const SpritePtr& sprite);
-	void		SetSprite(const SpritePtr& material, const bool wire_frame, bool tex_anim, UINT anim_count);
+	void		SetSprite(const SpritePtr& material, const bool wire_frame, bool tex_anim, int anim_count, bool on_z_buffer, bool z_buffer_write);
 public:
 	// ΩÃ±€≈Ê
 	static MGraphicsEngine* get();

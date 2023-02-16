@@ -146,7 +146,7 @@ MWindow::MWindow()
 		throw std::exception("Window not Created Successfully");
 
 	// 윈도우 생성 및 핸들 반환
-	_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX App", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
+	_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX App", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1280, 800,
 		NULL, NULL, NULL, NULL);			// 윈도우 객체를 생성자에서 아직 생성중이기 때문에 this 대신 NULL
 	// 윈도우 핸들 생성 실패시
 	if (!_hwnd)

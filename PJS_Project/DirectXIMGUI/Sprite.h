@@ -37,6 +37,11 @@ public:
 	std::vector<TexturePtr> _vec_textures;
 	// 스프라이트 크기 조정
 	RECT			sprite_rect_;
+	// 이름
+	std::string		names_;
+	// ID
+	UINT			SpriteID_;
+	bool			anim_loop_ = false;
 private:
 	// 크기
 	TVector3 spr_scale_;
@@ -47,9 +52,11 @@ private:
 	ConstantBufferPtr _constant_buffer;
 	MVertexShaderPtr _vertex_shader;
 	PixelShaderPtr  _pixel_shader;
+	PixelShaderPtr  _pixel_shader_discard;
 	// 텍스쳐 사이즈
 	std::vector<RECT>			uv_rect_;
 	std::vector<POINT>			image_size_;
+	bool						recompile_shader_ = false;
 private:
 	friend class MGraphicsEngine;
 };
