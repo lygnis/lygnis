@@ -108,7 +108,6 @@ bool RenderSystem::CompileVertexShader(const WCHAR* file_name, const CHAR* point
 	*shader_byte_code = _vsBlob->GetBufferPointer();
 	*byte_code_size = _vsBlob->GetBufferSize();
 
-
 	return true;
 }
 
@@ -117,7 +116,6 @@ bool RenderSystem::CompilePixelShader(const WCHAR* filename, const CHAR* point_n
 	HRESULT hr;
 	ComPtr<ID3DBlob> errCode = nullptr;
 	// 쉐이더 컴파일러
-
 	hr = D3DCompileFromFile(filename, nullptr, nullptr, point_name, "ps_5_0", NULL, NULL, _psBlob.GetAddressOf(), errCode.GetAddressOf());
 	if (FAILED(hr))
 	{

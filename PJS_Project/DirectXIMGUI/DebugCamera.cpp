@@ -11,37 +11,31 @@ bool DebugCamera::Frame()
     {
         TBASIS_EX::TVector3 _v = m_vLook * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos += _v;
-        //vTarget.z += 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('S') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vLook * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos -= _v;
-        //vTarget.z -= 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('D') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vRight * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos += _v;
-        //vTarget.x -= 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('A') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vRight * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos -= _v;
-        //vTarget.x += 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('Q') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vUp * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos += _v;
-        //vTarget.y += 10.0f * g_fSecondPerFrame;
     }
     if (Input::get()->GetKey('E') == KEY_HOLD)
     {
         TBASIS_EX::TVector3 _v = m_vUp * 10 * Timer::get()->m_fDeltaTime;
         m_vCameraPos -= _v;
-        //vTarget.y -= 10.0f * g_fSecondPerFrame;
     }
     
     TBASIS_EX::TVector3 _vPos;
@@ -49,7 +43,7 @@ bool DebugCamera::Frame()
     _vPos.y = m_vCameraPos.y;
     _vPos.z = m_vCameraPos.z;
     ////////////////////////////////////////////////////////
-
+    // 카메라 위치, 회전값 변경
     TBASIS_EX::TMatrix matView;
     TBASIS_EX::TMatrix matProj;
     TBASIS_EX::TQuaternion qRotation;

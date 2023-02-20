@@ -6,9 +6,6 @@ IndexBuffer::IndexBuffer(void* list_indices, UINT size_list ,RenderSystem* syste
 {
     HRESULT hr;
 
-
-
-
     D3D11_BUFFER_DESC buffDesc = {};
     buffDesc.Usage = D3D11_USAGE_DEFAULT;
     buffDesc.ByteWidth = 4 * size_list;

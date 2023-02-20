@@ -18,7 +18,7 @@ cbuffer constant : register(b0)
 	row_major float4x4 _proj;
 	float4 _light_dir;
 	float4 _cameraPos;
-	float _time;
+	float _discard;
 };
 
 float4 mainps(PS_INPUT input) : SV_TARGET

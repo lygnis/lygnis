@@ -53,8 +53,8 @@ private:
 	TexturePtr			sprite_tex2_;
 
 	MeshPtr				_sky_mesh;
-	SpritePtr			test_sprite_;
-
+	//SpritePtr			test_sprite_;
+	ButtonPtr			test_button_;
 
 	MaterialPtr			_mater;
 	MaterialPtr			_bricks_mat;
@@ -84,6 +84,7 @@ private:
 	bool on_blend_state = true;
 	bool on_blend_testing = false;
 	UINT tex_count_;
+	float alpha_test_val_ =0.3f;
 
 	bool showButton = true;
 	bool showMakeButton = false;

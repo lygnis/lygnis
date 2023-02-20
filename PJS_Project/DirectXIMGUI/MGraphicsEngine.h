@@ -4,7 +4,7 @@
 #include "RenderSystem.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
-#include "Sprite.h"
+#include "Button.h"
 #include "Material.h"
 
 class MGraphicsEngine
@@ -25,6 +25,8 @@ public:
 	// 스프라이트 렌더링
 	SpritePtr	CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
 	SpritePtr	CreateSprite(const SpritePtr& sprite);
+	ButtonPtr	CreateButton(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
+	ButtonPtr   CreateButton(const ButtonPtr& button);
 	void		SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
 	void        SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
 	void		SetState(const bool wire_frame, bool on_z_buffer, bool z_buffer_write, bool blend_state);

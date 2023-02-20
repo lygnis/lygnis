@@ -95,6 +95,12 @@ SpritePtr MGraphicsEngine::CreateSprite(const wchar_t* vertex_shader_path, const
 	sprite = std::make_shared<Sprite>(vertex_shader_path, pixel_shader_path);
 	return sprite;
 }
+ButtonPtr MGraphicsEngine::CreateButton(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
+{
+	ButtonPtr btn;
+	btn = std::make_shared<Button>(vertex_shader_path, pixel_shader_path);
+	return btn;
+}
 
 SpritePtr MGraphicsEngine::CreateSprite(const SpritePtr& sprite)
 {
@@ -102,6 +108,13 @@ SpritePtr MGraphicsEngine::CreateSprite(const SpritePtr& sprite)
 	spr = std::make_shared<Sprite>(sprite);
 	return spr;
 }
+ButtonPtr MGraphicsEngine::CreateButton(const ButtonPtr& button)
+{
+	ButtonPtr btn;
+	btn = std::make_shared<Button>(button);
+	return btn;
+}
+
 void MGraphicsEngine::SetState(const bool wire_frame, bool on_z_buffer, bool z_buffer_write, bool blend_state)
 {
 	// 레스터 라이스 컬링 모드 설정

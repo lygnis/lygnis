@@ -43,7 +43,7 @@ public:
 	UINT			SpriteID_;
 	bool			anim_loop_ = false;
 	UINT			texture_index_=0;
-private:
+protected:
 	// Å©±â
 	TVector3 spr_scale_;
 	TVector3 spr_position_;

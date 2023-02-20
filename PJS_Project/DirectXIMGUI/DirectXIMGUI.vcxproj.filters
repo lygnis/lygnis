@@ -198,6 +198,9 @@
     <ClCompile Include="ImFileDialog.cpp">
       <Filter>IMGUI\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MAppWindow.h">
@@ -319,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>IMGUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

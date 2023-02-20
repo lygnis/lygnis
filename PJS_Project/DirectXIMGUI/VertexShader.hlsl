@@ -14,6 +14,7 @@ struct VS_OUTPUT
 	float3 normal: NORMAL;
 	float4 color : COLOR;
 	float3 direction_cam: TEXCOORD1;
+	float _discard : TEXCOORD2;
 };
 
 cbuffer constant : register(b0)
@@ -23,6 +24,7 @@ cbuffer constant : register(b0)
 	row_major float4x4 _proj;
 	float4 _light_dir;
 	float4 _cameraPos;
+	float  _discard;
 }
 
 VS_OUTPUT mainvs(VS_INPUT  input)
@@ -37,7 +39,7 @@ VS_OUTPUT mainvs(VS_INPUT  input)
 	output.position = mul(output.position, _view);
 	// Åõ¿µ ÁÂÇ¥°è
 	output.position = mul(output.position, _proj);
-
+	output._discard = _discard;
 	output.texcoord = input.texcoord;
 	output.normal = input.normal;
 	//output.color = input.color;

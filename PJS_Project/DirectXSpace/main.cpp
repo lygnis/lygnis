@@ -1,4 +1,4 @@
-#include "SpaceShooterGame.h"
+#include "BumpMapping.h"
 #include "InputSystem.h"
 int main()
 {
@@ -14,7 +14,7 @@ int main()
 	{
 		try
 		{
-			SpaceShooterGame app;
+			BumpMapping app;
 			while (app.IsRun())
 			{
 			}

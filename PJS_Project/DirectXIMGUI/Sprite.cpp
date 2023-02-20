@@ -7,10 +7,10 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 {
 	TVector3 position_list[] =
 	{
-		{ TVector3(-0.5f,-0.5f,-0.5f)},
-		{ TVector3(-0.5f,0.5f,-0.5f) },
-		{ TVector3(0.5f,0.5f,-0.5f) },
-		{ TVector3(0.5f,-0.5f,-0.5f)},
+		{ TVector3(-1.0f,-1.0f,-1.0f)},
+		{ TVector3(-1.f,1.0f,-1.0f) },
+		{ TVector3(1.f,1.f,-1.f) },
+		{ TVector3(1.f,-1.f,-1.f)},
 	};
 	TVector2 texcoord_list[] =
 	{
@@ -46,7 +46,7 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 	_vertex_shader = MGraphicsEngine::get()->getRenderSystem()->CreateVertexShader(shader_byte_code, size_shader);
 
 	if (!_vertex_shader)
-		throw std::runtime_error("Material not created successfully");
+		throw std::runtime_error("Sprite not created successfully");
 	vertex_buffer_ = MGraphicsEngine::get()->getRenderSystem()->CreateVertexBuffer(vertex_list, sizeof(vertex), size_list, shader_byte_code, (UINT)size_shader);
 
 
@@ -54,7 +54,7 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 	_pixel_shader = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
 
 	if (!_pixel_shader)
-		throw std::runtime_error("Material not created successfully");
+		throw std::runtime_error("Sprite not created successfully");
 	//MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(pixel_shader_path, "mainps_discard", &shader_byte_code, &size_shader);
 	//_pixel_shader_discard = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
 	//if (!_pixel_shader_discard)

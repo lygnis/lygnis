@@ -4,6 +4,7 @@
 #include "InputSystem.h"
 #include "Mesh.h"
 #include "Sprite.h"
+#include "Button.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -22,6 +23,7 @@ struct Constant
 	TVector4 _light_dir;
 	TVector4 _cameraPos;
 	TVector4 _light_position = TVector4(0,1,0,0);
+	float    discard;
 	float _light_radius;
 	float _cTime = 0.0f;
 };
@@ -29,6 +31,7 @@ struct UIConstant
 {
 	TVector3 position;
 	TVector2 texcoord;
+
 };
 
 void MAppWindow::UpdateQuadPosition()
@@ -102,7 +105,7 @@ void MAppWindow::UpdateUI(SpritePtr& spr)
 	cc._world = cc._world*temp;
 	cc._view = _camera->mat_ui_view_;
 	cc._proj = _camera->mat_ortho_;
-
+	cc.discard = alpha_test_val_;
 	spr->SetData(&cc, sizeof(Constant));
 }
 
@@ -163,6 +166,9 @@ void MAppWindow::OnCreate()
 	_camera->CreateOrthoLH((float)(this->GetClientRect().right), (float)(this->GetClientRect().bottom),0.f,1000.f);
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
+
+	test_button_ = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"PixelShader.hlsl");
+
 	// 텍스쳐 로딩
 	_sky_Tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
 
@@ -187,6 +193,12 @@ void MAppWindow::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
+	RECT rc = this->GetClientRect();
+	UINT width = rc.right - rc.left;
+	UINT height = rc.bottom - rc.top;
+	float mouseX = ((2.0f * Input::get()->m_pMpos.x) / width) - 1.0f;
+	float mouseY = (((2.0f * Input::get()->m_pMpos.y) / height) - 1.0f) * -1.0f;
+	
 
 	if (Input::get()->GetKey('F') == KEY_UP)
 	{
@@ -281,7 +293,8 @@ void MAppWindow::ImGuiStuff()
 	{
 		SpritePtr& selected_sprite = list_sprite_[selected_texture_index_];
 		ImGui::Text("Name: %s", selected_sprite->names_.c_str());
-		ImGui::Text("Position x , y: %d, %d", selected_sprite->GetPosition().x, selected_sprite->GetPosition().y);
+		ImGui::Text("Position x , y , z: %d, %d, %d", selected_sprite->GetPosition().x, selected_sprite->GetPosition().y, selected_sprite->GetPosition().z);
+
 		ImGui::Separator();
 		ImGui::ListBoxHeader("Texture");
 		for (int i = 0; i < selected_sprite->_vec_textures.size(); i++)
@@ -406,12 +419,12 @@ void MAppWindow::ImGuiMainMenuBar()
 					RECT rc = this->GetClientRect();
 					std::random_device rd;
 					std::mt19937 gen(rd());
-					std::uniform_int_distribution<> dis(-(rc.right/2), rc.right / 2);
+					std::uniform_int_distribution<> dis(-(rc.right/2)+35, (rc.right / 2)-35);
 					TVector3 rand_pos; rand_pos.x = dis(gen);
-					std::uniform_int_distribution<> disy(-(rc.bottom / 2), rc.bottom / 2);
+					std::uniform_int_distribution<> disy(-(rc.bottom / 2)+35, (rc.bottom / 2)-35);
 					rand_pos.y = disy(gen); rand_pos.z = 0;
 					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
-					spr->Scale(50, 50, 1);
+					spr->Scale(70, 70, 1);
 					spr->Position(rand_pos.x, rand_pos.y, rand_pos.z);
 					spr->names_ = "Sprite" + std::to_string(sprite_count_);
 					spr->SpriteID_ = sprite_count_;
@@ -438,6 +451,8 @@ void MAppWindow::ImGuiMainMenuBar()
 			ImGui::Checkbox("Blend State On", &on_blend_state);
 			ImGui::SameLine(100.0f, 40.f);
 			ImGui::Checkbox("Blend testting On", &on_blend_testing);
+			ImGui::Separator();
+			ImGui::DragFloat("testting drag", &alpha_test_val_, 0.01f, 0.1f, 0.9f);
 			ImGui::End();
 			ImGui::EndMenu();
 		}
