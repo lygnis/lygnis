@@ -163,6 +163,16 @@ void MGraphicsEngine::SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, 
 	}
 }
 
+void MGraphicsEngine::SetButton(const ButtonPtr& sprite, ButtonState state)
+{
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
+	// ½¦ÀÌ´õ ¼³Á¤
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[state], 1);
+}
+
 
 MGraphicsEngine* MGraphicsEngine::get()
 {

@@ -19,7 +19,8 @@ bool		Input::Frame()
     ::ScreenToClient(g_hWnd, &m_pMpos); // 클라이언트
     m_pOffset.x = m_pMpos.x - m_pPrevMpos.x;
     m_pOffset.y = m_pMpos.y - m_pPrevMpos.y;
-
+    //std::cout << m_pMpos.x << "\n";
+    //std::cout << m_pMpos.y << "\n";
     for (int iKey = 0; iKey < 256; iKey++)
     {
         SHORT sKey = ::GetAsyncKeyState(iKey); // 비동기 키 상태 

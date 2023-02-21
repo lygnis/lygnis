@@ -109,6 +109,34 @@ void MAppWindow::UpdateUI(SpritePtr& spr)
 	spr->SetData(&cc, sizeof(Constant));
 }
 
+void MAppWindow::UpdateBTN(ButtonPtr& spr)
+{
+	Constant cc;
+	TMatrix temp;
+	spr->SetState(BTN_NORMAL);
+	temp = temp.Identity;
+	cc._world.Identity;
+	temp = TMatrix::CreateScale(spr->GetSclae());
+	cc._world = cc._world * temp;
+	temp = temp.Identity;
+	temp.Translation(spr->GetPosition());
+	cc._world = cc._world * temp;
+	cc._view = _camera->mat_ui_view_;
+	cc._proj = _camera->mat_ortho_;
+
+	spr->CoordUpdate(cc._world, view_port_);
+	RECT rt = spr->GetRect();
+	if (PtInRect(&rt, Input::get()->m_pMpos))
+	{
+		spr->SetState(BTN_HOVER);
+		if (Input::get()->GetKey(VK_LBUTTON))
+		{
+			spr->SetState(BTN_CLICK);
+		}
+	}
+	spr->SetData(&cc, sizeof(Constant));
+}
+
 void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
 {
 	// 오브젝트 렌더링
@@ -152,6 +180,15 @@ void MAppWindow::DrawSprite(const SpritePtr& spr)
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
 
+void MAppWindow::DrawButton(const ButtonPtr& btn)
+{
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(btn->GetVertexBuffer());
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(btn->GetIndexBuffer());
+	MGraphicsEngine::get()->SetState(wireframe_, on_z_buffer_, z_buffer_write_, true);
+	MGraphicsEngine::get()->SetButton(btn,btn->GetState());
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(btn->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
+}
+
 void MAppWindow::OnCreate()
 {
 	// 타이머
@@ -167,10 +204,12 @@ void MAppWindow::OnCreate()
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
 
-	test_button_ = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"PixelShader.hlsl");
-
+	test_button_ = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"UIPixelShader.hlsl");
+	test_button_->Position(0,0,0);
+	test_button_->Scale(150,70,1);
 	// 텍스쳐 로딩
 	_sky_Tex =	MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
+
 
 	// 스왑체인 생성
 	// 스카이 박스 메쉬
@@ -185,6 +224,8 @@ void MAppWindow::OnCreate()
 	_skyMat = MGraphicsEngine::get()->CreateMaterial(L"PointLightVertex.hlsl", L"SkyBoxShader.hlsl");
 	_skyMat->AddTexture(_sky_Tex);	
 	_skyMat->SetCullMode(CULL_MODE_FRONT);
+	view_port_ = TMatrix::Identity;
+	view_port_._11 = 1; view_port_._22 = -1; view_port_._41 = (float)this->GetClientRect().right /2; view_port_._42 = (float)this->GetClientRect().bottom / 2;
 
 	_list_materials.reserve(32);
 }
@@ -193,13 +234,6 @@ void MAppWindow::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
-	RECT rc = this->GetClientRect();
-	UINT width = rc.right - rc.left;
-	UINT height = rc.bottom - rc.top;
-	float mouseX = ((2.0f * Input::get()->m_pMpos.x) / width) - 1.0f;
-	float mouseY = (((2.0f * Input::get()->m_pMpos.y) / height) - 1.0f) * -1.0f;
-	
-
 	if (Input::get()->GetKey('F') == KEY_UP)
 	{
 		_fullscreen_state = !_fullscreen_state;
@@ -235,7 +269,8 @@ void MAppWindow::Render()
 			DrawSprite(list_sprite_[i]);
 		}
 	}
-
+	UpdateBTN(test_button_);
+	DrawButton(test_button_);
 	// imgui stuff
 	ImGuiStuff();
 	// 버퍼 바꾸기
@@ -437,6 +472,47 @@ void MAppWindow::ImGuiMainMenuBar()
 			ImGui::End();
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Make Button"))
+		{
+			ImGui::Begin("Make Button");
+			ImGui::Text("Set Scale and Position");
+
+			if (showButton)
+			{
+				if (ImGui::Button("Button Setting"))
+				{
+					showButton = false;
+					showMakeButton = true;
+				}
+			}
+
+			if (showMakeButton)
+			{
+				ImGui::Text("Scale");
+				ImGui::InputInt("scale X", &scale_valuex_);
+				ImGui::InputInt("scale Y", &scale_valuey_);
+				ImGui::Separator();
+				ImGui::Text("Position");
+				ImGui::InputInt("position X", &position_valuex_);
+				ImGui::InputInt("position Y", &position_valuey_);
+				ImGui::InputInt("position Z", &position_valuez_);
+				ImGui::Separator();
+				if (ImGui::Button("Make"))
+				{
+					ButtonPtr btn = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					btn->Scale(scale_valuex_, scale_valuey_, 1);
+					btn->Position(position_valuex_, position_valuex_, position_valuez_);
+					btn->names_ = "Button" + std::to_string(sprite_count_);
+					btn->SpriteID_ = sprite_count_;
+					list_button_.push_back(btn);
+					showButton = true;
+					showMakeButton = false;
+					sprite_count_++;
+				}
+			}
+			ImGui::End();
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Set State"))
 		{
 			ImGui::Begin("Set State");
@@ -458,6 +534,18 @@ void MAppWindow::ImGuiMainMenuBar()
 		}
 		ImGui::EndMainMenuBar();
 	}
+}
+
+bool MAppWindow::MpRect(const RECT& rt, const float x, const float y)
+{
+	if (rt.left <= x && rt.right >= x)
+	{
+		if (rt.top <= y && rt.bottom >= y)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 

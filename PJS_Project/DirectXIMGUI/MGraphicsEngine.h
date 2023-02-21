@@ -28,6 +28,7 @@ public:
 	ButtonPtr	CreateButton(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
 	ButtonPtr   CreateButton(const ButtonPtr& button);
 	void		SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
+	void		SetButton(const ButtonPtr& sprite, ButtonState state);
 	void        SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
 	void		SetState(const bool wire_frame, bool on_z_buffer, bool z_buffer_write, bool blend_state);
 public:

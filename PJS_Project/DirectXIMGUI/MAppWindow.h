@@ -16,14 +16,17 @@ public:
 	// 버텍스 셰이더 픽셀셰이더와 같은 모든 리소스가 이제 머티리얼의 일부이다.
 	void DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material);
 	void DrawSprite(const SpritePtr& spr);
+	void DrawButton(const ButtonPtr& btn);
 	void UpdateCamera();
 	void UpdateModel(TVector3 position, const std::vector<MaterialPtr>& list_material);
 	void UpdateUI(SpritePtr& spr);
+	void UpdateBTN(ButtonPtr& spr);
 	void UpdateSkyBox();
 	void UpdateLight();
 	void Render();
 	void ImGuiStuff();
 	void ImGuiMainMenuBar();
+	bool MpRect(const RECT& rt, const float x, const float y);
 public:
 	// MWindow을(를) 통해 상속됨
 	virtual void OnCreate() override;
@@ -72,11 +75,13 @@ private:
 	TMatrix _world_cam;
 	TMatrix _view_cam;
 	TMatrix _proj_cam;
+	TMatrix view_port_;
 	TVector4 _light_position;
 
 	std::vector<MaterialPtr> _list_materials;
 	std::vector<TexturePtr>	list_texture_;
 	std::vector<SpritePtr>  list_sprite_;
+	std::vector<ButtonPtr>  list_button_;
 	bool _fullscreen_state = false;
 	bool wireframe_ = false;
 	bool on_z_buffer_ = true;

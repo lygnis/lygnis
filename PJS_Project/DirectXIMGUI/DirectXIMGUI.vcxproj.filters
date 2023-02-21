@@ -349,5 +349,8 @@
     <FxCompile Include="UIVertexShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="UIPixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

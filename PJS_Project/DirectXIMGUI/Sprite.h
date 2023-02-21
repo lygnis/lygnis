@@ -20,7 +20,6 @@ public:
 
 	void AddTexture(const TexturePtr& texture);
 	void RemoveTexture(UINT index);
-	void SetRect(RECT rt, UINT tex_num_size);
 	void ReCompilePixelShader(const wchar_t* pixel_shader_path);
 	// 상수버퍼 업데이트
 	void SetData(void* data, UINT size);
@@ -32,11 +31,12 @@ public:
 	TVector3 GetSclae();
 	void Position(float x, float y, float z);
 	TVector3 GetPosition();
+	RECT	GetRect();
 public:
 	// 
 	std::vector<TexturePtr> _vec_textures;
 	// 스프라이트 크기 조정
-	RECT			sprite_rect_;
+	RECT			rect_;
 	// 이름
 	std::string		names_;
 	// ID
@@ -47,13 +47,15 @@ protected:
 	// 크기
 	TVector3 spr_scale_;
 	TVector3 spr_position_;
-
+	vertex   vertices[4];
 	MVertexBufferPtr vertex_buffer_;
 	IndexBufferPtr index_buffer_;
 	ConstantBufferPtr _constant_buffer;
 	MVertexShaderPtr _vertex_shader;
 	PixelShaderPtr  _pixel_shader;
 	PixelShaderPtr  _pixel_shader_discard;
+
+
 	// 텍스쳐 사이즈
 	std::vector<RECT>			uv_rect_;
 	std::vector<POINT>			image_size_;

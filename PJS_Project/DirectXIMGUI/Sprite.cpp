@@ -17,7 +17,7 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 		{ TVector2(0.0f,0.0f) },
 		{ TVector2(0.0f,1.0f) },
 		{ TVector2(1.0f,0.0f) },
-		{ TVector2(1.0f,1.0f) }
+		{ TVector2(1.0f,1.0f) },
 	};
 	TVector4 color_list[] =
 	{
@@ -32,6 +32,10 @@ Sprite::Sprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_pa
 		{ position_list[2],texcoord_list[2],TVector3(0,0,0),  color_list[0] },
 		{ position_list[3],texcoord_list[3],TVector3(0,0,0),  color_list[0] },
 	};
+	vertices[0] = vertex_list[0];
+	vertices[1] = vertex_list[1];
+	vertices[2] = vertex_list[2];
+	vertices[3] = vertex_list[3];
 	UINT size_list = ARRAYSIZE(vertex_list);
 	unsigned int index_list[] =
 	{
@@ -94,21 +98,6 @@ void Sprite::RemoveTexture(UINT index)
 	_vec_textures.erase(_vec_textures.begin() + index);
 }
 
-void Sprite::SetRect(RECT rt, UINT tex_num_size)
-{
-	// 스프라이트 크기 초기화 및 텍스쳐 크기
-	sprite_rect_ = rt;
-	image_size_.resize(tex_num_size);
-	uv_rect_.resize(tex_num_size);
-
-	for (int i = 0; i < tex_num_size; i++)
-	{
-		image_size_[i].x=_vec_textures[i]->GetImageDesc().Width;
-		image_size_[i].y=_vec_textures[i]->GetImageDesc().Height;
-		uv_rect_[i].left = sprite_rect_.left / image_size_[i].x;
-		uv_rect_[i].top = sprite_rect_.top / image_size_[i].y;
-	}
-}
 
 void Sprite::ReCompilePixelShader(const wchar_t* pixel_shader_path)
 {
@@ -170,4 +159,9 @@ void Sprite::Position(float x, float y, float z)
 TVector3 Sprite::GetPosition()
 {
 	return spr_position_;
+}
+
+RECT Sprite::GetRect()
+{
+	return rect_;
 }
