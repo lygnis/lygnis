@@ -6,27 +6,26 @@
 #include "MeshManager.h"
 #include "Button.h"
 #include "Material.h"
-
+#include "ObjectManager.h"
 class MGraphicsEngine
 {
 public:
 	MGraphicsEngine();
 	~MGraphicsEngine();
 public:
-	RenderSystem* getRenderSystem();
-	TextureManager* getTextureManager();
-	MeshManager* getMeshManager();
+	RenderSystem*		getRenderSystem();
+	TextureManager*		getTextureManager();
+	MeshManager*		getMeshManager();
+	std::shared_ptr<ObjectManager>		GetObjectManager();
 	void		GetVertexMeshLayoutShader(void** byte_code, size_t* size);
+	void		SaveToJson(const std::string& filepath);
+	void		LoadToJson(const std::string& filepath);
 public:
 	// 머티리얼 렌더링
 	MaterialPtr CreateMaterial(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
 	MaterialPtr CreateMaterial(const MaterialPtr& material);
 	void		SetMaterial(const MaterialPtr& material, const bool wire_frame);
 	// 스프라이트 렌더링
-	SpritePtr	CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
-	SpritePtr	CreateSprite(const SpritePtr& sprite);
-	ButtonPtr	CreateButton(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
-	ButtonPtr   CreateButton(const ButtonPtr& button);
 	void		SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
 	void		SetButton(const ButtonPtr& sprite, ButtonState state);
 	void        SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
@@ -38,6 +37,7 @@ public:
 	static void				Release();
 private:
 	std::shared_ptr<RenderSystem> _render_system;
+	std::shared_ptr<ObjectManager> obj_manager_;
 	TextureManager* _tex_manager = nullptr;
 	MeshManager* _mesh_manger = nullptr;
 

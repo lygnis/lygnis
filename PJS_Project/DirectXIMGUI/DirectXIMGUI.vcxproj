@@ -178,6 +178,7 @@
     <ClCompile Include="MVertexBuffer.cpp" />
     <ClCompile Include="MVertexShader.cpp" />
     <ClCompile Include="MWindow.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="MVertexBuffer.h" />
     <ClInclude Include="MVertexShader.h" />
     <ClInclude Include="MWindow.h" />
+    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RenderSystem.h" />

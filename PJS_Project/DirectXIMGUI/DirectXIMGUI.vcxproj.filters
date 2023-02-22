@@ -201,6 +201,9 @@
     <ClCompile Include="Button.cpp">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MAppWindow.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

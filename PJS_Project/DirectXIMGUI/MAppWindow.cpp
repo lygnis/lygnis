@@ -92,7 +92,7 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 	}
 }
 
-void MAppWindow::UpdateUI(SpritePtr& spr)
+void MAppWindow::UpdateUI(const SpritePtr& spr)
 {
 	Constant cc;
 	TMatrix temp;
@@ -161,20 +161,19 @@ void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& l
 
 void MAppWindow::DrawSprite(const SpritePtr& spr)
 {
-	if (spr->anim_loop_)
-		animcount_ = (UINT)Timer::get()->m_fGameTime % spr->_vec_textures.size();
-	else
-	{
-		if(spr->SpriteID_ == selected_texture_index_)
-			animcount_ = selected_image_index_;
-	}
+	//if (spr->anim_loop_)
+	//	animcount_ = (UINT)Timer::get()->m_fGameTime % spr->_vec_textures.size();
+	//else
+	//{
+
+	//}
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(spr->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(spr->GetIndexBuffer());
 	MGraphicsEngine::get()->SetState(wireframe_, on_z_buffer_, z_buffer_write_, on_blend_state);
-	if (on_blend_testing && !spr->_vec_textures.empty())
-		MGraphicsEngine::get()->SetTesttingSprite(spr, spr->anim_loop_, animcount_);
+	if (on_blend_testing) //&& !spr->_vec_textures.empty())
+		MGraphicsEngine::get()->SetTesttingSprite(spr, spr->anim_loop_, 0);
 	else
-		MGraphicsEngine::get()->SetSprite(spr, spr->anim_loop_, animcount_);
+		MGraphicsEngine::get()->SetSprite(spr, spr->anim_loop_, spr->set_tex_index);
 
 	
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(spr->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
@@ -204,7 +203,7 @@ void MAppWindow::OnCreate()
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right-rc.left,rc.bottom-rc.top);
 
 
-	test_button_ = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"UIPixelShader.hlsl");
+	test_button_ = MGraphicsEngine::get()->GetObjectManager()->CreateButton(L"VertexShader.hlsl", L"UIPixelShader.hlsl");
 	test_button_->Position(0,0,0);
 	test_button_->Scale(150,70,1);
 	// 텍스쳐 로딩
@@ -261,16 +260,19 @@ void MAppWindow::Render()
 	DrawMesh(_sky_mesh, _list_materials);
 
 
-	if (!list_sprite_.empty())
+
+	for (int i = 0; i < sprite_count_; i++)
 	{
-		for (int i = 0; i < list_sprite_.size(); i++)
-		{
-			UpdateUI(list_sprite_[i]);
-			DrawSprite(list_sprite_[i]);
-		}
+		//const SpritePtr& spr = MGraphicsEngine::get()->GetObjectManager()->GetSprite(i);
+		UpdateUI(MGraphicsEngine::get()->GetObjectManager()->sprite_list_[i]);
+		DrawSprite(MGraphicsEngine::get()->GetObjectManager()->sprite_list_[i]);
 	}
-	UpdateBTN(test_button_);
-	DrawButton(test_button_);
+
+	for (int i = 0; i < button_count_; i++)
+	{
+		UpdateBTN(MGraphicsEngine::get()->GetObjectManager()->button_list_[i]);
+		DrawButton(MGraphicsEngine::get()->GetObjectManager()->button_list_[i]);
+	}
 	// imgui stuff
 	ImGuiStuff();
 	// 버퍼 바꾸기
@@ -310,46 +312,69 @@ void MAppWindow::ImGuiStuff()
 	ImGui::NewFrame();
 	//
 	ImGuiMainMenuBar();
-	
-	ImGui::ListBoxHeader("Sprites");
-	for (int i = 0; i < list_sprite_.size(); i++)
+	std::string selectSpritename = "";
+	bool hasselectedsprite = (selectSpriteID != -1 && MGraphicsEngine::get()->GetObjectManager()->sprite_list_.count(selectSpriteID) > 0);
+	if (hasselectedsprite)
 	{
-		const char* texture_name = list_sprite_[i]->names_.c_str();
-		bool is_selected = (i == selected_texture_index_);
-
-		if (ImGui::Selectable(texture_name, is_selected))
-		{
-			selected_texture_index_ = i;
-			selected_image_index_ = -1;
-		}
+		selectSpritename = MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->names_;
 	}
-	ImGui::ListBoxFooter();
-	if (selected_texture_index_ >= 0 && selected_texture_index_ < list_sprite_.size())
+	if (ImGui::ListBoxHeader("Sprite", ImVec2(0, 200)))
 	{
-		SpritePtr& selected_sprite = list_sprite_[selected_texture_index_];
-		ImGui::Text("Name: %s", selected_sprite->names_.c_str());
-		ImGui::Text("Position x , y , z: %d, %d, %d", selected_sprite->GetPosition().x, selected_sprite->GetPosition().y, selected_sprite->GetPosition().z);
-
-		ImGui::Separator();
-		ImGui::ListBoxHeader("Texture");
-		for (int i = 0; i < selected_sprite->_vec_textures.size(); i++)
+		for (auto& spr : MGraphicsEngine::get()->GetObjectManager()->sprite_list_)
 		{
-			const char* texture_name = selected_sprite->_vec_textures[i]->tex_name_.c_str();
-			bool is_selected = (i == selected_image_index_);
-			if (ImGui::Selectable(texture_name, is_selected))
+			std::string sprname = spr.second->names_;
+			if (!spr.second->names_.empty())
 			{
-				selected_image_index_ = i;
+				sprname = spr.second->names_;
+			}
+			bool is_sprite_selected = (selectSpriteID == spr.first);
+			if (ImGui::Selectable(sprname.c_str(), is_sprite_selected))
+			{
+				selectSpriteID = spr.first;
+				selectedImageID = 0;
 			}
 		}
-
+		//for (auto& btn : MGraphicsEngine::get()->GetObjectManager()->button_list_)
+		//{
+		//	std::string sprname = btn.second->names_;
+		//	if (!btn.second->names_.empty())
+		//	{
+		//		sprname = btn.second->names_;
+		//	}
+		//	bool is_sprite_selected = (selectSpriteID == btn.first);
+		//	if (ImGui::Selectable(sprname.c_str(), is_sprite_selected))
+		//	{
+		//		selectSpriteID = btn.first;
+		//		selectedImageID = 0;
+		//	}
+		//}
 		ImGui::ListBoxFooter();
-		if (selected_image_index_ >= 0 && selected_image_index_ < selected_sprite->_vec_textures.size())
+	}
+	if (hasselectedsprite)
+	{
+		if (MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->list_textures_.empty())
 		{
-			const TexturePtr& selected_texture = selected_sprite->_vec_textures[selected_image_index_];
-			// 텍스쳐 인덱스
-			selected_sprite->texture_index_ = selected_image_index_;
-			ImGui::Text("Name: %s", selected_texture->tex_name_.c_str());
+			ImGui::Text("No Image");
 		}
+		else
+		{
+			ImGui::Text("Image");
+			for (auto& image : MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->list_textures_)
+			{
+				std::string imagename = std::to_string(image.first);
+				if (!image.second->tex_name_.empty())
+				{
+					imagename = image.second->tex_name_;
+				}
+				bool is_image_selected = (selectedImageID == image.first);
+				if (ImGui::Selectable(imagename.c_str(), is_image_selected))
+				{
+					selectedImageID = image.first;
+					MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->set_tex_index = selectedImageID;
+				}
+			}
+		}
+		ImGui::Separator();
 		if (ImGui::Button("Load a texture"))
 		{
 			ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga*.dds;){.png,.jpg,.jpeg,.bmp,.tgam,.dds},.*");
@@ -360,15 +385,20 @@ void MAppWindow::ImGuiStuff()
 			{
 				std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
 				TexturePtr load_texture = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
-				selected_sprite->AddTexture(load_texture);
+				MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->AddTexture(load_texture);
 			}
 			ifd::FileDialog::Instance().Close();
 		}
-		ImGui::SameLine(100.0f, 30.f);
-		if(!selected_sprite->_vec_textures.empty())
-			ImGui::Checkbox("on loop animation", &selected_sprite->anim_loop_);
 	}
-	//
+	if (!MGraphicsEngine::get()->GetObjectManager()->sprite_list_.empty())
+	{
+		ImGui::Text("Selected Sprite : %s", selectSpritename.c_str());
+		ImGui::Text("Position x , y , z: %.1f, %.1f, %.1f", MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->GetPosition().x,
+			MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->GetPosition().y, MGraphicsEngine::get()->GetObjectManager()->sprite_list_[selectSpriteID]->GetPosition().z);
+		ImGui::Separator();
+		ImGui::Text("Selected Image ID : %u", selectedImageID);
+	}
+
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
@@ -391,9 +421,7 @@ void MAppWindow::ImGuiMainMenuBar()
 			{
 				if (ifd::FileDialog::Instance().HasResult())
 				{
-					std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
-					sprite_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
-					list_texture_.push_back(sprite_tex_);
+					
 				}
 				ifd::FileDialog::Instance().Close();
 			}
@@ -437,15 +465,21 @@ void MAppWindow::ImGuiMainMenuBar()
 				ImGui::Separator();
 				if (ImGui::Button("Make"))
 				{
-					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					SpritePtr spr = MGraphicsEngine::get()->GetObjectManager()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					UINT spriteid = sprite_count_++;
 					spr->Scale(scale_valuex_, scale_valuey_, 1);
-					spr->Position(position_valuex_, position_valuex_, position_valuez_);
+					spr->Position(position_valuex_, position_valuey_, position_valuez_);
 					spr->names_ = "Sprite" + std::to_string(sprite_count_);
-					spr->SpriteID_ = sprite_count_;
-					list_sprite_.push_back(spr);
+					spr->SpriteID_ = spriteid;
+
+					MGraphicsEngine::get()->GetObjectManager()->InsertSprite(spriteid, spr);
 					showButton = true;
 					showMakeButton = false;
-					sprite_count_++;
+					scale_valuex_ = 0;
+					scale_valuey_ = 0;
+					position_valuex_ = 0;
+					position_valuey_ = 0;
+					position_valuez_ = 0;
 				}
 				ImGui::Separator();
 				ImGui::Spacing();
@@ -458,14 +492,15 @@ void MAppWindow::ImGuiMainMenuBar()
 					TVector3 rand_pos; rand_pos.x = dis(gen);
 					std::uniform_int_distribution<> disy(-(rc.bottom / 2)+35, (rc.bottom / 2)-35);
 					rand_pos.y = disy(gen); rand_pos.z = 0;
-					SpritePtr spr = MGraphicsEngine::get()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					SpritePtr spr = MGraphicsEngine::get()->GetObjectManager()->CreateSprite(L"VertexShader.hlsl", L"PixelShader.hlsl");
 					spr->Scale(70, 70, 1);
 					spr->Position(rand_pos.x, rand_pos.y, rand_pos.z);
 					spr->names_ = "Sprite" + std::to_string(sprite_count_);
 					spr->SpriteID_ = sprite_count_;
-					list_sprite_.push_back(spr);
+					//list_sprite_.push_back(spr);
 					showButton = true;
 					showMakeButton = false;
+
 					sprite_count_++;
 				}
 			}
@@ -499,15 +534,21 @@ void MAppWindow::ImGuiMainMenuBar()
 				ImGui::Separator();
 				if (ImGui::Button("Make"))
 				{
-					ButtonPtr btn = MGraphicsEngine::get()->CreateButton(L"VertexShader.hlsl", L"PixelShader.hlsl");
+					ButtonPtr btn = MGraphicsEngine::get()->GetObjectManager()->CreateButton(L"VertexShader.hlsl", L"UIPixelShader.hlsl");
+					UINT btncount = button_count_++;
 					btn->Scale(scale_valuex_, scale_valuey_, 1);
-					btn->Position(position_valuex_, position_valuex_, position_valuez_);
-					btn->names_ = "Button" + std::to_string(sprite_count_);
-					btn->SpriteID_ = sprite_count_;
-					list_button_.push_back(btn);
+					btn->Position(position_valuex_, position_valuey_, position_valuez_);
+					btn->names_ = "Button" + std::to_string(button_count_);
+					btn->SpriteID_ = btncount;
+
+					MGraphicsEngine::get()->GetObjectManager()->InsertButton(btncount, btn);
 					showButton = true;
 					showMakeButton = false;
-					sprite_count_++;
+					scale_valuex_ = 0;
+					scale_valuey_ = 0;
+					position_valuex_ = 0;
+					position_valuey_ = 0;
+					position_valuez_ = 0;
 				}
 			}
 			ImGui::End();
@@ -536,17 +577,6 @@ void MAppWindow::ImGuiMainMenuBar()
 	}
 }
 
-bool MAppWindow::MpRect(const RECT& rt, const float x, const float y)
-{
-	if (rt.left <= x && rt.right >= x)
-	{
-		if (rt.top <= y && rt.bottom >= y)
-		{
-			return true;
-		}
-	}
-	return false;
-}
 
 
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "MStd.h"
 #include <vector>
+#include <map>
 class MGraphicsEngine;
 struct vertex
 {
@@ -34,7 +35,8 @@ public:
 	RECT	GetRect();
 public:
 	// 
-	std::vector<TexturePtr> _vec_textures;
+	//std::vector<TexturePtr> _vec_textures;
+	std::map<UINT,TexturePtr> list_textures_;
 	// 스프라이트 크기 조정
 	RECT			rect_;
 	// 이름
@@ -42,8 +44,10 @@ public:
 	// ID
 	UINT			SpriteID_;
 	bool			anim_loop_ = false;
-	UINT			texture_index_=0;
+	// 현재 선택한 이미지 인덱스
+	UINT            set_tex_index =0;
 protected:
+	UINT			texture_counter_=0;
 	// 크기
 	TVector3 spr_scale_;
 	TVector3 spr_position_;

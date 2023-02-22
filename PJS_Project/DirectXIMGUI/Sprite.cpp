@@ -79,23 +79,34 @@ Sprite::~Sprite()
 
 void Sprite::AddTexture(const TexturePtr& texture)
 {
-	_vec_textures.push_back(texture);
-	if (!_vec_textures.empty())
+	list_textures_.insert(std::make_pair(texture_counter_, texture));
+	texture_counter_++;
+	if (!list_textures_.empty())
 	{
 		recompile_shader_ = true;
 		if (recompile_shader_)
 		{
-			ReCompilePixelShader(L"SkyBoxShader.hlsl");
+			ReCompilePixelShader(L"UIPixelShader.hlsl");
 			recompile_shader_ = false;
 		}
 	}
+	//_vec_textures.push_back(texture);
+	//if (!_vec_textures.empty())
+	//{
+	//	recompile_shader_ = true;
+	//	if (recompile_shader_)
+	//	{
+	//		ReCompilePixelShader(L"SkyBoxShader.hlsl");
+	//		recompile_shader_ = false;
+	//	}
+	//}
 }
 
 void Sprite::RemoveTexture(UINT index)
 {
-	if (index >= this->_vec_textures.size())
+	/*if (index >= this->_vec_textures.size())
 		return;
-	_vec_textures.erase(_vec_textures.begin() + index);
+	_vec_textures.erase(_vec_textures.begin() + index);*/
 }
 
 

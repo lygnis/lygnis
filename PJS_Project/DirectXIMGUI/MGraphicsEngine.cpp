@@ -24,6 +24,11 @@ MGraphicsEngine::MGraphicsEngine()
 		_mesh_manger = new MeshManager();
 	}
 	catch (...) { throw std::exception("MeshManager not create successfully"); }
+	try
+	{
+		obj_manager_ = std::make_shared<ObjectManager>();
+	}
+	catch (...) { throw std::exception("MeshManager not create successfully"); }
 
 	// 쉐이더 컴파일
 	void* shader_byte_code = nullptr;
@@ -55,11 +60,18 @@ MeshManager* MGraphicsEngine::getMeshManager()
 	return _mesh_manger;
 }
 
+std::shared_ptr<ObjectManager> MGraphicsEngine::GetObjectManager()
+{
+	return obj_manager_;
+}
+
 void MGraphicsEngine::GetVertexMeshLayoutShader(void** byte_code, size_t* size)
 {
 	*byte_code = _mesh_layout_byte_code;
 	*size = _mesh_layout_size;
 }
+
+
 
 MaterialPtr MGraphicsEngine::CreateMaterial(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
 {
@@ -79,7 +91,6 @@ void MGraphicsEngine::SetMaterial(const MaterialPtr& material, const bool wire_f
 {
 	// 레스터 라이스 컬링 모드 설정
 	MGraphicsEngine::get()->getRenderSystem()->SetRaterizerState((material->_cullmode == CULL_MODE_FRONT), wire_frame);
-
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(material->_vertex_shader, material->_constant_buffer);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(material->_pixel_shader, material->_constant_buffer);
 	// 쉐이더 설정
@@ -87,32 +98,6 @@ void MGraphicsEngine::SetMaterial(const MaterialPtr& material, const bool wire_f
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(material->_pixel_shader);
 
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(material->_pixel_shader, &material->_vec_textures[0], material->_vec_textures.size());
-}
-
-SpritePtr MGraphicsEngine::CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
-{
-	SpritePtr sprite;
-	sprite = std::make_shared<Sprite>(vertex_shader_path, pixel_shader_path);
-	return sprite;
-}
-ButtonPtr MGraphicsEngine::CreateButton(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
-{
-	ButtonPtr btn;
-	btn = std::make_shared<Button>(vertex_shader_path, pixel_shader_path);
-	return btn;
-}
-
-SpritePtr MGraphicsEngine::CreateSprite(const SpritePtr& sprite)
-{
-	SpritePtr spr;
-	spr = std::make_shared<Sprite>(sprite);
-	return spr;
-}
-ButtonPtr MGraphicsEngine::CreateButton(const ButtonPtr& button)
-{
-	ButtonPtr btn;
-	btn = std::make_shared<Button>(button);
-	return btn;
 }
 
 void MGraphicsEngine::SetState(const bool wire_frame, bool on_z_buffer, bool z_buffer_write, bool blend_state)
@@ -127,7 +112,7 @@ void MGraphicsEngine::SetState(const bool wire_frame, bool on_z_buffer, bool z_b
 
 void MGraphicsEngine::SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count)
 {
-	UINT tex_index = sprite->texture_index_;
+	//UINT tex_index = sprite->texture_index_;
 	
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
@@ -135,18 +120,18 @@ void MGraphicsEngine::SetSprite(const SpritePtr& sprite, bool tex_anim, int anim
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
 
-	if (!sprite->_vec_textures.empty())
+	if (!sprite->list_textures_.empty())
 	{
 		if(tex_anim )
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[anim_count],1);
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count],1);
 		else
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[tex_index], 1);
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count], 1);
 	}
 }
 
 void MGraphicsEngine::SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count)
 {
-	UINT tex_index = sprite->texture_index_;
+	//UINT tex_index = sprite->texture_index_;
 
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader_discard, sprite->_constant_buffer);
@@ -154,12 +139,12 @@ void MGraphicsEngine::SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, 
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader_discard);
 
-	if (!sprite->_vec_textures.empty())
+	if (!sprite->list_textures_.empty())
 	{
 		if (tex_anim)
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->_vec_textures[anim_count], 1);
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
 		else
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->_vec_textures[tex_index], 1);
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
 	}
 }
 
@@ -170,7 +155,7 @@ void MGraphicsEngine::SetButton(const ButtonPtr& sprite, ButtonState state)
 	// 쉐이더 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->_vec_textures[state], 1);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[state], 1);
 }
 
 
@@ -190,4 +175,14 @@ void MGraphicsEngine::Release()
 	if (!MGraphicsEngine::_engine) return;
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void MGraphicsEngine::SaveToJson(const std::string& filepath)
+{
+
+}
+
+void MGraphicsEngine::LoadToJson(const std::string& filepath)
+{
+
 }

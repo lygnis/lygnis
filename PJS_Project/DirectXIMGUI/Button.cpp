@@ -4,12 +4,15 @@
 #include "Texture.h"
 Button::Button(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path) : Sprite(vertex_shader_path,  pixel_shader_path)
 {
-	_vec_textures.resize(4);
 	btn_state_ = BTN_NORMAL;
-	_vec_textures[0] = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_nor.bmp");
-	_vec_textures[1] = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_pus.bmp");
-	_vec_textures[2] = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_sel.bmp");
-	_vec_textures[3] = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_dis.bmp");
+	TexturePtr tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_nor.bmp");
+	list_textures_.insert(std::make_pair(0, tex));
+	tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_pus.bmp");
+	list_textures_.insert(std::make_pair(1, tex));
+	tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_sel.bmp");
+	list_textures_.insert(std::make_pair(2, tex));
+	tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/png/main_start_dis.bmp");
+	list_textures_.insert(std::make_pair(3, tex));
 }
 Button::Button(const ButtonPtr& button) : Sprite(button)
 {

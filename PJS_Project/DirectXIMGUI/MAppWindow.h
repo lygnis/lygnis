@@ -19,14 +19,13 @@ public:
 	void DrawButton(const ButtonPtr& btn);
 	void UpdateCamera();
 	void UpdateModel(TVector3 position, const std::vector<MaterialPtr>& list_material);
-	void UpdateUI(SpritePtr& spr);
+	void UpdateUI(const SpritePtr& spr);
 	void UpdateBTN(ButtonPtr& spr);
 	void UpdateSkyBox();
 	void UpdateLight();
 	void Render();
 	void ImGuiStuff();
 	void ImGuiMainMenuBar();
-	bool MpRect(const RECT& rt, const float x, const float y);
 public:
 	// MWindow을(를) 통해 상속됨
 	virtual void OnCreate() override;
@@ -56,7 +55,6 @@ private:
 	TexturePtr			sprite_tex2_;
 
 	MeshPtr				_sky_mesh;
-	//SpritePtr			test_sprite_;
 	ButtonPtr			test_button_;
 
 	MaterialPtr			_mater;
@@ -79,8 +77,6 @@ private:
 	TVector4 _light_position;
 
 	std::vector<MaterialPtr> _list_materials;
-	std::vector<TexturePtr>	list_texture_;
-	std::vector<SpritePtr>  list_sprite_;
 	std::vector<ButtonPtr>  list_button_;
 	bool _fullscreen_state = false;
 	bool wireframe_ = false;
@@ -99,10 +95,11 @@ private:
 	int position_valuex_ = 0;
 	int position_valuey_ = 0;
 	int position_valuez_ = 0;
-	int selected_texture_index_ =0;
-	int selected_image_index_ = 0;
+	// 현재 선택된 Sprite 
+	int selectSpriteID =0;
+	int selectedImageID = 0;
 	UINT sprite_count_ = 0;
+	UINT button_count_ = 0;
 	UINT texture_count_ = 0;
-	int animcount_=0;
 };
 
