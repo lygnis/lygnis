@@ -28,6 +28,7 @@ class MeshManager;
 class Material;
 class Sprite;
 class Button;
+class ControlUI;
 
 using namespace Microsoft::WRL;
 using namespace TBASIS_EX;
@@ -46,7 +47,7 @@ typedef std::shared_ptr<Mesh> MeshPtr;
 typedef std::shared_ptr<Material> MaterialPtr;
 typedef std::shared_ptr<Sprite> SpritePtr;
 typedef std::shared_ptr<Button> ButtonPtr;
-
+typedef std::shared_ptr<ControlUI> ControlUIPtr;
 
 typedef std::basic_string<TCHAR> T_STR;
 typedef std::basic_string<wchar_t> W_STR;

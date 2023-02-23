@@ -3,6 +3,8 @@
 #include "DeviceContext.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "ControlUI.h"
+
 std::shared_ptr<MGraphicsEngine> MGraphicsEngine::_engine = nullptr;
 
 MGraphicsEngine::MGraphicsEngine()
@@ -110,53 +112,53 @@ void MGraphicsEngine::SetState(const bool wire_frame, bool on_z_buffer, bool z_b
 	MGraphicsEngine::get()->getRenderSystem()->SetBlendState(blend_state);
 }
 
-void MGraphicsEngine::SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count)
+void MGraphicsEngine::SetControlUI(const ControlUIPtr& sel_ui, bool tex_anim, int anim_count)
 {
 	//UINT tex_index = sprite->texture_index_;
 	
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sel_ui->_vertex_shader, sel_ui->_constant_buffer);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sel_ui->_pixel_shader, sel_ui->_constant_buffer);
 	// ½¦ÀÌ´õ ¼³Á¤
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sel_ui->_vertex_shader);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sel_ui->_pixel_shader);
 
-	if (!sprite->list_textures_.empty())
+	if (!sel_ui->list_textures_.empty())
 	{
-		if(tex_anim )
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count],1);
-		else
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count], 1);
+		//if(tex_anim )
+		MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sel_ui->_pixel_shader, &sel_ui->list_textures_[anim_count],1);
+		//else
+		//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count], 1);
 	}
 }
 
-void MGraphicsEngine::SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count)
-{
-	//UINT tex_index = sprite->texture_index_;
+//void MGraphicsEngine::SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count)
+//{
+//	//UINT tex_index = sprite->texture_index_;
+//
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader_discard, sprite->_constant_buffer);
+//	// ½¦ÀÌ´õ ¼³Á¤
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader_discard);
+//
+//	if (!sprite->list_textures_.empty())
+//	{
+//		if (tex_anim)
+//			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
+//		else
+//			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
+//	}
+//}
 
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader_discard, sprite->_constant_buffer);
-	// ½¦ÀÌ´õ ¼³Á¤
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader_discard);
-
-	if (!sprite->list_textures_.empty())
-	{
-		if (tex_anim)
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
-		else
-			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader_discard, &sprite->list_textures_[anim_count], 1);
-	}
-}
-
-void MGraphicsEngine::SetButton(const ButtonPtr& sprite, ButtonState state)
-{
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
-	// ½¦ÀÌ´õ ¼³Á¤
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[state], 1);
-}
+//void MGraphicsEngine::SetButton(const ButtonPtr& sprite, ButtonState state)
+//{
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_vertex_shader, sprite->_constant_buffer);
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetConstantBuffer(sprite->_pixel_shader, sprite->_constant_buffer);
+//	// ½¦ÀÌ´õ ¼³Á¤
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sprite->_vertex_shader);
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sprite->_pixel_shader);
+//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[state], 1);
+//}
 
 
 MGraphicsEngine* MGraphicsEngine::get()

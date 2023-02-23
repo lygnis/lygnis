@@ -1,7 +1,27 @@
 #include "ObjectManager.h"
 #include "MGraphicsEngine.h"
+#include "Sprite.h"
 #include "Button.h"
-
+#include "Input.h"
+struct ConstantUI
+{
+	TMatrix _world;
+	TMatrix _view;
+	TMatrix _proj;
+	TVector4 _light_dir;
+	TVector4 _cameraPos;
+	TVector4 _light_position = TVector4(0, 1, 0, 0);
+	float _cTime = 0.0f;
+};
+void ObjectManager::Initalize(const TMatrix& view_port, const TMatrix& ortho_mat)
+{
+	view_port_ = view_port;
+	ortho_proj_ = ortho_mat;
+	TVector3 vEye = TVector3(0.0f, 0.0f, -100.0f);
+	TVector3 vAt = TVector3(0.0f, 0.0f, 100.0f);
+	TVector3 vUp(0.0f, 1.0f, 0.0f);
+	view_mat_ = TMatrix::CreateLookAt(vEye, vAt, vUp);
+}
 SpritePtr ObjectManager::CreateSprite(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path)
 {
 	SpritePtr sprite;
@@ -15,35 +35,44 @@ ButtonPtr ObjectManager::CreateButton(const wchar_t* vertex_shader_path, const w
 	return btn;
 }
 
-SpritePtr ObjectManager::CreateSprite(const SpritePtr& sprite)
+void ObjectManager::UpdateUI(UINT index)
 {
-	SpritePtr spr;
-	spr = std::make_shared<Sprite>(sprite);
-	return spr;
-}
-ButtonPtr ObjectManager::CreateButton(const ButtonPtr& button)
-{
-	ButtonPtr btn;
-	btn = std::make_shared<Button>(button);
-	return btn;
-}
+	ConstantUI cc;
+	TMatrix temp;
+	temp = temp.Identity;
+	cc._world.Identity;
+	temp = TMatrix::CreateScale(ui_list_[index]->GetSclae());
+	cc._world = cc._world * temp;
+	temp = temp.Identity;
+	temp.Translation(ui_list_[index]->GetPosition());
+	cc._world = cc._world * temp;
+	switch (ui_list_[index]->GetState())
+	{
+	case M_SPRITE:
+	{
 
-SpritePtr ObjectManager::GetSprite(UINT index)
-{
-	return sprite_list_[index];
-}
+	}
+	case M_BUTTON:
+	{
+		ui_list_[index]->CoordUpdate(cc._world, view_port_);
+		RECT rt = ui_list_[index]->GetRect();
+		if (PtInRect(&rt, Input::get()->m_pMpos))
+		{
+			ui_list_[index]->SetButtonState(BTN_HOVER);
+			if (Input::get()->GetKey(VK_LBUTTON))
+			{
+				ui_list_[index]->SetButtonState(BTN_CLICK);
+			}
+		}
+	}
 
-
-int ObjectManager::GetSpriteSize()
-{
-	return sprite_list_.size();
+	}
+	cc._view = view_mat_;
+	cc._proj = ortho_proj_;
+	ui_list_[index]->SetData(&cc, sizeof(ConstantUI));
 }
-
-void ObjectManager::InsertButton(UINT index, ButtonPtr& button)
+void ObjectManager::InsertUI(UINT index, ControlUIPtr& sel_ui)
 {
-	button_list_.insert(std::make_pair(index, button));
-}
-void ObjectManager::InsertSprite(UINT index, SpritePtr& sprite)
-{
-	sprite_list_.insert(std::make_pair(index, sprite));
+	//sprite_list_.insert(std::make_pair(index, sprite));
+	ui_list_.insert(std::make_pair(index, sel_ui));
 }

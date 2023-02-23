@@ -53,10 +53,7 @@ bool DebugCamera::Frame()
     TBASIS_EX::D3DXMatrixInverse(&matView, NULL, &_matWorld);
     m_matView = matView;
 
-    TVector3 vEye = TVector3(0.0f, 0.0f, -100.0f);
-    TVector3 vAt = TVector3(0.0f, 0.0f, 100.0f);
-    TVector3 vUp(0.0f, 1.0f, 0.0f);
-    mat_ui_view_ = TMatrix::CreateLookAt(vEye, vAt, vUp);
+   
     Update();
     return true;
 }

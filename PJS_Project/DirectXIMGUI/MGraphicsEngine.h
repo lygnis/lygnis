@@ -7,6 +7,7 @@
 #include "Button.h"
 #include "Material.h"
 #include "ObjectManager.h"
+
 class MGraphicsEngine
 {
 public:
@@ -26,8 +27,8 @@ public:
 	MaterialPtr CreateMaterial(const MaterialPtr& material);
 	void		SetMaterial(const MaterialPtr& material, const bool wire_frame);
 	// 스프라이트 렌더링
-	void		SetSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
-	void		SetButton(const ButtonPtr& sprite, ButtonState state);
+	void		SetControlUI(const ControlUIPtr& sprite, bool tex_anim, int anim_count);
+	//void		SetButton(const ButtonPtr& sprite, ButtonState state);
 	void        SetTesttingSprite(const SpritePtr& sprite, bool tex_anim, int anim_count);
 	void		SetState(const bool wire_frame, bool on_z_buffer, bool z_buffer_write, bool blend_state);
 public:

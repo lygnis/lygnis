@@ -15,11 +15,11 @@ public:
 	void UpdateQuadPosition();
 	// 버텍스 셰이더 픽셀셰이더와 같은 모든 리소스가 이제 머티리얼의 일부이다.
 	void DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material);
-	void DrawSprite(const SpritePtr& spr);
-	void DrawButton(const ButtonPtr& btn);
+	void DrawUI(const ControlUIPtr& spr);
+	//void DrawButton(const ControlUIPtr& ui_sel);
 	void UpdateCamera();
 	void UpdateModel(TVector3 position, const std::vector<MaterialPtr>& list_material);
-	void UpdateUI(const SpritePtr& spr);
+	//void UpdateUI(const ControlUIPtr& spr);
 	void UpdateBTN(ButtonPtr& spr);
 	void UpdateSkyBox();
 	void UpdateLight();
@@ -73,7 +73,7 @@ private:
 	TMatrix _world_cam;
 	TMatrix _view_cam;
 	TMatrix _proj_cam;
-	TMatrix view_port_;
+	//TMatrix view_port_;
 	TVector4 _light_position;
 
 	std::vector<MaterialPtr> _list_materials;
@@ -98,8 +98,8 @@ private:
 	// 현재 선택된 Sprite 
 	int selectSpriteID =0;
 	int selectedImageID = 0;
-	UINT sprite_count_ = 0;
-	UINT button_count_ = 0;
+	UINT ui_count_ = 0;
+	//UINT button_count_ = 0;
 	UINT texture_count_ = 0;
 };
 
