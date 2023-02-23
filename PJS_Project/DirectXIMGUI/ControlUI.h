@@ -13,7 +13,7 @@ struct vertex
 enum UI_TYPE
 {
 	M_SPRITE,
-	M_BUTTON,
+	M_BUTTON =1,
 };
 enum ButtonState
 {
@@ -50,6 +50,7 @@ public:
 	void SetState(UI_TYPE ui_type);
 	UI_TYPE GetState();
 	void SetButtonState(ButtonState btn_state);
+	ButtonState GetButtonState();
 	RECT GetRect();
 public:
 	std::map<UINT, TexturePtr> list_textures_;
@@ -66,7 +67,7 @@ protected:
 	// UI 종류
 	UI_TYPE			ui_type_;
 	// 버튼 상태
-	ButtonState		btn_type;
+	ButtonState		btn_type_ =BTN_NORMAL ;
 	// 텍스처 수
 	UINT			texture_counter_ = 0;
 	// 크기

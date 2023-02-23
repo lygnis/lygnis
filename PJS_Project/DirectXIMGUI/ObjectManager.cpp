@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Button.h"
 #include "Input.h"
+__declspec(align(16))
 struct ConstantUI
 {
 	TMatrix _world;
@@ -11,7 +12,9 @@ struct ConstantUI
 	TVector4 _light_dir;
 	TVector4 _cameraPos;
 	TVector4 _light_position = TVector4(0, 1, 0, 0);
+	float _light_radius;
 	float _cTime = 0.0f;
+	float discard_;
 };
 void ObjectManager::Initalize(const TMatrix& view_port, const TMatrix& ortho_mat)
 {
@@ -50,10 +53,11 @@ void ObjectManager::UpdateUI(UINT index)
 	{
 	case M_SPRITE:
 	{
-
+		break;
 	}
 	case M_BUTTON:
 	{
+		ui_list_[index]->SetButtonState(BTN_NORMAL);
 		ui_list_[index]->CoordUpdate(cc._world, view_port_);
 		RECT rt = ui_list_[index]->GetRect();
 		if (PtInRect(&rt, Input::get()->m_pMpos))
@@ -64,6 +68,7 @@ void ObjectManager::UpdateUI(UINT index)
 				ui_list_[index]->SetButtonState(BTN_CLICK);
 			}
 		}
+		break;
 	}
 
 	}

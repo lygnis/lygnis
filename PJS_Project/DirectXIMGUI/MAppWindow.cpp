@@ -23,7 +23,6 @@ struct Constant
 	TVector4 _light_dir;
 	TVector4 _cameraPos;
 	TVector4 _light_position = TVector4(0,1,0,0);
-	float    discard;
 	float _light_radius;
 	float _cTime = 0.0f;
 };
@@ -412,7 +411,7 @@ void MAppWindow::ImGuiMainMenuBar()
 					spr->Position(position_valuex_, position_valuey_, position_valuez_);
 					spr->names_ = "Sprite" + std::to_string(ui_count_);
 					spr->SpriteID_ = spriteid;
-					
+					spr->SetState(M_SPRITE);
 					MGraphicsEngine::get()->GetObjectManager()->InsertUI(spriteid, spr);
 					showButton = true;
 					showMakeButton = false;
@@ -481,7 +480,7 @@ void MAppWindow::ImGuiMainMenuBar()
 					btn->Position(position_valuex_, position_valuey_, position_valuez_);
 					btn->names_ = "Button" + std::to_string(ui_count_);
 					btn->SpriteID_ = btncount;
-
+					btn->SetState(M_BUTTON);
 					MGraphicsEngine::get()->GetObjectManager()->InsertUI(btncount, btn);
 					showButton = true;
 					showMakeButton = false;

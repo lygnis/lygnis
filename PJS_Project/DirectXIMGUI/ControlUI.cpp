@@ -147,7 +147,12 @@ UI_TYPE ControlUI::GetState()
 
 void ControlUI::SetButtonState(ButtonState btn_state)
 {
+	btn_type_ = btn_state;
+}
 
+ButtonState ControlUI::GetButtonState()
+{
+	return btn_type_;
 }
 
 RECT ControlUI::GetRect()

@@ -121,13 +121,16 @@ void MGraphicsEngine::SetControlUI(const ControlUIPtr& sel_ui, bool tex_anim, in
 	// ½¦ÀÌ´õ ¼³Á¤
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexShader(sel_ui->_vertex_shader);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetPixelShader(sel_ui->_pixel_shader);
-
-	if (!sel_ui->list_textures_.empty())
+	if (sel_ui->GetState() == M_SPRITE)
 	{
-		//if(tex_anim )
-		MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sel_ui->_pixel_shader, &sel_ui->list_textures_[anim_count],1);
-		//else
-		//	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sprite->_pixel_shader, &sprite->list_textures_[anim_count], 1);
+		if (!sel_ui->list_textures_.empty())
+		{
+			MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sel_ui->_pixel_shader, &sel_ui->list_textures_[anim_count], 1);
+		}
+	}
+	else if (sel_ui->GetState() == M_BUTTON)
+	{
+		MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetTexture(sel_ui->_pixel_shader, &sel_ui->list_textures_[sel_ui->GetButtonState()], 1);
 	}
 }
 
