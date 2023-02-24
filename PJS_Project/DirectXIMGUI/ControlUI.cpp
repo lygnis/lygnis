@@ -172,9 +172,9 @@ IndexBufferPtr ControlUI::GetIndexBuffer()
 
 void ControlUI::Scale(float x, float y, float z)
 {
-	spr_scale_.x += x;
-	spr_scale_.y += y;
-	spr_scale_.z += z;
+	spr_scale_.x = x;
+	spr_scale_.y = y;
+	spr_scale_.z = z;
 }
 
 TVector3 ControlUI::GetSclae()

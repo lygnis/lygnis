@@ -3,6 +3,8 @@
 #include "Sprite.h"
 #include "Button.h"
 #include "Input.h"
+#include <fstream>
+#include <iostream>
 __declspec(align(16))
 struct ConstantUI
 {
@@ -80,4 +82,41 @@ void ObjectManager::InsertUI(UINT index, ControlUIPtr& sel_ui)
 {
 	//sprite_list_.insert(std::make_pair(index, sprite));
 	ui_list_.insert(std::make_pair(index, sel_ui));
+}
+
+void ObjectManager::SaveToJson(const char* filename)
+{
+	Document document;
+	document.SetObject();
+	Document::AllocatorType& allocator = document.GetAllocator();
+	Value control_ui(kArrayType);
+	for (const auto& ui_list : ui_list_)
+	{
+		Value sprite_obj(kArrayType);
+		sprite_obj.AddMember("ID", ui_list.first, allocator);
+		sprite_obj.AddMember("Name", Value().SetString(ui_list.second->names_.c_str(), allocator).Move(), allocator);
+		//sprite_obj.AddMember("Position", ui_list.G, allocator);
+	}
+}
+
+void ObjectManager::LoadFromFile(const std::string& filename, Document& outdoc)
+{
+	// 이진 모드로 ifstream 에 디스크 파일을 로드하고
+	// 스트림 버퍼의 위치를 파일 마지막으로 설정한다 (ate)
+	std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
+	if (!file.is_open())
+	{
+		return;
+	}
+	// 파일의 크기를 얻는다.
+	std::ifstream::pos_type filesize = file.tellg();
+	// 스트림 버처가 파일 처음 부분을 가리키도록 되돌린다
+	file.seekg(0, std::ios::beg);
+	// 파일 사이즈 +1 크기 (null문자) 의 크기ㅡ이 벡터를 선언한다.
+	std::vector<char> bytes(static_cast<size_t>(filesize) + 1);
+	// 파일의 데이터를 벡터로 읽어들인다.
+	file.read(bytes.data(), static_cast<size_t>(filesize));
+	// Json의 document 객체로 데이터를 넘겨서 파싱한다
+	outdoc.Parse(bytes.data());
+
 }

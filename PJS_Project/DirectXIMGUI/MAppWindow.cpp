@@ -286,6 +286,9 @@ void MAppWindow::OnSize()
 	_swapChain->Resize(rc.right, rc.bottom);
 	_camera->CreateProjMatrix(0.1f, 1000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
 	_camera->CreateOrthoLH((float)(rc.right), (float)(rc.bottom),0.f,1000.f);
+	TMatrix view_port = TMatrix::Identity;
+	view_port._11 = 1; view_port._22 = -1; view_port._41 = (float)this->GetClientRect().right / 2; view_port._42 = (float)this->GetClientRect().bottom / 2;
+	MGraphicsEngine::get()->GetObjectManager()->Initalize(view_port, _camera->mat_ortho_);
 	Render();
 }
 
@@ -345,6 +348,20 @@ void MAppWindow::ImGuiStuff()
 			}
 		}
 		ImGui::Separator();
+		if (!MGraphicsEngine::get()->GetObjectManager()->ui_list_.empty())
+		{
+			ImGui::Text("Selected Sprite : %s", selectSpritename.c_str());
+			ImGui::Text("Position x , y , z: %.1f, %.1f, %.1f", MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().x,
+				MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().y, MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().z);
+			if (ImGui::Button("Full Screen"))
+			{
+				RECT rc = GetClientRect();
+				MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->Scale(rc.right / 2, rc.bottom / 2, 1);
+			}
+			ImGui::Separator();
+			ImGui::Text("Selected Image ID : %u", selectedImageID);
+		}
+		ImGui::Separator();
 		if (ImGui::Button("Load a texture"))
 		{
 			ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga*.dds;){.png,.jpg,.jpeg,.bmp,.tga,.dds},.*");
@@ -360,15 +377,7 @@ void MAppWindow::ImGuiStuff()
 			ifd::FileDialog::Instance().Close();
 		}
 	}
-	if (!MGraphicsEngine::get()->GetObjectManager()->ui_list_.empty())
-	{
-		ImGui::Text("Selected Sprite : %s", selectSpritename.c_str());
-		ImGui::Text("Position x , y , z: %.1f, %.1f, %.1f", MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().x,
-			MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().y, MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->GetPosition().z);
-
-		ImGui::Separator();
-		ImGui::Text("Selected Image ID : %u", selectedImageID);
-	}
+	
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
