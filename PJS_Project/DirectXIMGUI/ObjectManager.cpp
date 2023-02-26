@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Button.h"
 #include "Input.h"
+#include "Texture.h"
 #include <fstream>
 #include <iostream>
 __declspec(align(16))
@@ -89,14 +90,40 @@ void ObjectManager::SaveToJson(const char* filename)
 	Document document;
 	document.SetObject();
 	Document::AllocatorType& allocator = document.GetAllocator();
-	Value control_ui(kArrayType);
+	Value control_ui(kObjectType);
 	for (const auto& ui_list : ui_list_)
 	{
-		Value sprite_obj(kArrayType);
+		Value sprite_obj(kObjectType);
 		sprite_obj.AddMember("ID", ui_list.first, allocator);
 		sprite_obj.AddMember("Name", Value().SetString(ui_list.second->names_.c_str(), allocator).Move(), allocator);
-		//sprite_obj.AddMember("Position", ui_list.G, allocator);
+		sprite_obj.AddMember("Status", static_cast<int>(ui_list.second->GetState()), allocator);
+		
+		Value position_val(kObjectType);
+		position_val.AddMember("X", ui_list.second->GetPosition().x, allocator);
+		position_val.AddMember("Y", ui_list.second->GetPosition().y, allocator);
+		position_val.AddMember("Z", ui_list.second->GetPosition().z, allocator);
+		sprite_obj.AddMember("Position", position_val, allocator);
+
+		Value scale_val(kObjectType);
+		scale_val.AddMember("X", ui_list.second->GetSclae().x, allocator);
+		scale_val.AddMember("Y", ui_list.second->GetSclae().y, allocator);
+		scale_val.AddMember("Z", ui_list.second->GetSclae().z, allocator);
+		sprite_obj.AddMember("Scale", scale_val, allocator);
+
+		Value images_val(kObjectType);
+		for (auto& image : ui_list.second->list_textures_)
+		{
+			Value image_val(kObjectType);
+			image_val.AddMember("ID", image.first, allocator);
+			image_val.AddMember("Name", Value().SetString(image.second->tex_name_.c_str(), allocator).Move(), allocator);
+			images_val.PushBack(image_val, allocator);
+		}
+		sprite_obj.AddMember("Image", images_val, allocator);
+		control_ui.PushBack(sprite_obj, allocator);
 	}
+	document.AddMember("Sprite", control_ui, allocator);
+	StringBuffer buffer;
+	
 }
 
 void ObjectManager::LoadFromFile(const std::string& filename, Document& outdoc)
