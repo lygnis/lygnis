@@ -55,6 +55,7 @@ D3D_DRIVER_TYPE driver_type[] =
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean()); // 한글 사용가능하게
 	ImGui::StyleColorsLight();
 	ImGui_ImplDX11_Init(_d3d_Device.Get(), _imm_Context.Get());
 }

@@ -53,5 +53,7 @@ Texture::~Texture()
 D3D11_TEXTURE2D_DESC Texture::GetImageDesc()
 {
 	_texture->GetDesc(&tex_desc_);
+	UINT width = tex_desc_.Width;
+	UINT height = tex_desc_.Height;
 	return tex_desc_;
 }

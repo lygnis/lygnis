@@ -3,7 +3,6 @@
 #include "MGraphicsEngine.h"
 #include "InputListener.h"
 #include "DebugCamera.h" 
-#include "ImGuiManager.h"
 
 
 class MAppWindow :public MWindow, public InputListener
@@ -63,7 +62,6 @@ private:
 	MaterialPtr			_skyMat;
 
 	std::shared_ptr<DebugCamera> _camera;
-	ImGuiManager imgui_;
 private:
 	float _camPos = 0.0f;
 	float _time = 0.0f;

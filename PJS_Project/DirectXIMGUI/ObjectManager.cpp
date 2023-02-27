@@ -12,12 +12,12 @@ struct ConstantUI
 	TMatrix _world;
 	TMatrix _view;
 	TMatrix _proj;
-	TVector4 _light_dir;
-	TVector4 _cameraPos;
-	TVector4 _light_position = TVector4(0, 1, 0, 0);
-	float _light_radius;
-	float _cTime = 0.0f;
-	float discard_;
+	float texture_width_;
+	float texture_height_;
+	float uv_left_;
+	float uv_top_;
+	float uv_right_;
+	float uv_bottom_;
 };
 void ObjectManager::Initalize(const TMatrix& view_port, const TMatrix& ortho_mat)
 {
@@ -56,6 +56,7 @@ void ObjectManager::UpdateUI(UINT index)
 	{
 	case M_SPRITE:
 	{
+		ui_list_[index]->CoordUpdate(cc._world, view_port_);
 		break;
 	}
 	case M_BUTTON:

@@ -114,8 +114,6 @@ void MAppWindow::DrawUI(const ControlUIPtr& sel_ui)
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetVertexBuffer(sel_ui->GetVertexBuffer());
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetIndexBuffer(sel_ui->GetIndexBuffer());
 	MGraphicsEngine::get()->SetState(wireframe_, on_z_buffer_, z_buffer_write_, on_blend_state);
-	//if (on_blend_testing) //&& !spr->_vec_textures.empty())
-		//MGraphicsEngine::get()->SetTesttingSprite(sel_ui, sel_ui->anim_loop_, 0);
 	MGraphicsEngine::get()->SetControlUI(sel_ui, sel_ui->anim_loop_, sel_ui->set_tex_index);
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->DrawIndexTriangleList(sel_ui->GetIndexBuffer()->GetSizeIndexList(), 0, 0);
 }
@@ -332,6 +330,8 @@ void MAppWindow::ImGuiStuff()
 	}
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 }
 
 void MAppWindow::ImGuiMainMenuBar()
@@ -397,7 +397,6 @@ void MAppWindow::ImGuiMainMenuBar()
 					spr->Position(rand_pos.x, rand_pos.y, rand_pos.z);
 					spr->names_ = "Sprite" + std::to_string(ui_count_);
 					spr->SpriteID_ = ui_count_;
-					//list_sprite_.push_back(spr);
 					showButton = true;
 					showMakeButton = false;
 

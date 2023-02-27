@@ -171,27 +171,6 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
     </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>IMGUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>IMGUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_tables.cpp">
-      <Filter>IMGUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>IMGUI\Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>IMGUI\Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>IMGUI\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>IMGUI\Core</Filter>
-    </ClCompile>
     <ClCompile Include="ImFileDialog.cpp">
       <Filter>IMGUI\Core</Filter>
     </ClCompile>
@@ -203,6 +182,24 @@
     </ClCompile>
     <ClCompile Include="ControlUI.cpp">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>IMGUI\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>IMGUI\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>IMGUI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>IMGUI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>IMGUI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>IMGUI\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,15 +290,6 @@
     <ClInclude Include="Sprite.h">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>IMGUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>IMGUI\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>IMGUI\Core</Filter>
-    </ClInclude>
     <ClInclude Include="imstb_truetype.h">
       <Filter>IMGUI\Core\stb_lib</Filter>
     </ClInclude>
@@ -310,12 +298,6 @@
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
       <Filter>IMGUI\Core\stb_lib</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_win32.h">
-      <Filter>IMGUI\Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>IMGUI\Backend</Filter>
     </ClInclude>
     <ClInclude Include="ImFileDialog.h">
       <Filter>IMGUI\Core</Filter>
@@ -331,6 +313,21 @@
     </ClInclude>
     <ClInclude Include="ControlUI.h">
       <Filter>GameEngine\GraphicsEngine\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>IMGUI\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>IMGUI\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>IMGUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>IMGUI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>IMGUI\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
