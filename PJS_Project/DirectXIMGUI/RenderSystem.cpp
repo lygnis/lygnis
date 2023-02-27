@@ -2,6 +2,7 @@
 #include <exception>
 #include "imgui_impl_dx11.h"
 
+
 RenderSystem::RenderSystem()
 {
 D3D_DRIVER_TYPE driver_type[] =
@@ -51,7 +52,10 @@ D3D_DRIVER_TYPE driver_type[] =
 	// Init imgui d3d impl
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	ImGui::StyleColorsLight();
 	ImGui_ImplDX11_Init(_d3d_Device.Get(), _imm_Context.Get());
 }
 

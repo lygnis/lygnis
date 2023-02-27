@@ -1,10 +1,10 @@
 #pragma once
 #include "MStd.h"
 #include <map>
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
-using namespace rapidjson;
+//#include "rapidjson/document.h"
+//#include "rapidjson/writer.h"
+//#include "rapidjson/stringbuffer.h"
+//using namespace rapidjson;
 class ObjectManager
 {
 public:
@@ -19,8 +19,8 @@ public:
 	void        InsertButton(UINT index, ButtonPtr& button);
 	void		UpdateUI(const UINT index);
 public:
-	void SaveToJson(const char* filename);
-	void LoadFromFile(const std::string& filename, Document& outdoc);
+	//void SaveToJson(const char* filename);
+	//void LoadFromFile(const std::string& filename, Document& outdoc);
 public:
 	std::map<UINT, ControlUIPtr> ui_list_;
 private:

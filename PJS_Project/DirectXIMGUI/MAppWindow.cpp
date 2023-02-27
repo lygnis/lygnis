@@ -86,69 +86,6 @@ void MAppWindow::UpdateModel(TVector3 position, const std::vector<MaterialPtr>& 
 	}
 }
 
-//void MAppWindow::UpdateUI(const ControlUIPtr& spr)
-//{
-//	Constant cc;
-//	TMatrix temp;
-//	temp = temp.Identity;
-//	cc._world.Identity;
-//	temp = TMatrix::CreateScale(spr->GetSclae());
-//	cc._world = cc._world*temp;
-//	temp= temp.Identity;
-//	temp.Translation(spr->GetPosition());
-//	cc._world = cc._world*temp;
-//	switch (spr->GetState())
-//	{
-//	case M_SPRITE:
-//	{
-//
-//	}
-//	case M_BUTTON:
-//	{
-//		spr->CoordUpdate(cc._world, view_port_);
-//		RECT rt = spr->GetRect();
-//		if (PtInRect(&rt, Input::get()->m_pMpos))
-//		{
-//
-//		}
-//	}
-//
-//	}
-//	cc._view = _camera->mat_ui_view_;
-//	cc._proj = _camera->mat_ortho_;
-//	cc.discard = alpha_test_val_;
-//	spr->SetData(&cc, sizeof(Constant));
-//
-//}
-
-//void MAppWindow::UpdateBTN(ButtonPtr& spr)
-//{
-//	Constant cc;
-//	TMatrix temp;
-//	spr->SetState(BTN_NORMAL);
-//	temp = temp.Identity;
-//	cc._world.Identity;
-//	temp = TMatrix::CreateScale(spr->GetSclae());
-//	cc._world = cc._world * temp;
-//	temp = temp.Identity;
-//	temp.Translation(spr->GetPosition());
-//	cc._world = cc._world * temp;
-//	cc._view = _camera->mat_ui_view_;
-//	cc._proj = _camera->mat_ortho_;
-//
-//	spr->CoordUpdate(cc._world, view_port_);
-//	RECT rt = spr->GetRect();
-//	if (PtInRect(&rt, Input::get()->m_pMpos))
-//	{
-//		spr->SetState(BTN_HOVER);
-//		if (Input::get()->GetKey(VK_LBUTTON)==KEY_HOLD)
-//		{
-//			spr->SetState(BTN_CLICK);
-//			//wireframe_ = !wireframe_;
-//		}
-//	}
-//	spr->SetData(&cc, sizeof(Constant));
-//}
 
 void MAppWindow::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
 {
@@ -376,9 +313,23 @@ void MAppWindow::ImGuiStuff()
 			}
 			ifd::FileDialog::Instance().Close();
 		}
-	}
-	
+		ImGui::Separator();
 
+		if (ImGui::Button("Erase and new Texture"))
+		{
+			ifd::FileDialog::Instance().Open("TextureOpenDialogFeat", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga*.dds;){.png,.jpg,.jpeg,.bmp,.tga,.dds},.*");
+		}
+		if (ifd::FileDialog::Instance().IsDone("TextureOpenDialogFeat"))
+		{
+			if (ifd::FileDialog::Instance().HasResult())
+			{
+				std::wstring res = ifd::FileDialog::Instance().GetResult().wstring();
+				TexturePtr load_texture = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(res.c_str());
+				MGraphicsEngine::get()->GetObjectManager()->ui_list_[selectSpriteID]->RemoveTexture(selectedImageID, load_texture);
+			}
+			ifd::FileDialog::Instance().Close();
+		}
+	}
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }

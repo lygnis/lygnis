@@ -85,65 +85,65 @@ void ObjectManager::InsertUI(UINT index, ControlUIPtr& sel_ui)
 	ui_list_.insert(std::make_pair(index, sel_ui));
 }
 
-void ObjectManager::SaveToJson(const char* filename)
-{
-	Document document;
-	document.SetObject();
-	Document::AllocatorType& allocator = document.GetAllocator();
-	Value control_ui(kObjectType);
-	for (const auto& ui_list : ui_list_)
-	{
-		Value sprite_obj(kObjectType);
-		sprite_obj.AddMember("ID", ui_list.first, allocator);
-		sprite_obj.AddMember("Name", Value().SetString(ui_list.second->names_.c_str(), allocator).Move(), allocator);
-		sprite_obj.AddMember("Status", static_cast<int>(ui_list.second->GetState()), allocator);
-		
-		Value position_val(kObjectType);
-		position_val.AddMember("X", ui_list.second->GetPosition().x, allocator);
-		position_val.AddMember("Y", ui_list.second->GetPosition().y, allocator);
-		position_val.AddMember("Z", ui_list.second->GetPosition().z, allocator);
-		sprite_obj.AddMember("Position", position_val, allocator);
+//void ObjectManager::SaveToJson(const char* filename)
+//{
+	//Document document;
+	//document.SetObject();
+	//Document::AllocatorType& allocator = document.GetAllocator();
+	//Value control_ui(kObjectType);
+	//for (const auto& ui_list : ui_list_)
+	//{
+	//	Value sprite_obj(kObjectType);
+	//	sprite_obj.AddMember("ID", ui_list.first, allocator);
+	//	sprite_obj.AddMember("Name", Value().SetString(ui_list.second->names_.c_str(), allocator).Move(), allocator);
+	//	sprite_obj.AddMember("Status", static_cast<int>(ui_list.second->GetState()), allocator);
+	//	
+	//	Value position_val(kObjectType);
+	//	position_val.AddMember("X", ui_list.second->GetPosition().x, allocator);
+	//	position_val.AddMember("Y", ui_list.second->GetPosition().y, allocator);
+	//	position_val.AddMember("Z", ui_list.second->GetPosition().z, allocator);
+	//	sprite_obj.AddMember("Position", position_val, allocator);
 
-		Value scale_val(kObjectType);
-		scale_val.AddMember("X", ui_list.second->GetSclae().x, allocator);
-		scale_val.AddMember("Y", ui_list.second->GetSclae().y, allocator);
-		scale_val.AddMember("Z", ui_list.second->GetSclae().z, allocator);
-		sprite_obj.AddMember("Scale", scale_val, allocator);
+	//	Value scale_val(kObjectType);
+	//	scale_val.AddMember("X", ui_list.second->GetSclae().x, allocator);
+	//	scale_val.AddMember("Y", ui_list.second->GetSclae().y, allocator);
+	//	scale_val.AddMember("Z", ui_list.second->GetSclae().z, allocator);
+	//	sprite_obj.AddMember("Scale", scale_val, allocator);
 
-		Value images_val(kObjectType);
-		for (auto& image : ui_list.second->list_textures_)
-		{
-			Value image_val(kObjectType);
-			image_val.AddMember("ID", image.first, allocator);
-			image_val.AddMember("Name", Value().SetString(image.second->tex_name_.c_str(), allocator).Move(), allocator);
-			images_val.PushBack(image_val, allocator);
-		}
-		sprite_obj.AddMember("Image", images_val, allocator);
-		control_ui.PushBack(sprite_obj, allocator);
-	}
-	document.AddMember("Sprite", control_ui, allocator);
-	StringBuffer buffer;
+	//	Value images_val(kObjectType);
+	//	for (auto& image : ui_list.second->list_textures_)
+	//	{
+	//		Value image_val(kObjectType);
+	//		image_val.AddMember("ID", image.first, allocator);
+	//		image_val.AddMember("Name", Value().SetString(image.second->tex_name_.c_str(), allocator).Move(), allocator);
+	//		images_val.PushBack(image_val, allocator);
+	//	}
+	//	sprite_obj.AddMember("Image", images_val, allocator);
+	//	control_ui.PushBack(sprite_obj, allocator);
+	//}
+	//document.AddMember("Sprite", control_ui, allocator);
+	//StringBuffer buffer;
 	
-}
+//}
 
-void ObjectManager::LoadFromFile(const std::string& filename, Document& outdoc)
-{
-	// 이진 모드로 ifstream 에 디스크 파일을 로드하고
-	// 스트림 버퍼의 위치를 파일 마지막으로 설정한다 (ate)
-	std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
-	if (!file.is_open())
-	{
-		return;
-	}
-	// 파일의 크기를 얻는다.
-	std::ifstream::pos_type filesize = file.tellg();
-	// 스트림 버처가 파일 처음 부분을 가리키도록 되돌린다
-	file.seekg(0, std::ios::beg);
-	// 파일 사이즈 +1 크기 (null문자) 의 크기ㅡ이 벡터를 선언한다.
-	std::vector<char> bytes(static_cast<size_t>(filesize) + 1);
-	// 파일의 데이터를 벡터로 읽어들인다.
-	file.read(bytes.data(), static_cast<size_t>(filesize));
-	// Json의 document 객체로 데이터를 넘겨서 파싱한다
-	outdoc.Parse(bytes.data());
+//void ObjectManager::LoadFromFile(const std::string& filename, Document& outdoc)
+//{
+	//// 이진 모드로 ifstream 에 디스크 파일을 로드하고
+	//// 스트림 버퍼의 위치를 파일 마지막으로 설정한다 (ate)
+	//std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
+	//if (!file.is_open())
+	//{
+	//	return;
+	//}
+	//// 파일의 크기를 얻는다.
+	//std::ifstream::pos_type filesize = file.tellg();
+	//// 스트림 버처가 파일 처음 부분을 가리키도록 되돌린다
+	//file.seekg(0, std::ios::beg);
+	//// 파일 사이즈 +1 크기 (null문자) 의 크기ㅡ이 벡터를 선언한다.
+	//std::vector<char> bytes(static_cast<size_t>(filesize) + 1);
+	//// 파일의 데이터를 벡터로 읽어들인다.
+	//file.read(bytes.data(), static_cast<size_t>(filesize));
+	//// Json의 document 객체로 데이터를 넘겨서 파싱한다
+	//outdoc.Parse(bytes.data());
 
-}
+//}

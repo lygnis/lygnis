@@ -31,7 +31,7 @@ public:
 	~ControlUI();
 
 	void AddTexture(const TexturePtr& texture);
-	void RemoveTexture(UINT index);
+	void RemoveTexture(UINT index, const TexturePtr& texture);
 	void ReCompilePixelShader(const wchar_t* pixel_shader_path);
 	// 상수버퍼 업데이트
 	void SetData(void* data, UINT size);

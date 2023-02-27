@@ -158,7 +158,6 @@
     <ClCompile Include="DeviceContext.cpp" />
     <ClCompile Include="ImFileDialog.cpp" />
     <ClCompile Include="imgui.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
@@ -199,7 +198,6 @@
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="ImFileDialog.h" />
     <ClInclude Include="imgui.h" />
-    <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />

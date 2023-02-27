@@ -189,9 +189,6 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>IMGUI\Core</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
-      <Filter>IMGUI\Backend</Filter>
-    </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
       <Filter>IMGUI\Core</Filter>
     </ClCompile>
@@ -318,9 +315,6 @@
       <Filter>IMGUI\Backend</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>IMGUI\Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
       <Filter>IMGUI\Backend</Filter>
     </ClInclude>
     <ClInclude Include="ImFileDialog.h">

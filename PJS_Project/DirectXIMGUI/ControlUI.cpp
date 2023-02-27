@@ -87,11 +87,12 @@ void ControlUI::AddTexture(const TexturePtr& texture)
 	}
 }
 
-void ControlUI::RemoveTexture(UINT index)
+void ControlUI::RemoveTexture(UINT index, const TexturePtr& texture)
 {
 	if (index >= this->list_textures_.size())
 		return;
 	list_textures_.erase(index);
+	list_textures_.insert(std::make_pair(index, texture));
 }
 
 
@@ -100,7 +101,7 @@ void ControlUI::ReCompilePixelShader(const wchar_t* pixel_shader_path)
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 	MGraphicsEngine::get()->getRenderSystem()->CompilePixelShader(pixel_shader_path, "mainps", &shader_byte_code, &size_shader);
-	_pixel_shader = std::move(MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader));
+	_pixel_shader = MGraphicsEngine::get()->getRenderSystem()->CreatePixelShader(shader_byte_code, size_shader);
 
 	if (!_pixel_shader)
 		throw std::runtime_error("Material not created successfully");
