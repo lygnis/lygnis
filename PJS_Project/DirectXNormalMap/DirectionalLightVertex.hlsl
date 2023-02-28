@@ -4,7 +4,6 @@ struct VS_INPUT
 	float4 position : POSITION;
 	float2 texcoord : TEXCOORD;
 	float3 normal : NORMAL;
-	float4 color : COLOR;
 };
 // 픽셀 쉐이더로 보낼 데이터
 struct VS_OUTPUT
@@ -12,9 +11,7 @@ struct VS_OUTPUT
 	float4 position : SV_POSITION;
 	float2 texcoord : TEXCOORD;
 	float3 normal: NORMAL;
-	float4 color : COLOR;
 	float3 direction_cam: TEXCOORD1;
-	float _discard : TEXCOORD2;
 };
 
 cbuffer constant : register(b0)
@@ -24,14 +21,17 @@ cbuffer constant : register(b0)
 	row_major float4x4 _proj;
 	float4 _light_dir;
 	float4 _cameraPos;
-	float  _discard;
+
+	float4 _light_position;
+	float _light_radius;
+	float _time;
 }
 
 VS_OUTPUT mainvs(VS_INPUT  input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	//output.position = lerp(input.position, input.position1, sin(_time/1000.0f)+1.0f / 2.0f);
-	
+
 	// 월드 좌표계
 	output.position = mul(input.position, _world);
 	output.direction_cam = normalize(output.position.xyz - _cameraPos.xyz);
@@ -39,10 +39,9 @@ VS_OUTPUT mainvs(VS_INPUT  input)
 	output.position = mul(output.position, _view);
 	// 투영 좌표계
 	output.position = mul(output.position, _proj);
-	output._discard = _discard;
-	output.texcoord.x = input.texcoord.x/2;
-	output.texcoord.y = input.texcoord.y / 2;
-	output.normal = input.normal;
+
+	output.texcoord = input.texcoord;
+	output.normal = normalize(mul(input.normal, _world));
 	//output.color = input.color;
 
 	return output;

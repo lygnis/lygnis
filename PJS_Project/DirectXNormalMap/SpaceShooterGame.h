@@ -1,18 +1,21 @@
 #pragma once
 #include "MWindow.h"
 #include "MGraphicsEngine.h"
+//#include "MVertexBuffer.h"
 #include "MVertexShader.h"
 #include "PixelShader.h"
 #include "InputListener.h"
-#include "Timer.h"
+//#include "Timer.h"
 #include "ThirdPersonCamera.h" 
-#include "ThirdPersonCamera.h" 
+#include "DebugCamera.h" 
+class MVertexBuffer;
+class MSwapChain;
 
-class BumpMapping :public MWindow
+class SpaceShooterGame :public MWindow
 {
 public:
-	BumpMapping() {}
-	~BumpMapping() {}
+	SpaceShooterGame() {}
+	~SpaceShooterGame() {}
 public:
 	void UpdateQuadPosition();
 	// 버텍스 셰이더 픽셀셰이더와 같은 모든 리소스가 이제 머티리얼의 일부이다.
@@ -85,3 +88,4 @@ private:
 	std::vector<MaterialPtr> _list_materials;
 	bool _fullscreen_state = false;
 };
+
