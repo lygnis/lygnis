@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{cdcb4404-cc3c-41ee-bf3e-f8eef6c6abe4}</ProjectGuid>
-    <RootNamespace>DirectXNormalMap</RootNamespace>
+    <ProjectGuid>{87be9b39-20f0-42c7-af24-f53df82c3cad}</ProjectGuid>
+    <RootNamespace>DirectXStencilBuffer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\output\Debug/DirectXNormalMap</OutDir>
-    <IntDir>..\..\..\output\Debug/DirectXNormalMap</IntDir>
+    <OutDir>..\..\..\output\Debug/DirectXStencilBuffer</OutDir>
+    <IntDir>..\..\..\output\Debug/DirectXStencilBuffer</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -155,6 +155,7 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
+    <ClCompile Include="FrameBufferDemo.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputSystem.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshManager.cpp" />
     <ClCompile Include="MGraphicsEngine.cpp" />
+    <ClCompile Include="MiniGame.cpp" />
     <ClCompile Include="MSwapChain.cpp" />
     <ClCompile Include="MVertexBuffer.cpp" />
     <ClCompile Include="MVertexShader.cpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="DeviceContext.h" />
+    <ClInclude Include="FrameBufferDemo.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputListener.h" />
@@ -195,6 +198,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="MGraphicsEngine.h" />
+    <ClInclude Include="MiniGame.h" />
     <ClInclude Include="MStd.h" />
     <ClInclude Include="MSwapChain.h" />
     <ClInclude Include="MVertexBuffer.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="MWindow.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />

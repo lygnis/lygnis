@@ -62,13 +62,13 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 			{
+				unsigned char num_face_vertex = shapes[s].mesh.num_face_vertices[f];
 				if (shapes[s].mesh.material_ids[f] != m)
 				{
 					//unsigned char num_face_vertex = shapes[s].mesh.num_face_vertices[f];
-
+					index_offset += num_face_vertex;
 					continue;
 				}
-				unsigned char num_face_vertex = shapes[s].mesh.num_face_vertices[f];
 				TVector3 vertices_face[3];
 				TVector2 texcoord_face[3];
 				for (unsigned char v = 0; v < num_face_vertex; v++)

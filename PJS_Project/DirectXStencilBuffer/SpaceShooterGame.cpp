@@ -1,4 +1,4 @@
-#include "BumpMapping.h"
+#include "SpaceShooterGame.h"
 #include "MVertexBuffer.h"
 #include <Windows.h>
 #include "InputSystem.h"
@@ -26,20 +26,21 @@ struct Constant
 
 
 
-void BumpMapping::UpdateQuadPosition()
+void SpaceShooterGame::UpdateQuadPosition()
 {
+	UpdateSpaceShip();
 	UpdateThirdPersonCamera();
 	UpdateLight();
 	UpdateSkyBox();
 }
 
-void BumpMapping::UpdateCamera()
+void SpaceShooterGame::UpdateCamera()
 {
 	_camera->Frame();
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void BumpMapping::UpdateThirdPersonCamera()
+void SpaceShooterGame::UpdateThirdPersonCamera()
 {
 	_camera->Frame();
 	//_camera->camera_pos_ = current_spaceship_pos_;
@@ -63,7 +64,7 @@ void BumpMapping::UpdateThirdPersonCamera()
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void BumpMapping::UpdateLight()
+void SpaceShooterGame::UpdateLight()
 {
 	//_light_tor_y += 1.807f * Timer::get()->m_fDeltaTime;
 	TMatrix temp;
@@ -77,8 +78,32 @@ void BumpMapping::UpdateLight()
 	_light_rot_matrix *= temp;
 }
 
+void SpaceShooterGame::UpdateSpaceShip()
+{
+	if (Input::get()->GetKey(VK_RBUTTON) == KEY_HOLD)
+	{
+		spaceship_rot_.y += Input::get()->m_pOffset.x * 0.002;
+		spaceship_rot_.x += Input::get()->m_pOffset.y * 0.002;
+		// X 축 회전을 통해 상하가 반전되지 않게 방지한다.
+		if (spaceship_rot_.x >= 1.57f)
+			spaceship_rot_.x = 1.57f;
+		else if (spaceship_rot_.x <= -1.57f)
+			spaceship_rot_.x = -1.57f;
+	}
+	MoveSpaceShip();
+	space_world.Identity;
+	//_camera->yaw_ = spaceship_rot_.y; _camera->pitch_ = spaceship_rot_.x; _camera->roll_ = spaceship_rot_.z;
+	current_spaceship_pos_ = TVector3::Lerp(current_spaceship_pos_, spaceship_pos_, 7.f *Timer::get()->m_fDeltaTime);
+	current_spaceship_rot_ = TVector3::Lerp(current_spaceship_rot_, spaceship_rot_, 3.f * Timer::get()->m_fDeltaTime);
+	space_world.Translation(current_spaceship_pos_);
+	TVector3 _vPos = spaceship_pos_;
+	::TQuaternion qRotation;
+	::D3DXQuaternionRotationYawPitchRoll(&qRotation, current_spaceship_rot_.y, current_spaceship_rot_.x, current_spaceship_rot_.z);
+	::D3DXMatrixAffineTransformation(&space_world, 1.0f, NULL, &qRotation, &_vPos);
+	_camera->camera_pos_ = current_spaceship_pos_ +space_world.Backward() * -cam_distance_ + space_world.Up() * 5.0f;
+}
 
-void BumpMapping::UpdateSkyBox()
+void SpaceShooterGame::UpdateSkyBox()
 {
 	// 스카이 박스 업데이트
 	Constant cc;
@@ -91,40 +116,20 @@ void BumpMapping::UpdateSkyBox()
 	_skyMat->SetData(&cc, sizeof(Constant));
 }
 
-void BumpMapping::UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scale, const std::vector<MaterialPtr>& list_material)
+void SpaceShooterGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>& list_material)
 {
 	Constant cc;
 	TMatrix mtemp;
 	cc._world.Identity;
-	mtemp = TMatrix::Identity;
-	mtemp = TMatrix::CreateScale(scale);
-	cc._world *= mtemp;
-
-	mtemp =TMatrix::Identity;
-	mtemp = TMatrix::CreateRotationX(rotation.x);
-	cc._world *= mtemp;
-
-	mtemp = TMatrix::Identity;
-	mtemp = TMatrix::CreateRotationY(rotation.y);
-	cc._world *= mtemp;
-
-	mtemp = TMatrix::Identity;
-	mtemp = TMatrix::CreateRotationZ(rotation.z);
-	cc._world *= mtemp;
-
-
-	mtemp = TMatrix::Identity;
-	mtemp.Translation(pos);
-	cc._world *= mtemp;
-	cc._world;
-
+	cc._world = world;
+	
 	TVector4 temp;
 	temp.x = _camera->camera_pos_.x; temp.y = _camera->camera_pos_.y; temp.z = _camera->camera_pos_.z; temp.w = 1.0f;
 
 	cc._cameraPos = temp;
 	cc._view = _view_cam;
 	cc._proj = _proj_cam;
-
+	
 	cc._light_position = _light_position;
 	cc._light_radius = 0.0f;
 	TVector3 temp_light = _light_rot_matrix.Backward();
@@ -136,7 +141,7 @@ void BumpMapping::UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scale, c
 	}
 }
 
-void BumpMapping::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
+void SpaceShooterGame::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
 {
 	// 오브젝트 렌더링
 	// 버텍스로 삼각형
@@ -157,46 +162,57 @@ void BumpMapping::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& 
 	}
 }
 
-void BumpMapping::OnCreate()
+void SpaceShooterGame::OnCreate()
 {
 	// 타이머
 	Timer::get()->Init();
 	Input::get()->Init();
 
 	// 카메라 생성 및 초기화
-	_camera = std::make_shared<DebugCamera>();
+	_camera = std::make_shared<ThirdPersonCamera>();
 	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
 	// 스왑체인 생성
 	RECT rc = GetClientRect();
 	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 	// 난수 생성
+	srand((UINT)time(NULL));
+	for (UINT i = 0; i < 200; i++)
+	{
+		asteroids_pos_[i] = TVector3(rand()%4000 + (-2000), rand() % 4000 + (-2000), rand() % 4000 + (-2000));
+		asteroids_rot_[i] = TVector3((rand() % 628)/100.f, (rand() % 628) / 100.f, (rand() % 628) / 100.f);
+		float scale = rand() % 10 + 1;
+		asteroids_scale_[i] = TVector3(scale, scale, scale);
+	}
 
 	// 텍스쳐 로딩
-	_sky_Tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
-	brick_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick_d.jpg");
-	brick_normal_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick_n.jpg");
+	_sky_Tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
+	spaceship_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/spaceship.jpg");
+	asteroid_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/asteroid.jpg");
 	// 오브젝트 로딩
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
-	spehre_mesh_ = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
+	spaceship_mesh_ = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/spaceship.obj");
+	asteroid_mesh_ = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/asteroid.obj");
 	// 머티리얼 생성
 	_base_mater = MGraphicsEngine::get()->CreateMaterial(L"DirectionalLightVertex.hlsl", L"DirectionalLightPixel.hlsl");
 	_base_mater->AddTexture(_sky_Tex);
 	_base_mater->SetCullMode(CULL_MODE_BACK);
+	spaceship_mat_ = MGraphicsEngine::get()->CreateMaterial(_base_mater);
+	spaceship_mat_->AddTexture(spaceship_tex_);
+	spaceship_mat_->SetCullMode(CULL_MODE_BACK);
+
+	asteroid_mat_ = MGraphicsEngine::get()->CreateMaterial(_base_mater);
+	asteroid_mat_->AddTexture(asteroid_tex_);
+	asteroid_mat_->SetCullMode(CULL_MODE_BACK);
 	// 스카이 박스
 	_skyMat = MGraphicsEngine::get()->CreateMaterial(L"SkyBoxVertexShader.hlsl", L"SkyBoxPixelShader.hlsl");
 	_skyMat->AddTexture(_sky_Tex);
 	_skyMat->SetCullMode(CULL_MODE_FRONT);
 
-	brick_mat_ = MGraphicsEngine::get()->CreateMaterial(L"DirLightBumpVS.hlsl", L"DirLightBumpPS.hlsl");
-	brick_mat_->AddTexture(brick_tex_);
-	brick_mat_->AddTexture(brick_normal_tex_);
-	brick_mat_->SetCullMode(CULL_MODE_BACK);
-
 	_list_materials.reserve(32);
 }
 
-void BumpMapping::OnUpdate()
+void SpaceShooterGame::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
@@ -220,26 +236,50 @@ void BumpMapping::OnUpdate()
 	this->Render();
 }
 
-void BumpMapping::Render()
+void SpaceShooterGame::Render()
 {
 	// 렌더링
 	// 렌더타겟 색 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearRenderTargetColor(this->_swapChain,
-		0.5, 0.5, 0.5, 1);
+		1, 1, 1, 1);
 	RECT rc = this->GetClientRect();
 	// 뷰포트 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+	// 우주선 렌더
+	_list_materials.clear();
+	_list_materials.push_back(spaceship_mat_);
+	UpdateModel(space_world, _list_materials);
+	DrawMesh(spaceship_mesh_, _list_materials);
 
 	_list_materials.clear();
-	_list_materials.push_back(brick_mat_);
-	UpdateModel(TVector3(0,0,0), TVector3(), TVector3(1,1,1), _list_materials);
-	DrawMesh(spehre_mesh_, _list_materials);
-
+	_list_materials.push_back(asteroid_mat_);
+	
+	// 소행성 렌더
+	for (UINT i = 0; i < 200; i++)
+	{
+		TMatrix temp , worldpos;
+		temp.Identity;
+		worldpos.Identity;
+		temp = TMatrix::CreateScale(asteroids_scale_[i]);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationX(asteroids_rot_[i].x);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationY(asteroids_rot_[i].y);
+		worldpos = worldpos*temp;
+		temp.Identity;
+		temp = TMatrix::CreateRotationZ(asteroids_rot_[i].z);
+		worldpos = worldpos*temp;
+		temp.Translation(asteroids_pos_[i]);
+		worldpos = worldpos*temp;
+		UpdateModel(worldpos, _list_materials);
+		DrawMesh(asteroid_mesh_, _list_materials);
+	}
 
 	_list_materials.clear();
 	_list_materials.push_back(_skyMat);
 	DrawMesh(_sky_mesh, _list_materials);
-	_list_materials.clear();
 
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
@@ -247,28 +287,51 @@ void BumpMapping::Render()
 	_time += Timer::get()->m_fDeltaTime;
 }
 
+void SpaceShooterGame::MoveSpaceShip()
+{
+	if (Input::get()->GetKey('W') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Backward() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ += _v;
+	}
+	if (Input::get()->GetKey('S') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Backward() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ -= _v;
+	}
+	if (Input::get()->GetKey('D') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Right() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ += _v;
+	}
+	if (Input::get()->GetKey('A') == KEY_HOLD)
+	{
+		TBASIS_EX::TVector3 _v = space_world.Right() * spaceship_speed_ * Timer::get()->m_fDeltaTime;
+		spaceship_pos_ -= _v;
+	}
+}
 
-float BumpMapping::lerp(float start, float end, float delta)
+float SpaceShooterGame::lerp(float start, float end, float delta)
 {
 	return start * (1.f - delta) + end * (delta);
 }
 
-void BumpMapping::OnDestroy()
+void SpaceShooterGame::OnDestroy()
 {
 	MWindow::OnDestroy();
 	_swapChain->SetFullScreen(false, 1, 1);
 }
 
-void BumpMapping::OnFocus()
+void SpaceShooterGame::OnFocus()
 {
 	//InputSystem::get()->addListener(this);
 }
 
-void BumpMapping::OnKillFocus()
+void SpaceShooterGame::OnKillFocus()
 {
 	//InputSystem::get()->removeListener(this);
 }
-void BumpMapping::OnSize()
+void SpaceShooterGame::OnSize()
 {
 	RECT rc = this->GetClientRect();
 	_swapChain->Resize(rc.right, rc.bottom);

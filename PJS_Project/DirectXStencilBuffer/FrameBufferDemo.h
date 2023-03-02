@@ -1,3 +1,4 @@
+
 #pragma once
 #include "MWindow.h"
 #include "MGraphicsEngine.h"
@@ -6,19 +7,19 @@
 #include "InputListener.h"
 #include "Timer.h"
 #include "DebugCamera.h"
-
-class BumpMapping :public MWindow
+#include "MiniGame.h"
+class FrameBufferDemo :public MWindow
 {
 public:
-	BumpMapping() {}
-	~BumpMapping() {}
+	FrameBufferDemo() {}
+	~FrameBufferDemo() {}
 public:
 	void UpdateQuadPosition();
 	// 버텍스 셰이더 픽셀셰이더와 같은 모든 리소스가 이제 머티리얼의 일부이다.
 	void DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material);
 	void UpdateCamera();
 	void UpdateThirdPersonCamera();
-	void UpdateModel(TVector3 pos,TVector3 rotation, TVector3 scale , const std::vector<MaterialPtr>& list_material);
+	void UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scale, const std::vector<MaterialPtr>& list_material);
 	void UpdateSkyBox();
 	void UpdateLight();
 	void Render();
@@ -39,6 +40,9 @@ private:
 	TexturePtr			_sky_Tex;
 
 	MeshPtr				_sky_mesh;
+	MeshPtr				_monitor_mesh;
+	MaterialPtr			_monitor_mat;
+	MaterialPtr			screen_mat_;
 
 	MeshPtr				spehre_mesh_;
 	MaterialPtr			_skyMat;
@@ -67,4 +71,6 @@ private:
 	float forward_ = 0.0f;
 	std::vector<MaterialPtr> _list_materials;
 	bool _fullscreen_state = false;
+
+	MiniGame mini_game;
 };
