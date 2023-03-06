@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{bc19e704-0073-460a-b6ad-5e2bc6a4a534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\OldDemo">
+      <UniqueIdentifier>{b9010cd3-9d22-4f6e-91bb-3ab3d814b2a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\OldDemo\Shader">
+      <UniqueIdentifier>{d380e890-832b-4c98-b3fa-7e87b1fabd3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\SpaceShooterGame">
+      <UniqueIdentifier>{23e714cf-550d-4210-99fb-bfb222ac90c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\GlobalShaders">
+      <UniqueIdentifier>{301cef83-2b0d-4b03-a1f5-bb26a13356b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\GlobalShaders\SkyBox">
+      <UniqueIdentifier>{59074b1c-33f6-4748-b4e2-c9dfaa350d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\GlobalShaders\DirectionalLight">
+      <UniqueIdentifier>{5d01b8e5-ad93-4b22-b483-1ba8c38badb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\GlobalShaders\PointLight">
+      <UniqueIdentifier>{4bddede3-74a1-4f5d-8110-9ada634c2f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\BumpMappingDemo">
+      <UniqueIdentifier>{95fc6917-7dcb-4510-ac5b-7311a7e64bb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\GlobalShaders\DirLightBumpMapping">
+      <UniqueIdentifier>{21ac577c-ca07-4823-bc58-745b1f427028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\FrameBufferDemo">
+      <UniqueIdentifier>{27959ff4-7767-4da9-940b-8361abcc8cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\PostProcessingDemo">
+      <UniqueIdentifier>{83d70fe5-795a-4fb8-b549-32c21e0e44c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{8dc18c21-c1b4-498f-b91d-4a6a77f6ac4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D">
+      <UniqueIdentifier>{86cc93b3-80dc-41c5-a496-28fc28f92d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include">
+      <UniqueIdentifier>{b067ac07-28ef-42d4-87ae-00ef6e36d405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source">
+      <UniqueIdentifier>{38d28c1a-a040-4a46-94c8-cb854616d5e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Vendor">
+      <UniqueIdentifier>{6cbcac22-b240-42f0-b2da-0bfe7478a42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D">
+      <UniqueIdentifier>{7274a0a3-faaa-480f-80ee-dfd8514f09ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D">
+      <UniqueIdentifier>{635feb84-a51d-4c10-ad3f-d9bde7bba1e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Window">
+      <UniqueIdentifier>{03ff9d1a-eea9-4be7-a361-9145fa004465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Window">
+      <UniqueIdentifier>{5746e6f8-f644-45f2-a374-f111c365a1b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Math">
+      <UniqueIdentifier>{deaa669c-e050-4bd7-b9ff-d4b30c0e7b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Game">
+      <UniqueIdentifier>{5bd2b8fd-4479-481f-9fe1-8360698a593d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Game">
+      <UniqueIdentifier>{44a92c5c-ea78-41ef-8ff2-4ebf38737658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Game\Win32">
+      <UniqueIdentifier>{c7e713c1-6004-43cc-b95c-c737f65c2dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Graphics">
+      <UniqueIdentifier>{998beafa-6364-4f9b-8e33-d9890bddd8a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Graphics">
+      <UniqueIdentifier>{f81a9a0f-9551-4284-b61d-0ad957bbcde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Resource">
+      <UniqueIdentifier>{d909bf98-38b8-4460-8482-4760fdaa2917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Resource">
+      <UniqueIdentifier>{dbf058c8-e58a-40bb-a736-2ccfa39e91d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DirectionalLightVertex.hlsl">
+      <Filter>App\GlobalShaders\DirectionalLight</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalLightPixel.hlsl">
+      <Filter>App\GlobalShaders\DirectionalLight</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxPixelShader.hlsl">
+      <Filter>App\GlobalShaders\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightShader.hlsl">
+      <Filter>App\GlobalShaders\PointLight</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightVertex.hlsl">
+      <Filter>App\GlobalShaders\PointLight</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxVertexShader.hlsl">
+      <Filter>App\GlobalShaders\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexMesh.hlsl">
+      <Filter>App\GlobalShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightBumpPS.hlsl">
+      <Filter>App\GlobalShaders\DirLightBumpMapping</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightBumpVS.hlsl">
+      <Filter>App\GlobalShaders\DirLightBumpMapping</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>App\OldDemo\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>App\OldDemo\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MWindow.h">
+      <Filter>DX3D\Include\DX3D\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>DX3D\Include\DX3D\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MStd.h">
+      <Filter>DX3D\Include\DX3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>DX3D\Include\DX3D\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceContext.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MGraphicsEngine.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MSwapChain.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MVertexBuffer.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MVertexShader.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>DX3D\Include\DX3D\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>DX3D\Include\DX3D\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MWindow.cpp">
+      <Filter>DX3D\Source\DX3D\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>DX3D\Source\DX3D\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Game.cpp">
+      <Filter>DX3D\Include\DX3D\Game\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceContext.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MGraphicsEngine.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MSwapChain.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MVertexBuffer.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MVertexShader.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>DX3D\Source\DX3D\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>DX3D\Source\DX3D\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

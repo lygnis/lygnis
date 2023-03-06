@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{87be9b39-20f0-42c7-af24-f53df82c3cad}</ProjectGuid>
-    <RootNamespace>DirectXStencilBuffer</RootNamespace>
+    <ProjectGuid>{353d9c3d-03df-4cd2-a672-00fb37584f77}</ProjectGuid>
+    <RootNamespace>DirectXEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,8 +78,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\output\Debug/DirectXStencilBuffer</OutDir>
-    <IntDir>..\..\..\output\Debug/DirectXStencilBuffer</IntDir>
+    <OutDir>..\..\..\output\Debug/DirectXEngine</OutDir>
+    <IntDir>..\..\..\output\Debug/DirectXEngine</IntDir>
+    <ReferencePath>DX3D/Include;DX3D/Vendor/tinyobjloader/include;DX3D/Vendor/DirectXTex/include;$(ReferencePath)</ReferencePath>
+    <LibraryPath>D3DX/Vendor/DirectXTex/bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -151,76 +153,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BumpMapping.cpp" />
-    <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="DebugCamera.cpp" />
-    <ClCompile Include="DeviceContext.cpp" />
-    <ClCompile Include="FrameBufferDemo.cpp" />
-    <ClCompile Include="IndexBuffer.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MAppWindow.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="MCamera.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshManager.cpp" />
-    <ClCompile Include="MGraphicsEngine.cpp" />
-    <ClCompile Include="MiniGame.cpp" />
-    <ClCompile Include="MSwapChain.cpp" />
-    <ClCompile Include="MVertexBuffer.cpp" />
-    <ClCompile Include="MVertexShader.cpp" />
-    <ClCompile Include="MWindow.cpp" />
-    <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="PostProcessingDemo.cpp" />
-    <ClCompile Include="RenderSystem.cpp" />
-    <ClCompile Include="Resource.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="SpaceShooterGame.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="ThirdPersonCamera.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TMath.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BumpMapping.h" />
-    <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="DebugCamera.h" />
-    <ClInclude Include="DeviceContext.h" />
-    <ClInclude Include="FrameBufferDemo.h" />
-    <ClInclude Include="IndexBuffer.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="InputListener.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="MAppWindow.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="MCamera.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshManager.h" />
-    <ClInclude Include="MGraphicsEngine.h" />
-    <ClInclude Include="MiniGame.h" />
-    <ClInclude Include="MStd.h" />
-    <ClInclude Include="MSwapChain.h" />
-    <ClInclude Include="MVertexBuffer.h" />
-    <ClInclude Include="MVertexShader.h" />
-    <ClInclude Include="MWindow.h" />
-    <ClInclude Include="PixelShader.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="PostProcessingDemo.h" />
-    <ClInclude Include="Rect.h" />
-    <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="SpaceShooterGame.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="ThirdPersonCamera.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="TMath.h" />
-    <ClInclude Include="VertexMesh.h" />
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="DirectionalLightPixel.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
@@ -278,6 +210,48 @@
     <FxCompile Include="VertexShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="DeviceContext.cpp" />
+    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MGraphicsEngine.cpp" />
+    <ClCompile Include="MSwapChain.cpp" />
+    <ClCompile Include="MVertexBuffer.cpp" />
+    <ClCompile Include="MVertexShader.cpp" />
+    <ClCompile Include="MWindow.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Win32Game.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="DeviceContext.h" />
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MGraphicsEngine.h" />
+    <ClInclude Include="MStd.h" />
+    <ClInclude Include="MSwapChain.h" />
+    <ClInclude Include="MVertexBuffer.h" />
+    <ClInclude Include="MVertexShader.h" />
+    <ClInclude Include="MWindow.h" />
+    <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

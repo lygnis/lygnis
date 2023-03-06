@@ -1,4 +1,4 @@
-#include "MiniGame.h"
+#include "PostProcessingDemo.h"
 #include "MVertexBuffer.h"
 #include <Windows.h>
 #include "InputSystem.h"
@@ -26,17 +26,7 @@ struct Constant
 
 
 
-void MiniGame::SetWindowSize(const TMath::Rect& size)
-{
-	window_size_ = size;
-}
-
-TexturePtr& MiniGame::GetRenderTarget()
-{
-	// TODO: 여기에 return 문을 삽입합니다.
-	return render_target_;
-}
-void MiniGame::UpdateQuadPosition()
+void PostProcessingDemo::UpdateQuadPosition()
 {
 	UpdateSpaceShip();
 	UpdateThirdPersonCamera();
@@ -44,16 +34,16 @@ void MiniGame::UpdateQuadPosition()
 	UpdateSkyBox();
 }
 
-void MiniGame::UpdateCamera()
+void PostProcessingDemo::UpdateCamera()
 {
-	//_camera->Frame();
+	_camera->Frame();
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void MiniGame::UpdateThirdPersonCamera()
+void PostProcessingDemo::UpdateThirdPersonCamera()
 {
 	_camera->Frame();
-	_camera->camera_pos_ = current_spaceship_pos_;
+	//_camera->camera_pos_ = current_spaceship_pos_;
 	if (forward_)
 	{
 		if (forward_ > 0.f)
@@ -74,7 +64,7 @@ void MiniGame::UpdateThirdPersonCamera()
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void MiniGame::UpdateLight()
+void PostProcessingDemo::UpdateLight()
 {
 	//_light_tor_y += 1.807f * Timer::get()->m_fDeltaTime;
 	TMatrix temp;
@@ -88,20 +78,21 @@ void MiniGame::UpdateLight()
 	_light_rot_matrix *= temp;
 }
 
-void MiniGame::UpdateSpaceShip()
+void PostProcessingDemo::UpdateSpaceShip()
 {
 	if (Input::get()->GetKey(VK_RBUTTON) == KEY_HOLD)
 	{
-		spaceship_rot_.y = 0;//+= Input::get()->m_pOffset.x * 0.002;
-		spaceship_rot_.x = 0;//+= Input::get()->m_pOffset.y * 0.002;
+		spaceship_rot_.y += Input::get()->m_pOffset.x * 0.002;
+		spaceship_rot_.x += Input::get()->m_pOffset.y * 0.002;
 		// X 축 회전을 통해 상하가 반전되지 않게 방지한다.
 		if (spaceship_rot_.x >= 1.57f)
 			spaceship_rot_.x = 1.57f;
 		else if (spaceship_rot_.x <= -1.57f)
 			spaceship_rot_.x = -1.57f;
 	}
-	//MoveSpaceShip();
+	MoveSpaceShip();
 	space_world.Identity;
+	//_camera->yaw_ = spaceship_rot_.y; _camera->pitch_ = spaceship_rot_.x; _camera->roll_ = spaceship_rot_.z;
 	current_spaceship_pos_ = TVector3::Lerp(current_spaceship_pos_, spaceship_pos_, 7.f * Timer::get()->m_fDeltaTime);
 	current_spaceship_rot_ = TVector3::Lerp(current_spaceship_rot_, spaceship_rot_, 3.f * Timer::get()->m_fDeltaTime);
 	space_world.Translation(current_spaceship_pos_);
@@ -112,7 +103,7 @@ void MiniGame::UpdateSpaceShip()
 	_camera->camera_pos_ = current_spaceship_pos_ + space_world.Backward() * -cam_distance_ + space_world.Up() * 5.0f;
 }
 
-void MiniGame::UpdateSkyBox()
+void PostProcessingDemo::UpdateSkyBox()
 {
 	// 스카이 박스 업데이트
 	Constant cc;
@@ -125,7 +116,7 @@ void MiniGame::UpdateSkyBox()
 	_skyMat->SetData(&cc, sizeof(Constant));
 }
 
-void MiniGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>& list_material)
+void PostProcessingDemo::UpdateModel(TMatrix world, const std::vector<MaterialPtr>& list_material)
 {
 	Constant cc;
 	TMatrix mtemp;
@@ -150,7 +141,7 @@ void MiniGame::UpdateModel(TMatrix world, const std::vector<MaterialPtr>& list_m
 	}
 }
 
-void MiniGame::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
+void PostProcessingDemo::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
 {
 	// 오브젝트 렌더링
 	// 버텍스로 삼각형
@@ -171,11 +162,19 @@ void MiniGame::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& lis
 	}
 }
 
-void MiniGame::OnCreate()
+void PostProcessingDemo::OnCreate()
 {
 	// 타이머
 	Timer::get()->Init();
 	Input::get()->Init();
+
+	// 카메라 생성 및 초기화
+	_camera = std::make_shared<ThirdPersonCamera>();
+	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
+	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(this->GetClientRect().right) / (float)(this->GetClientRect().bottom));
+	// 스왑체인 생성
+	RECT rc = GetClientRect();
+	_swapChain = MGraphicsEngine::get()->getRenderSystem()->CreateSwapChain(_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 	// 난수 생성
 	srand((UINT)time(NULL));
 	for (UINT i = 0; i < 200; i++)
@@ -188,7 +187,7 @@ void MiniGame::OnCreate()
 
 	// 텍스쳐 로딩
 	_sky_Tex = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/stars_map.jpg");
-	spaceship_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/sky.jpg");
+	spaceship_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/spaceship.jpg");
 	asteroid_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/asteroid.jpg");
 	// 오브젝트 로딩
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
@@ -212,35 +211,52 @@ void MiniGame::OnCreate()
 
 	_list_materials.reserve(32);
 
-	render_target_ = MGraphicsEngine::get()->getTextureManager()->CreateTuexture(TMath::Rect(1280, 720), Texture::Type::RENDERTARGET);
-	depth_stencil = MGraphicsEngine::get()->getTextureManager()->CreateTuexture(TMath::Rect(1280, 720), Texture::Type::DEPTHSTECIL);
-	// 카메라 생성 및 초기화
-	_camera = std::make_shared<ThirdPersonCamera>();
-	_camera->CreateViewMatrix(TVector3(0, 0, -3), TVector3(0, 0, 0), TVector3(0, 1, 0));
-	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)1280 / (float)720);
+	render_target_ = MGraphicsEngine::get()->getTextureManager()->CreateTuexture(TMath::Rect(rc.right - rc.left, rc.bottom - rc.top), Texture::Type::RENDERTARGET);
+	depth_stencil_ = MGraphicsEngine::get()->getTextureManager()->CreateTuexture(TMath::Rect(rc.right - rc.left, rc.bottom - rc.top), Texture::Type::DEPTHSTECIL);
+
+
 }
 
-void MiniGame::OnUpdate()
+void PostProcessingDemo::OnUpdate()
 {
-	//Timer::get()->Frame();
-	//Input::get()->Frame();
+	Timer::get()->Frame();
+	Input::get()->Frame();
+	if (Input::get()->GetKey('F') == KEY_UP)
+	{
+		_fullscreen_state = !_fullscreen_state;
+		RECT size_screen = this->GetSizeScreen();
 
+		_swapChain->SetFullScreen(_fullscreen_state, size_screen.right, size_screen.bottom);
+	}
+	if (Input::get()->GetKey(VK_F10) == KEY_HOLD)
+	{
+		//_light_radius -= 1.0f * Timer::get()->m_fDeltaTime;
+	}
+	if (Input::get()->GetKey(VK_F11) == KEY_HOLD)
+	{
+		//_light_radius += 1.0f * Timer::get()->m_fDeltaTime;
+	}
 	// 카메라 라이트 스카이 박스 업데이트
 	UpdateQuadPosition();
 	this->Render();
 }
 
-void MiniGame::Render()
+void PostProcessingDemo::Render()
 {
-
+	// 렌더링
+	// 렌더타겟 색 설정
+	
+	// 렌더타겟
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearRenderTargetColor(this->render_target_,
 		0.5f, 0.5f, 0.5f, 1);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearDepthStencil(this->depth_stencil);
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetRenderTarget(this->render_target_, this->depth_stencil);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearDepthStencil(this->depth_stencil_);
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetRenderTarget(this->render_target_, this->depth_stencil_);
 
 	TMath::Rect viewport_size = render_target_->GetSize();
 	// 뷰포트 설정
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(viewport_size.width, viewport_size.height);
+
+
 	// 우주선 렌더
 	_list_materials.clear();
 	_list_materials.push_back(spaceship_mat_);
@@ -277,13 +293,19 @@ void MiniGame::Render()
 	_list_materials.push_back(_skyMat);
 	DrawMesh(_sky_mesh, _list_materials);
 
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearRenderTargetColor(this->_swapChain,
+		1, 1, 1, 1);
+	RECT rc = this->GetClientRect();
+	// 뷰포트 설정
+	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+
 	// 버퍼 바꾸기
-	//_swapChain->Present(true);
+	_swapChain->Present(true);
 	// 상수버퍼 시간 갱신
 	_time += Timer::get()->m_fDeltaTime;
 }
 
-void MiniGame::MoveSpaceShip()
+void PostProcessingDemo::MoveSpaceShip()
 {
 	if (Input::get()->GetKey('W') == KEY_HOLD)
 	{
@@ -307,26 +329,33 @@ void MiniGame::MoveSpaceShip()
 	}
 }
 
-float MiniGame::lerp(float start, float end, float delta)
+float PostProcessingDemo::lerp(float start, float end, float delta)
 {
 	return start * (1.f - delta) + end * (delta);
 }
 
-void MiniGame::OnDestroy()
+void PostProcessingDemo::OnDestroy()
 {
+	MWindow::OnDestroy();
+	_swapChain->SetFullScreen(false, 1, 1);
 }
 
-void MiniGame::OnFocus()
+void PostProcessingDemo::OnFocus()
 {
 	//InputSystem::get()->addListener(this);
 }
 
-void MiniGame::OnKillFocus()
+void PostProcessingDemo::OnKillFocus()
 {
 	//InputSystem::get()->removeListener(this);
 }
-void MiniGame::OnSize()
+void PostProcessingDemo::OnSize()
 {
+	RECT rc = this->GetClientRect();
+	_swapChain->Resize(rc.right, rc.bottom);
+	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
+	UpdateQuadPosition();
+	Render();
 }
 
 

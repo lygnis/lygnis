@@ -1,4 +1,4 @@
-#include "FrameBufferDemo.h"
+#include "BumpMapping.h"
 #include "MVertexBuffer.h"
 #include <Windows.h>
 #include "InputSystem.h"
@@ -26,20 +26,20 @@ struct Constant
 
 
 
-void FrameBufferDemo::UpdateQuadPosition()
+void BumpMapping::UpdateQuadPosition()
 {
 	UpdateThirdPersonCamera();
 	UpdateLight();
 	UpdateSkyBox();
 }
 
-void FrameBufferDemo::UpdateCamera()
+void BumpMapping::UpdateCamera()
 {
 	_camera->Frame();
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void FrameBufferDemo::UpdateThirdPersonCamera()
+void BumpMapping::UpdateThirdPersonCamera()
 {
 	_camera->Frame();
 	//_camera->camera_pos_ = current_spaceship_pos_;
@@ -63,22 +63,22 @@ void FrameBufferDemo::UpdateThirdPersonCamera()
 	_view_cam = _camera->mat_view_;
 	_proj_cam = _camera->mat_proj_;
 }
-void FrameBufferDemo::UpdateLight()
+void BumpMapping::UpdateLight()
 {
 	//_light_tor_y += 1.807f * Timer::get()->m_fDeltaTime;
 	TMatrix temp;
 	temp.Identity;
-	_light_rot_matrix = TMatrix::Identity;
-	temp = TMatrix::Identity;
+	_light_rot_matrix.Identity;
+	temp.Identity;
 	temp = TMatrix::CreateRotationX(-0.707f);
-	_light_rot_matrix = _light_rot_matrix*temp;
-	temp = TMatrix::Identity;
-	temp = TMatrix::CreateRotationY(2.14f);
-	_light_rot_matrix = _light_rot_matrix*temp;
+	_light_rot_matrix *= temp;
+	temp.Identity;
+	temp = TMatrix::CreateRotationY(0.807f);
+	_light_rot_matrix *= temp;
 }
 
 
-void FrameBufferDemo::UpdateSkyBox()
+void BumpMapping::UpdateSkyBox()
 {
 	// 스카이 박스 업데이트
 	Constant cc;
@@ -91,31 +91,32 @@ void FrameBufferDemo::UpdateSkyBox()
 	_skyMat->SetData(&cc, sizeof(Constant));
 }
 
-void FrameBufferDemo::UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scale, const std::vector<MaterialPtr>& list_material)
+void BumpMapping::UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scale, const std::vector<MaterialPtr>& list_material)
 {
 	Constant cc;
 	TMatrix mtemp;
 	cc._world.Identity;
 	mtemp = TMatrix::Identity;
 	mtemp = TMatrix::CreateScale(scale);
-	cc._world = cc._world*mtemp;
+	cc._world *= mtemp;
 
-	mtemp = TMatrix::Identity;
+	mtemp =TMatrix::Identity;
 	mtemp = TMatrix::CreateRotationX(rotation.x);
-	cc._world = cc._world * mtemp;;
+	cc._world *= mtemp;
 
 	mtemp = TMatrix::Identity;
 	mtemp = TMatrix::CreateRotationY(rotation.y);
-	cc._world = cc._world * mtemp;;
+	cc._world *= mtemp;
 
 	mtemp = TMatrix::Identity;
 	mtemp = TMatrix::CreateRotationZ(rotation.z);
-	cc._world = cc._world * mtemp;;
+	cc._world *= mtemp;
 
 
 	mtemp = TMatrix::Identity;
 	mtemp.Translation(pos);
-	cc._world = cc._world * mtemp;;
+	cc._world *= mtemp;
+	cc._world;
 
 	TVector4 temp;
 	temp.x = _camera->camera_pos_.x; temp.y = _camera->camera_pos_.y; temp.z = _camera->camera_pos_.z; temp.w = 1.0f;
@@ -135,7 +136,7 @@ void FrameBufferDemo::UpdateModel(TVector3 pos, TVector3 rotation, TVector3 scal
 	}
 }
 
-void FrameBufferDemo::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
+void BumpMapping::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_material)
 {
 	// 오브젝트 렌더링
 	// 버텍스로 삼각형
@@ -156,7 +157,7 @@ void FrameBufferDemo::DrawMesh(const MeshPtr& mesh, const std::vector<MaterialPt
 	}
 }
 
-void FrameBufferDemo::OnCreate()
+void BumpMapping::OnCreate()
 {
 	// 타이머
 	Timer::get()->Init();
@@ -177,7 +178,7 @@ void FrameBufferDemo::OnCreate()
 	brick_normal_tex_ = MGraphicsEngine::get()->getTextureManager()->CreateTuextureFromeFile(L"../../data/Textures/brick_n.jpg");
 	// 오브젝트 로딩
 	_sky_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
-	_monitor_mesh = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/monitor.obj");
+	spehre_mesh_ = MGraphicsEngine::get()->getMeshManager()->CreateMeshFromeFile(L"../../data/Meshes/sphere.obj");
 	// 머티리얼 생성
 	_base_mater = MGraphicsEngine::get()->CreateMaterial(L"DirectionalLightVertex.hlsl", L"DirectionalLightPixel.hlsl");
 	_base_mater->AddTexture(_sky_Tex);
@@ -187,28 +188,18 @@ void FrameBufferDemo::OnCreate()
 	_skyMat->AddTexture(_sky_Tex);
 	_skyMat->SetCullMode(CULL_MODE_FRONT);
 
-	_monitor_mat = MGraphicsEngine::get()->CreateMaterial(_base_mater);
-	_monitor_mat->AddTexture(brick_tex_);
-	_monitor_mat->SetCullMode(CULL_MODE_BACK);
-
-	screen_mat_ = MGraphicsEngine::get()->CreateMaterial(_base_mater);
-	screen_mat_->SetCullMode(CULL_MODE_BACK);
+	brick_mat_ = MGraphicsEngine::get()->CreateMaterial(L"DirLightBumpVS.hlsl", L"DirLightBumpPS.hlsl");
+	brick_mat_->AddTexture(brick_tex_);
+	brick_mat_->AddTexture(brick_normal_tex_);
+	brick_mat_->SetCullMode(CULL_MODE_BACK);
 
 	_list_materials.reserve(32);
-
-	// 미니게임
-	mini_game.SetWindowSize(TMath::Rect(rc.right - rc.left, rc.bottom - rc.top));
-	mini_game.OnCreate();
-
-	screen_mat_->AddTexture(mini_game.GetRenderTarget());
 }
 
-void FrameBufferDemo::OnUpdate()
+void BumpMapping::OnUpdate()
 {
 	Timer::get()->Frame();
 	Input::get()->Frame();
-
-	mini_game.OnUpdate();
 	if (Input::get()->GetKey('F') == KEY_UP)
 	{
 		_fullscreen_state = !_fullscreen_state;
@@ -229,7 +220,7 @@ void FrameBufferDemo::OnUpdate()
 	this->Render();
 }
 
-void FrameBufferDemo::Render()
+void BumpMapping::Render()
 {
 	// 렌더링
 	// 렌더타겟 색 설정
@@ -240,10 +231,9 @@ void FrameBufferDemo::Render()
 	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->SetViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
 	_list_materials.clear();
-	_list_materials.push_back(_monitor_mat);
-	_list_materials.push_back(screen_mat_);
-	UpdateModel(TVector3(0, 0, 0), TVector3(0, 3.14f,0), TVector3(1, 1, 1), _list_materials);
-	DrawMesh(_monitor_mesh, _list_materials);
+	_list_materials.push_back(brick_mat_);
+	UpdateModel(TVector3(0,0,0), TVector3(), TVector3(1,1,1), _list_materials);
+	DrawMesh(spehre_mesh_, _list_materials);
 
 
 	_list_materials.clear();
@@ -251,7 +241,6 @@ void FrameBufferDemo::Render()
 	DrawMesh(_sky_mesh, _list_materials);
 	_list_materials.clear();
 
-	MGraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->ClearDepthStencil(this->_swapChain);
 	// 버퍼 바꾸기
 	_swapChain->Present(true);
 	// 상수버퍼 시간 갱신
@@ -259,32 +248,30 @@ void FrameBufferDemo::Render()
 }
 
 
-float FrameBufferDemo::lerp(float start, float end, float delta)
+float BumpMapping::lerp(float start, float end, float delta)
 {
 	return start * (1.f - delta) + end * (delta);
 }
 
-void FrameBufferDemo::OnDestroy()
+void BumpMapping::OnDestroy()
 {
 	MWindow::OnDestroy();
 	_swapChain->SetFullScreen(false, 1, 1);
 }
 
-void FrameBufferDemo::OnFocus()
+void BumpMapping::OnFocus()
 {
 	//InputSystem::get()->addListener(this);
 }
 
-void FrameBufferDemo::OnKillFocus()
+void BumpMapping::OnKillFocus()
 {
 	//InputSystem::get()->removeListener(this);
 }
-void FrameBufferDemo::OnSize()
+void BumpMapping::OnSize()
 {
 	RECT rc = this->GetClientRect();
 	_swapChain->Resize(rc.right, rc.bottom);
-	mini_game.SetWindowSize(TMath::Rect(rc.right - rc.left, rc.bottom - rc.top));
-
 	_camera->CreateProjMatrix(0.1f, 5000.0f, 3.141 * 0.5f, (float)(rc.right) / (float)(rc.bottom));
 	UpdateQuadPosition();
 	Render();

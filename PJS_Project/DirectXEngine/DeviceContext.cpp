@@ -27,29 +27,29 @@ void DeviceContext::ClearDepthStencil(const SwapChainPtr& swap_chain)
     _deviceContex->ClearDepthStencilView(swap_chain->_Dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 }
 
-bool DeviceContext::ClearRenderTargetColor(const TexturePtr& render_target, float r, float g, float b, float a)
-{
-    if (render_target->t_type_ != Texture::Type::RENDERTARGET)
-        return false;
-    FLOAT clear_color[] = { r,g,b,a };
-    _deviceContex->ClearRenderTargetView(render_target->render_target_view_.Get(), clear_color);
-}
+//bool DeviceContext::ClearRenderTargetColor(const TexturePtr& render_target, float r, float g, float b, float a)
+//{
+//    if (render_target->t_type_ != Texture::Type::RENDERTARGET)
+//        return false;
+//    FLOAT clear_color[] = { r,g,b,a };
+//    _deviceContex->ClearRenderTargetView(render_target->render_target_view_.Get(), clear_color);
+//}
 
-void DeviceContext::ClearDepthStencil(const TexturePtr& depth_stencil)
-{
-    if (depth_stencil->t_type_ != Texture::Type::DEPTHSTECIL)
-        return;
-    _deviceContex->ClearDepthStencilView(depth_stencil->depth_stencil_view_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-}
-
-void DeviceContext::SetRenderTarget(const TexturePtr& render_target, const TexturePtr& depth_stencil)
-{
-    if (render_target->t_type_ != Texture::Type::RENDERTARGET)
-        return;
-    if (depth_stencil->t_type_ != Texture::Type::DEPTHSTECIL)
-        return;
-    _deviceContex->OMSetRenderTargets(1, render_target->render_target_view_.GetAddressOf(), depth_stencil->depth_stencil_view_.Get());
-}
+//void DeviceContext::ClearDepthStencil(const TexturePtr& depth_stencil)
+//{
+//    if (depth_stencil->t_type_ != Texture::Type::DEPTHSTECIL)
+//        return;
+//    _deviceContex->ClearDepthStencilView(depth_stencil->depth_stencil_view_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+//}
+//
+//void DeviceContext::SetRenderTarget(const TexturePtr& render_target, const TexturePtr& depth_stencil)
+//{
+//    if (render_target->t_type_ != Texture::Type::RENDERTARGET)
+//        return;
+//    if (depth_stencil->t_type_ != Texture::Type::DEPTHSTECIL)
+//        return;
+//    _deviceContex->OMSetRenderTargets(1, render_target->render_target_view_.GetAddressOf(), depth_stencil->depth_stencil_view_.Get());
+//}
 
 bool DeviceContext::SetVertexBuffer(const MVertexBufferPtr &vertex_buffer)
 { 
@@ -114,35 +114,35 @@ void DeviceContext::SetConstantBuffer(const PixelShaderPtr& pixel_shader, const 
     _deviceContex->PSSetConstantBuffers(0, 1, buffer->_constBuffer.GetAddressOf());
 }
 
-void DeviceContext::SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr* texture, UINT num_textures)
-{
-    // 쉐이더에서 검색 할 수 있게
-    ComPtr<ID3D11ShaderResourceView> list_res[32];
-    ID3D11SamplerState* list_sampler[32];
-    for (UINT i = 0; i < num_textures; i++)
-    {
-        list_res[i] = texture[i]->_srview;
-        list_sampler[i] = texture[i]->_sampler_state;
-    }
-    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
-    _deviceContex->VSSetShaderResources(0, 1, list_res->GetAddressOf());
-    _deviceContex->VSSetSamplers(0, num_textures, list_sampler);
-}
-
-void DeviceContext::SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr* texture, UINT num_textures)
-{
-    // 쉐이더에서 검색 할 수 있게
-   ID3D11ShaderResourceView* list_res[32];
-   ID3D11SamplerState* list_sampler[32];
-    for (UINT i = 0; i < num_textures; i++)
-    {
-        list_res[i] = texture[i]->_srview;
-        list_sampler[i] = texture[i]->_sampler_state;
-    }
-    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
-    _deviceContex->PSSetShaderResources(0, num_textures, list_res);
-    _deviceContex->PSSetSamplers(0, num_textures, list_sampler);
-}
+//void DeviceContext::SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr* texture, UINT num_textures)
+//{
+//    // 쉐이더에서 검색 할 수 있게
+//    ComPtr<ID3D11ShaderResourceView> list_res[32];
+//    ID3D11SamplerState* list_sampler[32];
+//    for (UINT i = 0; i < num_textures; i++)
+//    {
+//        list_res[i] = texture[i]->_srview;
+//        list_sampler[i] = texture[i]->_sampler_state;
+//    }
+//    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
+//    _deviceContex->VSSetShaderResources(0, 1, list_res->GetAddressOf());
+//    _deviceContex->VSSetSamplers(0, num_textures, list_sampler);
+//}
+//
+//void DeviceContext::SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr* texture, UINT num_textures)
+//{
+//    // 쉐이더에서 검색 할 수 있게
+//   ID3D11ShaderResourceView* list_res[32];
+//   ID3D11SamplerState* list_sampler[32];
+//    for (UINT i = 0; i < num_textures; i++)
+//    {
+//        list_res[i] = texture[i]->_srview;
+//        list_sampler[i] = texture[i]->_sampler_state;
+//    }
+//    // 텍스처 목록을 쉐이더에 전달하기 위해 목록 내에 텍스쳐 수를 나타내는 변수 추가
+//    _deviceContex->PSSetShaderResources(0, num_textures, list_res);
+//    _deviceContex->PSSetSamplers(0, num_textures, list_sampler);
+//}
 
 
 ID3D11DeviceContext* DeviceContext::GetDeviceContext()
