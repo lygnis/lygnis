@@ -5,7 +5,7 @@
 class MVertexBuffer
 {
 public:
-	MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader ,RenderSystem* system);
+	MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list ,RenderSystem* system);
 	~MVertexBuffer() {};
 public:
 	UINT GetSizeVertexList();

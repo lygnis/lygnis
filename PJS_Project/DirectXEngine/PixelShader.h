@@ -4,7 +4,7 @@
 class PixelShader
 {
 public:
-	PixelShader(const void* shader_byte_code, size_t byte_code_size ,RenderSystem* system);
+	PixelShader(const wchar_t* full_path, const char* entry_point ,RenderSystem* system);
 	~PixelShader() {};
 private:
 	ComPtr<ID3D11PixelShader> _psShader;

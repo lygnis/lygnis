@@ -9,8 +9,12 @@ public:
 	// 윈도우 초기화
 	Display(Game* game);
 	~Display();
+protected:
+	virtual void OnSize();
 private:
 	SwapChainPtr swap_chain_;
 	Game* game_ = nullptr;
+
+	friend class MGraphicsEngine;
 };
 

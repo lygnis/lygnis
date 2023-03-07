@@ -2,14 +2,27 @@
 #include "RenderSystem.h"
 #include <exception>
 
-MVertexShader::MVertexShader(const void* shader_byte_code, size_t byte_code_size ,RenderSystem* system) : _system(system)
+MVertexShader::MVertexShader(const wchar_t* full_path, const char* entry_point ,RenderSystem* system) : _system(system)
 {
-    HRESULT hr;
+	HRESULT hr;
+	ComPtr<ID3DBlob> blob;
+	ComPtr<ID3DBlob> errCode;
 
-    hr = _system->_d3d_Device->CreateVertexShader(shader_byte_code, byte_code_size, nullptr, _vsShader.GetAddressOf());
+
+	hr = D3DCompileFromFile(full_path, nullptr, nullptr,
+        entry_point, "vs_5_0", 0, 0, &blob, &errCode);
     if (FAILED(hr))
     {
+		if (errCode != NULL)
+		{
+			OutputDebugStringA((char*)errCode->GetBufferPointer());
+		}
         assert(false);
-        throw std::exception("VertexShader not create successfully");
     }
+    hr = _system->_d3d_Device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, _vsShader.GetAddressOf());
+	if (FAILED(hr))
+	{
+		assert(false);
+	}
+
 }

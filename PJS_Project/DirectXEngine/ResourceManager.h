@@ -8,7 +8,7 @@
 class ResourceManager
 {
 public:
-	ResourceManager();
+	ResourceManager(Game* game);
 	~ResourceManager();
 
 	template<typename T>
@@ -17,11 +17,11 @@ public:
 		return std::dynamic_pointer_cast<T>(CreateResourceFromFileConcre(file_path));
 	}
 
-public:
-	bool Release();
+	Game* GetGame();
 private:
 	ResourcePtr CreateResourceFromFileConcre(const wchar_t* file_path);
 private:
 	std::unordered_map<std::wstring, ResourcePtr> _map_Resource;
+	Game* game_ = nullptr;
 };
 

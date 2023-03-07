@@ -29,11 +29,10 @@ public:
 	void SetVertexShader(const MVertexShaderPtr& vertex_shader);
 	void SetPixelShader(const PixelShaderPtr& pixel_shader);
 
-	void SetConstantBuffer(const MVertexShaderPtr &vertex_shader, const ConstantBufferPtr &buffer);
-	void SetConstantBuffer(const PixelShaderPtr &pixel_shader, const ConstantBufferPtr &buffer);
+	void SetConstantBuffer(const ConstantBufferPtr &buffer);
 
 	//void SetTexture(const MVertexShaderPtr& vertex_shader, const TexturePtr* texture, UINT num_textures);
-	//void SetTexture(const PixelShaderPtr& pixel_shader, const TexturePtr* texture, UINT num_textures);
+	void SetTexture(const Texture2DPtr* texture, UINT num_textures);
 
 	ID3D11DeviceContext* GetDeviceContext();
 private:

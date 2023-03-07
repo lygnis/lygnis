@@ -53,6 +53,7 @@ D3D_DRIVER_TYPE driver_type[] =
 	_dxgi_Adapter->GetParent(__uuidof(IDXGIFactory), (void**)_dxgi_Factory.GetAddressOf());
 
 	InitRasterizerState();
+	CompilePrivateShaders();
 }
 
 RenderSystem::~RenderSystem()
@@ -62,13 +63,7 @@ RenderSystem::~RenderSystem()
 
 SwapChainPtr RenderSystem::CreateSwapChain(HWND hwnd, UINT width, UINT height)
 {
-	SwapChainPtr sc = nullptr;
-	try
-	{
-		sc = std::make_shared<MSwapChain>(hwnd, width, height, this);
-	}
-	catch (...) {}
-	return sc;
+	return std::make_shared<MSwapChain>(hwnd, width, height, this);
 }
 
 DeviceContextPtr RenderSystem::getImmediateDeviceContext()
@@ -78,57 +73,55 @@ DeviceContextPtr RenderSystem::getImmediateDeviceContext()
 
 
 
-MVertexShaderPtr RenderSystem::CreateVertexShader(const void* shader_byte_code, size_t byte_code_size)
+MVertexShaderPtr RenderSystem::CreateVertexShader(const wchar_t* full_path, const char* entry_point)
 {
-	MVertexShaderPtr _vs = std::make_shared<MVertexShader>(shader_byte_code, byte_code_size, this);
-	return _vs;
+	return std::make_shared<MVertexShader>(full_path, entry_point, this);
 }
 
-PixelShaderPtr RenderSystem::CreatePixelShader(const void* shader_byte_code, size_t byte_code_size)
+PixelShaderPtr RenderSystem::CreatePixelShader(const wchar_t* full_path, const char* entry_point)
 {
-	PixelShaderPtr _ps = std::make_shared<PixelShader>(shader_byte_code, byte_code_size, this);
-	return _ps;
+	return std::make_shared<PixelShader>(full_path, entry_point, this);
 }
 
-bool RenderSystem::CompileVertexShader(const WCHAR* file_name, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size)
-{
-	HRESULT hr;
-	ComPtr<ID3DBlob> errCode;
-	hr = D3DCompileFromFile(file_name, nullptr, nullptr, point_name, "vs_5_0", NULL, NULL, _vsBlob.GetAddressOf(), errCode.GetAddressOf());
-	if (FAILED(hr))
-	{
-		if (errCode != NULL)
-		{
-			OutputDebugStringA((char*)errCode->GetBufferPointer());
-		}
-		assert(false);
-		return false;
-	}
-	*shader_byte_code = _vsBlob->GetBufferPointer();
-	*byte_code_size = _vsBlob->GetBufferSize();
-
-
-	return true;
-}
-
-bool RenderSystem::CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size)
-{
-	HRESULT hr;
-	ComPtr<ID3DBlob> errCode = nullptr;
-	// 쉐이더 컴파일러
-
-	hr = D3DCompileFromFile(filename, nullptr, nullptr, point_name, "ps_5_0", NULL, NULL, _psBlob.GetAddressOf(), errCode.GetAddressOf());
-	if (FAILED(hr))
-	{
-		if (errCode.Get() != NULL)
-		{
-			OutputDebugStringA((char*)errCode->GetBufferPointer());
-		}
-	}
-	*shader_byte_code = _psBlob->GetBufferPointer();
-	*byte_code_size = _psBlob->GetBufferSize();
-	return true;
-}
+//bool RenderSystem::CompileVertexShader(const WCHAR* file_name, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size)
+//{
+//	HRESULT hr;
+//	ComPtr<ID3DBlob> errCode;
+//	hr = D3DCompileFromFile(file_name, nullptr, nullptr, point_name, "vs_5_0", NULL, NULL, _vsBlob.GetAddressOf(), errCode.GetAddressOf());
+//	if (FAILED(hr))
+//	{
+//		if (errCode != NULL)
+//		{
+//			OutputDebugStringA((char*)errCode->GetBufferPointer());
+//		}
+//		assert(false);
+//		return false;
+//	}
+//	*shader_byte_code = _vsBlob->GetBufferPointer();
+//	*byte_code_size = _vsBlob->GetBufferSize();
+//
+//
+//	return true;
+//}
+//
+//bool RenderSystem::CompilePixelShader(const WCHAR* filename, const CHAR* point_name, void** shader_byte_code, size_t* byte_code_size)
+//{
+//	HRESULT hr;
+//	ComPtr<ID3DBlob> errCode = nullptr;
+//	// 쉐이더 컴파일러
+//
+//	hr = D3DCompileFromFile(filename, nullptr, nullptr, point_name, "ps_5_0", NULL, NULL, _psBlob.GetAddressOf(), errCode.GetAddressOf());
+//	if (FAILED(hr))
+//	{
+//		if (errCode.Get() != NULL)
+//		{
+//			OutputDebugStringA((char*)errCode->GetBufferPointer());
+//		}
+//	}
+//	*shader_byte_code = _psBlob->GetBufferPointer();
+//	*byte_code_size = _psBlob->GetBufferSize();
+//	return true;
+//}
 
 void RenderSystem::SetRaterizerState(bool cull_front)
 {
@@ -136,6 +129,62 @@ void RenderSystem::SetRaterizerState(bool cull_front)
 		_immContext->GetDeviceContext()->RSSetState(_cull_front_state.Get());
 	else
 		_immContext->GetDeviceContext()->RSSetState(_cull_back_state.Get());
+}
+
+Texture2DPtr RenderSystem::CreateTexture(const wchar_t* full_path)
+{
+	return std::make_shared<Texture2D>(full_path, this);
+}
+
+Texture2DPtr RenderSystem::CreateTexture(const TMath::Rect& size, Texture2D::Type type)
+{
+	return std::make_shared<Texture2D>(size, type, this);
+}
+
+void RenderSystem::CompilePrivateShaders()
+{
+	HRESULT hr;
+	ComPtr<ID3DBlob> blob;
+	ComPtr<ID3DBlob> errCode;
+
+	auto mesh_layout_code = R"(
+struct VS_INPUT
+{
+	float4 position: POSITION;
+	float2 texcoord: TEXCOORD;
+	float3 normal: NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+};
+
+struct VS_OUTPUT
+{
+	float4 position: SV_POSITION;
+	float2 texcoord: TEXCOORD0;
+};
+
+VS_OUTPUT mainvs(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	return output;
+}
+
+	)";
+	auto code_size = strlen(mesh_layout_code);
+
+	hr = D3DCompile(mesh_layout_code, code_size, "VertexMeshLayoutShader",nullptr, nullptr,
+		"mainvs", "vs_5_0",0,0,&blob, &errCode);
+	if (FAILED(hr))
+	{
+		if (errCode != NULL)
+		{
+			OutputDebugStringA((char*)errCode->GetBufferPointer());
+		}
+		assert(false);
+		return;
+	}
+	memcpy(mesh_layout_byte_code_, blob->GetBufferPointer(), blob->GetBufferSize());
+	mesh_layout_size_ = blob->GetBufferSize();
 }
 
 void RenderSystem::InitRasterizerState()
@@ -152,9 +201,9 @@ void RenderSystem::InitRasterizerState()
 }
 
 
-MVertexBufferPtr RenderSystem::CreateVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
+MVertexBufferPtr RenderSystem::CreateVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list)
 {
-	return std::make_shared<MVertexBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+	return std::make_shared<MVertexBuffer>(list_vertices, size_vertex, size_list, this);
 }
 
 IndexBufferPtr RenderSystem::CreateIndexBuffer(void* list_indices, UINT size_list)

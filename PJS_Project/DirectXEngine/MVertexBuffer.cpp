@@ -2,7 +2,7 @@
 #include "RenderSystem.h"
 #include <exception>
 
-MVertexBuffer::MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader ,RenderSystem* system) : _system(system), _layout(0), _buffer(0)
+MVertexBuffer::MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list,RenderSystem* system) : _system(system), _layout(0), _buffer(0)
 { 
     HRESULT hr;
 
@@ -37,7 +37,7 @@ MVertexBuffer::MVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_li
     };
     UINT size_layout = ARRAYSIZE(layout);
 
-    hr = _system->_d3d_Device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader,_layout.GetAddressOf());
+    hr = _system->_d3d_Device->CreateInputLayout(layout, size_layout, _system->mesh_layout_byte_code_, _system->mesh_layout_size_,_layout.GetAddressOf());
     if (FAILED(hr))
     {
         assert(false);

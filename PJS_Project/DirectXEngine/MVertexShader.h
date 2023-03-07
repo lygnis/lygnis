@@ -4,7 +4,7 @@
 class MVertexShader
 {
 public:
-	MVertexShader(const void* shader_byte_code, size_t byte_code_size ,RenderSystem* system);
+	MVertexShader(const wchar_t* full_path ,const char* entry_point, RenderSystem* system);
 	~MVertexShader() {};
 private:
 	ComPtr<ID3D11VertexShader> _vsShader;

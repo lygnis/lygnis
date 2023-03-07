@@ -1,7 +1,5 @@
 #pragma once
-#include "MVertexShader.h"
-#include "PixelShader.h"
-#include "ConstantBuffer.h"
+#include "Resource.h"
 #include <vector>
 enum CULL_MODE
 {
@@ -11,13 +9,12 @@ enum CULL_MODE
 };
 class MGraphicsEngine;
 
-class Material
+class Material :public Resource
 {
 public:
 	// 쉐이더 파일 경로를 받는다.
-	Material(const wchar_t* vertex_shader_path, const wchar_t* pixel_shader_path);
-	Material(const MaterialPtr& material);
-	~Material();
+	Material(const wchar_t* path, ResourceManager* manager);
+	Material(const MaterialPtr& material, ResourceManager* manager);
 
 	void AddTexture(const TexturePtr& texture);
 	void RemoveTexture(UINT index);
@@ -30,7 +27,7 @@ private:
 	MVertexShaderPtr _vertex_shader;
 	PixelShaderPtr  _pixel_shader;
 	ConstantBufferPtr _constant_buffer;
-	std::vector<TexturePtr> _vec_textures;
+	std::vector<Texture2DPtr> _vec_textures;
 	CULL_MODE _cullmode = CULL_MODE_BACK;
 private:
 	friend class MGraphicsEngine;

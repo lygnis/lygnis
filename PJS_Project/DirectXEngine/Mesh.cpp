@@ -1,12 +1,15 @@
 #include "Mesh.h"
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
-#include <locale>
-//#include <codecvt>
 //#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#include "MGraphicsEngine.h"
 #include "VertexMesh.h"
-Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
+#include "ResourceManager.h"
+#include "MGraphicsEngine.h"
+#include "Game.h"
+#include "RenderSystem.h"
+#include <filesystem>
+
+Mesh::Mesh(const wchar_t* full_path, ResourceManager* manager) : Resource(full_path, manager)
 {
 	tinyobj::attrib_t attribs;
 	std::vector<tinyobj::shape_t> shapes;
@@ -17,7 +20,8 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 
 	// 유니코드를 지원안하기 때문에 ASCII 코드로 변환한다.
 	std::wstring ws(full_path);
-	std::string str(ws.begin(), ws.end());
+	//std::string str(ws.begin(), ws.end());
+	auto str = std::filesystem::path(full_path).string();
 
 	// obj 파일이 있는 동일한 경로를 사용한다.
 	// mtl 파일을 찾는다.
@@ -136,30 +140,35 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 		_material_slots[m].num_indices = index_globaloffset - _material_slots[m].start_index;
 
 	}
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
-	MGraphicsEngine::get()->GetVertexMeshLayoutShader(&shader_byte_code, &size_shader);
-	_vertex_buffer = MGraphicsEngine::get()->getRenderSystem()->CreateVertexBuffer(&list_vertices[0], sizeof(VertexMesh), (UINT)list_vertices.size(),
-		shader_byte_code, (UINT)size_shader);
+	auto rsys = manager_->GetGame()->GetGraphicsEngine()->getRenderSystem();
+	_vertex_buffer = rsys->CreateVertexBuffer(&list_vertices[0], sizeof(VertexMesh), (UINT)list_vertices.size());
 
-	_index_buffer = MGraphicsEngine::get()->getRenderSystem()->CreateIndexBuffer(&list_indices[0], (UINT)list_indices.size());
+	_index_buffer = rsys->CreateIndexBuffer(&list_indices[0], (UINT)list_indices.size());
+}
+
+
+Mesh::Mesh(VertexMesh* vertex_list_data, UINT vertex_list_size,
+	UINT* index_list_data, UINT index_list_size,
+	MaterialSlot* material_slot_list, UINT material_slot_list_size, ResourceManager* manager) : Resource(L"", manager)
+{
+	auto rsys = manager_->GetGame()->GetGraphicsEngine()->getRenderSystem();
+	
+	_vertex_buffer = rsys->CreateVertexBuffer(vertex_list_data, sizeof(VertexMesh), vertex_list_size);
+
+	_index_buffer = rsys->CreateIndexBuffer(index_list_data, index_list_size);
+
+	_material_slots.resize(material_slot_list_size);
+	for (UINT i = 0; i < material_slot_list_size; i++)
+	{
+		_material_slots[i] = material_slot_list[i];
+	}
 }
 
 Mesh::~Mesh()
 {
 }
 
-const MVertexBufferPtr& Mesh::getVertexBuffer()
-{
-	return _vertex_buffer;
-}
-
-const IndexBufferPtr& Mesh::getIndexBuffer()
-{
-	return _index_buffer;
-}
-
-const MaterialSlot& Mesh::GetMaterialSlot(UINT slot)
+MaterialSlot Mesh::GetMaterialSlot(UINT slot)
 {
 	if (slot >= _material_slots.size())
 	{

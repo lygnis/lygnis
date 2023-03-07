@@ -3,7 +3,9 @@
 #include <Windows.h>
 void Game::Run()
 {
-	MSG msg;
+	OnCreate();
+
+	MSG msg = {};
 	while (is_running_)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
@@ -19,5 +21,10 @@ void Game::Run()
 				DispatchMessage(&msg);
 			}
 		}
+		OnInternalUpdate();
 	}
+
+	OnQuit();
 }
+
+
