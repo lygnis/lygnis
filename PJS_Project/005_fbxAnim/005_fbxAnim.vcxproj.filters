@@ -94,4 +94,7 @@
     <Text Include="DefaultObject.txt" />
     <Text Include="DefaultShape.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

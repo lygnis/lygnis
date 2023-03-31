@@ -2,9 +2,9 @@
 
 bool FbxLoader::Init()
 {
-    m_FbxManager = FbxManager::Create();
-    m_pFbxImporter = FbxImporter::Create(m_FbxManager, "");
-    m_pFbxScene = FbxScene::Create(m_FbxManager, "");
+    m_FbxManager =      FbxManager::Create();
+    m_pFbxImporter =    FbxImporter::Create(m_FbxManager, "");
+    m_pFbxScene =       FbxScene::Create(m_FbxManager, "");
     return true;
 }
 
@@ -522,6 +522,7 @@ FbxVector4 FbxLoader::ReadNormal(FbxMesh* pMehs, FbxLayerElementNormal* VertexNo
         switch (VertexNormalSet->GetReferenceMode())
         {
         case FbxLayerElementUV::eDirect:
+
         {
             normal = VertexNormalSet->GetDirectArray().GetAt(posIndex);
         }break;

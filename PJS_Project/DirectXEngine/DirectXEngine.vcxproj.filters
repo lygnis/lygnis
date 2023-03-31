@@ -16,39 +16,6 @@
     <Filter Include="App">
       <UniqueIdentifier>{bc19e704-0073-460a-b6ad-5e2bc6a4a534}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\OldDemo">
-      <UniqueIdentifier>{b9010cd3-9d22-4f6e-91bb-3ab3d814b2a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\OldDemo\Shader">
-      <UniqueIdentifier>{d380e890-832b-4c98-b3fa-7e87b1fabd3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\SpaceShooterGame">
-      <UniqueIdentifier>{23e714cf-550d-4210-99fb-bfb222ac90c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\GlobalShaders">
-      <UniqueIdentifier>{301cef83-2b0d-4b03-a1f5-bb26a13356b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\GlobalShaders\SkyBox">
-      <UniqueIdentifier>{59074b1c-33f6-4748-b4e2-c9dfaa350d48}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\GlobalShaders\DirectionalLight">
-      <UniqueIdentifier>{5d01b8e5-ad93-4b22-b483-1ba8c38badb3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\GlobalShaders\PointLight">
-      <UniqueIdentifier>{4bddede3-74a1-4f5d-8110-9ada634c2f26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\BumpMappingDemo">
-      <UniqueIdentifier>{95fc6917-7dcb-4510-ac5b-7311a7e64bb0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\GlobalShaders\DirLightBumpMapping">
-      <UniqueIdentifier>{21ac577c-ca07-4823-bc58-745b1f427028}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\FrameBufferDemo">
-      <UniqueIdentifier>{27959ff4-7767-4da9-940b-8361abcc8cba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\PostProcessingDemo">
-      <UniqueIdentifier>{83d70fe5-795a-4fb8-b549-32c21e0e44c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{8dc18c21-c1b4-498f-b91d-4a6a77f6ac4d}</UniqueIdentifier>
     </Filter>
@@ -106,40 +73,88 @@
     <Filter Include="Asset\Shader">
       <UniqueIdentifier>{afe603d8-2e41-42e8-978d-74d86a0945c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Old">
+      <UniqueIdentifier>{1fa01410-a86a-4049-a860-5591c2644851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\SpaceShooterGame">
+      <UniqueIdentifier>{23e714cf-550d-4210-99fb-bfb222ac90c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\BumpMappingDemo">
+      <UniqueIdentifier>{95fc6917-7dcb-4510-ac5b-7311a7e64bb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\FrameBufferDemo">
+      <UniqueIdentifier>{27959ff4-7767-4da9-940b-8361abcc8cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\GlobalShaders">
+      <UniqueIdentifier>{301cef83-2b0d-4b03-a1f5-bb26a13356b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\GlobalShaders\SkyBox">
+      <UniqueIdentifier>{59074b1c-33f6-4748-b4e2-c9dfaa350d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\GlobalShaders\DirectionalLight">
+      <UniqueIdentifier>{5d01b8e5-ad93-4b22-b483-1ba8c38badb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\GlobalShaders\PointLight">
+      <UniqueIdentifier>{4bddede3-74a1-4f5d-8110-9ada634c2f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\GlobalShaders\DirLightBumpMapping">
+      <UniqueIdentifier>{21ac577c-ca07-4823-bc58-745b1f427028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\OldDemo">
+      <UniqueIdentifier>{b9010cd3-9d22-4f6e-91bb-3ab3d814b2a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\OldDemo\Shader">
+      <UniqueIdentifier>{d380e890-832b-4c98-b3fa-7e87b1fabd3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\PostProcessingDemo">
+      <UniqueIdentifier>{83d70fe5-795a-4fb8-b549-32c21e0e44c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Input">
+      <UniqueIdentifier>{835e3ca8-05fc-422e-bea1-5a37db47f95c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Input">
+      <UniqueIdentifier>{e3872722-11c9-4db4-8048-1ed475371bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Include\DX3D\Entity">
+      <UniqueIdentifier>{aac046f5-58e7-4f86-8b72-625d1c8bc0b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX3D\Source\DX3D\Entity">
+      <UniqueIdentifier>{9969e465-3eca-4eb4-af0a-f2e3f77bd97e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectionalLightVertex.hlsl">
-      <Filter>App\GlobalShaders\DirectionalLight</Filter>
+      <Filter>Old\GlobalShaders\DirectionalLight</Filter>
     </FxCompile>
     <FxCompile Include="DirectionalLightPixel.hlsl">
-      <Filter>App\GlobalShaders\DirectionalLight</Filter>
+      <Filter>Old\GlobalShaders\DirectionalLight</Filter>
     </FxCompile>
     <FxCompile Include="SkyBoxPixelShader.hlsl">
-      <Filter>App\GlobalShaders\SkyBox</Filter>
+      <Filter>Old\GlobalShaders\SkyBox</Filter>
     </FxCompile>
     <FxCompile Include="PointLightShader.hlsl">
-      <Filter>App\GlobalShaders\PointLight</Filter>
+      <Filter>Old\GlobalShaders\PointLight</Filter>
     </FxCompile>
     <FxCompile Include="PointLightVertex.hlsl">
-      <Filter>App\GlobalShaders\PointLight</Filter>
+      <Filter>Old\GlobalShaders\PointLight</Filter>
     </FxCompile>
     <FxCompile Include="SkyBoxVertexShader.hlsl">
-      <Filter>App\GlobalShaders\SkyBox</Filter>
+      <Filter>Old\GlobalShaders\SkyBox</Filter>
     </FxCompile>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
-      <Filter>App\GlobalShaders</Filter>
+      <Filter>Old\GlobalShaders</Filter>
     </FxCompile>
     <FxCompile Include="DirLightBumpPS.hlsl">
-      <Filter>App\GlobalShaders\DirLightBumpMapping</Filter>
+      <Filter>Old\GlobalShaders\DirLightBumpMapping</Filter>
     </FxCompile>
     <FxCompile Include="DirLightBumpVS.hlsl">
-      <Filter>App\GlobalShaders\DirLightBumpMapping</Filter>
+      <Filter>Old\GlobalShaders\DirLightBumpMapping</Filter>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>App\OldDemo\Shader</Filter>
+      <Filter>Old\OldDemo\Shader</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>App\OldDemo\Shader</Filter>
+      <Filter>Old\OldDemo\Shader</Filter>
     </FxCompile>
     <FxCompile Include="MyMaterial.hlsl">
       <Filter>Asset\Shader</Filter>
@@ -212,6 +227,45 @@
     <ClInclude Include="Texture.h">
       <Filter>DX3D\Include\DX3D\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>DX3D\Include\DX3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>DX3D\Include\DX3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>DX3D\Include\DX3D\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame.h">
+      <Filter>DX3D\Include\DX3D\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>DX3D\Include\DX3D\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="All.h">
+      <Filter>DX3D\Include\DX3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>DX3D\Include\DX3D\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>DX3D\Include\DX3D\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>DX3D\Include\DX3D\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>DX3D\Include\DX3D\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>DX3D\Include\DX3D\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxObject.h">
+      <Filter>DX3D\Include\DX3D\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MWindow.cpp">
@@ -275,6 +329,42 @@
       <Filter>DX3D\Source\DX3D\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>DX3D\Source\DX3D\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>DX3D\Source\DX3D\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>DX3D\Source\DX3D\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>DX3D\Source\DX3D\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>DX3D\Source\DX3D\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>DX3D\Source\DX3D\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>DX3D\Source\DX3D\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>DX3D\Source\DX3D\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>DX3D\Source\DX3D\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxObject.cpp">
       <Filter>DX3D\Source\DX3D\Resource</Filter>
     </ClCompile>
   </ItemGroup>

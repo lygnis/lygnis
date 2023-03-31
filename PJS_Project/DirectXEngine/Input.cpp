@@ -47,8 +47,8 @@ bool		Input::Release()
 {
     return true;
 }
-Input* Input::get()
-{
-    static Input input;
-    return &input;
-}
+//Input* Input::get()
+//{
+//    static Input input;
+//    return &input;
+//}

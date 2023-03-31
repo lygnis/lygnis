@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "MGraphicsEngine.h"
 #include "RenderSystem.h"
+#include "MSwapChain.h"
 Display::Display(Game* game) : game_(game)
 {
 	auto size = GetClientSize();
@@ -10,4 +11,11 @@ Display::Display(Game* game) : game_(game)
 
 Display::~Display()
 {
+}
+
+void Display::OnSize(const TMath::Rect& size)
+{
+	swap_chain_->Resize(size.width, size.height);
+
+	game_->OnDisplaySize(size);
 }

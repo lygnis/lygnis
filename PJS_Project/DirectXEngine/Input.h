@@ -21,5 +21,5 @@ public:
 	bool Release();
 public:
 	DWORD GetKey(DWORD _key);
-	static Input* get();
+	//static Input* get();
 };

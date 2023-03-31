@@ -1,0 +1,12 @@
+#pragma once
+#include "Game.h"
+#include "Entity.h"
+#include "World.h"
+#include "Component.h"
+#include "TransformComponent.h"
+#include "MeshComponent.h"
+#include "CameraComponent.h"
+#include "ResourceManager.h"
+#include "Mesh.h"
+#include "Texture.h"
+#include "Material.h"

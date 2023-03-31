@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DebugCamera" Collapsed="true">
+    <Position X="6.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>DebugCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FbxLoader" Collapsed="true">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAkg1ABEBSwCgAAAAAAoAEAQAECACIAARACCBABgAA=</HashCode>
+      <FileName>FbxLoader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MFbxObject" Collapsed="true">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAmAVACAAgAAAUAAZARIAEAAAACAEAIQUARQDAmAAM=</HashCode>
+      <FileName>FbxObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MCamera" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEECAAAAAgAAAAIQBQQgEwACAAAACAAAAggAAAAACBE=</HashCode>
+      <FileName>MCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MFrustum" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAABAABAAAAwAAAAAAAAAAAAAAAAAACAAQAAAAA=</HashCode>
+      <FileName>MFrustum.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MmapTile" Collapsed="true">
+    <Position X="9" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAQgABAAAABAAACAAAAAAAAAAAAAAAAEEAA=</HashCode>
+      <FileName>MmapTile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MNode" Collapsed="true">
+    <Position X="10.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABACQAgAIAAAAAAAAAgBQAAAAACFCAQAAAAAAAAgAAA=</HashCode>
+      <FileName>MNode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MQuadTree" Collapsed="true">
+    <Position X="12.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAABAJAAABIAAAAABAAAAEQDABAAABAAAAE=</HashCode>
+      <FileName>MQuadTree.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MShape" Collapsed="true">
+    <Position X="3.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MShape.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MBoxShape" Collapsed="true">
+    <Position X="3.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAAAAgAEAAA=</HashCode>
+      <FileName>MShape.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyShapeLine" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAACAAAAAAAAAAAAABAAAQAEAAE=</HashCode>
+      <FileName>MShapeLine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShapeDirectLine" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAgAAAAEAAA=</HashCode>
+      <FileName>MShapeLine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyMatrix3X3" Collapsed="true">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAIAAAAAAACAAAAAAEAkAAgAAAA=</HashCode>
+      <FileName>MyMatrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyMatrix4X4" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAIAGAAIAAAAAAAAAAAAAAEQgAAgAEAA=</HashCode>
+      <FileName>MyMatrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sample" Collapsed="true">
+    <Position X="9" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQACAAAAAAAAAAABAAAAAAAAIAAAAAABACABAgAAE=</HashCode>
+      <FileName>Sample.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MAnimTrack" Collapsed="true">
+    <Position X="10.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAIQBAAIAAAA=</HashCode>
+      <FileName>FbxObject.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MAnimScene" Collapsed="true">
+    <Position X="9" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEgBACAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FbxObject.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MWeight" Collapsed="true">
+    <Position X="12.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAEAAAgAAEAAAAAAAA=</HashCode>
+      <FileName>FbxObject.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Plane" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAECkAQAAAAAAAAA=</HashCode>
+      <FileName>MFrustum.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="float3X3" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MyMatrix.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="float4X4" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MyMatrix.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="T_POSITION" Collapsed="true">
+    <Position X="9" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAgQAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>MFrustum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

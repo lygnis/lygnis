@@ -9,6 +9,11 @@
 #include "Texture.h"
 #include "Material.h"
 #include "TMath.h"
+#include "TransformComponent.h"
+#include "MeshComponent.h"
+#include "CameraComponent.h"
+#include "Entity.h"
+
 __declspec(align(16))
 struct ConstantData
 {
@@ -33,40 +38,83 @@ RenderSystem* MGraphicsEngine::getRenderSystem()
 	return _render_system.get();
 }
 
-void MGraphicsEngine::Update(const MeshData& data)
+void MGraphicsEngine::AddComponent(Component* component)
+{
+	if (auto c = dynamic_cast<MeshComponent*>(component))
+	{
+		meshes_.emplace(c);
+	}
+	else if (auto c = dynamic_cast<CameraComponent*>(component))
+	{
+		cameras_.emplace(c);
+	}
+}
+
+void MGraphicsEngine::RemoveComponent(Component* component)
+{
+	if (auto c = dynamic_cast<MeshComponent*>(component))
+	{
+		meshes_.erase(c);
+	}
+	else if (auto c = dynamic_cast<CameraComponent*>(component))
+	{
+		cameras_.erase(c);
+	}
+}
+
+void MGraphicsEngine::Update()
 {
 	auto swap_chain = game_->display_->swap_chain_;
 	
 	auto context = _render_system->getImmediateDeviceContext();
 
-	context->ClearRenderTargetColor(swap_chain, 1,0,0,1);
+	context->ClearRenderTargetColor(swap_chain, 0.5,0.5f,0.5f,1.f);
 	auto win_size = game_->display_->GetClientSize();
 	context->SetViewportSize(win_size.width, win_size.height);
 
 	ConstantData constData = {};
-	constData.world = TMatrix::Identity;
 	constData.view = TMatrix::Identity;
 	constData.proj = TMatrix::Identity;
 
-	constData.world = TMatrix::CreateRotationY(0.707f);
-	constData.view.Translation(TVector3(0, 0, -10.f));
-	constData.view = constData.view.Invert();
-	constData.proj = TMatrix::CreatePerspectiveFieldOfView(1.3f, (float)win_size.width / (float)win_size.height, 0.01f, 1000.f);
-
-
-	context->SetVertexBuffer(data.mesh->_vertex_buffer);
-	context->SetIndexBuffer(data.mesh->_index_buffer);
-	for (auto i = 0; i < data.mesh->GetNumMaterialSlots(); i++)
+	for (auto c : cameras_)
 	{
-		data.material->SetData(&constData, sizeof(ConstantData));
-		context->SetConstantBuffer(data.material->_constant_buffer);
+		c->SetScreenArea(win_size);
+		c->GetViewMatrix(constData.view);
+		c->GetProjectionMatrix(constData.proj);
+	}
 
-		context->SetVertexShader(data.material->_vertex_shader);
-		context->SetPixelShader(data.material->_pixel_shader);
+	//
+	//constData.view.Translation(TVector3(0, 0, 10.f));
+	//constData.view = constData.view.Invert();
+	//constData.proj = TMatrix::CreatePerspectiveFieldOfView(1.3f, (float)win_size.width / (float)win_size.height, 0.01f, 1000.f);
 
-		context->SetTexture(&data.material->_vec_textures[0], data.material->_vec_textures.size());
-		auto slot = data.mesh->GetMaterialSlot(i);
-		context->DrawIndexTriangleList(slot.num_indices, slot.start_index, 0);
+	for (auto m : meshes_)
+	{
+		auto transform = m->GetEntity()->GetTransform();
+		transform->GetWorldMatrix(constData.world);
+
+		auto mesh = m->GetMesh().get();
+		const auto materials = m->GetMaterials();
+
+		context->SetVertexBuffer(mesh->_vertex_buffer);
+		context->SetIndexBuffer(mesh->_index_buffer);
+		for (auto i = 0; i < mesh->GetNumMaterialSlots(); i++)
+		{
+			if (i >= materials.size())
+				break;
+			auto mat = materials[i].get();
+
+
+			mat->SetData(&constData, sizeof(ConstantData));
+			context->SetConstantBuffer(mat->_constant_buffer);
+
+			context->SetVertexShader(mat->_vertex_shader);
+			context->SetPixelShader(mat->_pixel_shader);
+
+			context->SetTexture(&mat->_vec_textures[0], mat->_vec_textures.size());
+			auto slot = mesh->GetMaterialSlot(i);
+			context->DrawIndexTriangleList(slot.num_indices, slot.start_index, 0);
+		}
 	}
 
 	swap_chain->Present(true);

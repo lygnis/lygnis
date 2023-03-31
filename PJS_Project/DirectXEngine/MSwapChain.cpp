@@ -42,10 +42,8 @@ void MSwapChain::SetFullScreen(bool fullscreen, UINT width, UINT height)
 void MSwapChain::Resize(UINT width, UINT height)
 {
 	HRESULT hr;
-	_Rtv.ReleaseAndGetAddressOf();
-	if (_Rtv)
-		return;
-	_Dsv.ReleaseAndGetAddressOf();
+	_Rtv.Reset();
+	_Dsv.Reset();
 	
 
 	//hr = _gi_swapChain->ResizeBuffers(CurrentSD.BufferCount, width, height,CurrentSD.BufferDesc.Format, 0);

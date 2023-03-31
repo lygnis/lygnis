@@ -15,7 +15,7 @@ public:
 	virtual void OnDestroy();
 	virtual void OnFocus();
 	virtual void OnKillFocus();
-	virtual void OnSize();
+	virtual void OnSize(const TMath::Rect& size);
 protected:
 	TMath::Rect size_ = {0,0,1024,768};
 	void* _hwnd;

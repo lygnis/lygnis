@@ -1,9 +1,9 @@
-#include "Game.h"
+#include "MyGame.h"
 int main()
 {
 	try
 	{
-		Game app;
+		MyGame app;
 		app.Run();
 	}
 	catch (...)

@@ -18,9 +18,9 @@ bool Sample::Init()
 {
     m_fbxLoad = new FbxLoader;
     m_fbxLoad->Init();
-    m_fbxLoad->Load("../../fbxdata/Girl_FBX2020/Girl_FBX2020.fbx");
+    m_fbxLoad->Load("../../fbxdata/mb1023.fbx");
     m_fbxLoad->CreateConstantBuffer(m_p3dDevice);
-    W_STR szDefaultDir = L"../../fbxdata//Girl_FBX2020/";
+    W_STR szDefaultDir = L"../../fbxdata/";
     for (int i = 0; i < m_fbxLoad->m_pDrawObjectList.size(); i++)
     {
         MFbxObject* pObj = m_fbxLoad->m_pDrawObjectList[i];
@@ -71,14 +71,7 @@ bool Sample::Render()
     gWorld._22 = 10;
     gWorld._33 = 10;
     bool bRender = m_pCamera->m_vFrustum.ClassifyPoint(m_pBox->m_vCenter);
-    /*if(bRender)
-    {
-		m_pBox->SetMatrix(nullptr, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
-		m_pBox->Render(m_pImmediateContext);
-    }*/
-    //m_QuadTree.m_pMap->SetMatrix(&gWorld, &m_pCamera->m_matView, &m_pCamera->m_matProj, m_pImmediateContext);
-    //m_QuadTree.Frame();
-    //m_QuadTree.Render();
+
     for (int i = 0; i < m_fbxLoad->m_pDrawObjectList.size(); i++)
     {
         MFbxObject* pObj = m_fbxLoad->m_pDrawObjectList[i];

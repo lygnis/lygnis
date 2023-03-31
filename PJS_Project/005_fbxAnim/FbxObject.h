@@ -96,9 +96,9 @@ public:
 	virtual HRESULT CreateVertexBuffer()override;
 	virtual HRESULT CreateConstantBuffer()override;
 	virtual HRESULT SetInputLayout()override;
+
 	bool Release();
 	TMatrix Interplate(float fFrame, MAnimScene _scene);
-
 	//virtual bool CreateIndexData();
 };
 

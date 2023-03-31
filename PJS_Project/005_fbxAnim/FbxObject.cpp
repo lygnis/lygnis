@@ -10,7 +10,7 @@ HRESULT MFbxObject::LoadTextures(ID3D11Device* _pDevice, const TCHAR* _pTextureF
 {
 	if (vbTexList.size() > 0)
 	{
-		W_STR szDefaultDir = L"../../fbxdata//Girl_FBX2020/";
+		W_STR szDefaultDir = L"../../fbxdata/";
 		m_pSubTextureList.resize(vbTexList.size());
 		for (int ivb = 0; ivb < vbTexList.size(); ivb++)
 		{
@@ -20,7 +20,7 @@ HRESULT MFbxObject::LoadTextures(ID3D11Device* _pDevice, const TCHAR* _pTextureF
 	}
 	else
 	{
-		W_STR szDefaultDir = L"../../fbxdata//Girl_FBX2020/";
+		W_STR szDefaultDir = L"../../fbxdata/";
 		W_STR szLoadFile = szDefaultDir + m_szTextureName;
 		MActor::LoadTextures(_pDevice, szLoadFile.c_str());
 	}

@@ -27,6 +27,7 @@ public:
 public:
 	TVector3 _position;
 	TVector2 _texcoord;
+	TVector4 _color;
 	TVector3 _normal;
 	TVector3 tangent_;
 	TVector3 binormal_;

@@ -19,7 +19,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,  WPARAM wparam, LPARAM lparam)
 		MWindow* window = (MWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		// 윈도우 포인터가 만들어지는 중에 함수 호출이 될 수 있다. 방지
 		if(window)
-			window->OnSize();
+			window->OnSize(window->GetClientSize());
 		break;
 	}
 	case WM_SETFOCUS:
@@ -118,8 +118,9 @@ void MWindow::OnKillFocus()
 {
 }
 
-void MWindow::OnSize()
+void MWindow::OnSize(const TMath::Rect& size)
 {
+
 }
 
 MWindow::MWindow()

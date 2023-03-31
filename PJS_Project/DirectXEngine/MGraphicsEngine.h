@@ -1,10 +1,7 @@
 #pragma once
 //#include <d3d11.h>
 #include "MStd.h"
-//#include "RenderSystem.h"
-//#include "TextureManager.h"
-//#include "MeshManager.h"
-//#include "Material.h"
+#include <set>
 
 
 struct MeshData
@@ -21,9 +18,15 @@ public:
 public:
 	RenderSystem* getRenderSystem();
 
-	void Update(const MeshData& data);
+	void AddComponent(Component* component);
+	void RemoveComponent(Component* component);
+
+	void Update();
 private:
 	std::unique_ptr<RenderSystem> _render_system;
 	Game* game_ = nullptr;
+
+	std::set<MeshComponent*> meshes_;
+	std::set<CameraComponent*> cameras_;
 };
 

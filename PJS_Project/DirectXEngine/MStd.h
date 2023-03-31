@@ -28,6 +28,15 @@ class Material;
 class MWindow;
 class Game;
 class Display;
+class Input;
+class TransformComponent;
+class MeshComponent;
+class CameraComponent;
+class World;
+class Entity;
+class Component;
+class FbxLoader;
+class MFbxObject;
 
 using namespace Microsoft::WRL;
 using namespace TBASIS_EX;
@@ -45,8 +54,30 @@ typedef std::shared_ptr<Texture2D> Texture2DPtr;
 typedef std::shared_ptr<Texture> TexturePtr;
 typedef std::shared_ptr<Mesh> MeshPtr;
 typedef std::shared_ptr<Material> MaterialPtr;
+typedef std::shared_ptr<MFbxObject> MFbxObjectPtr;
+
+typedef std::basic_string<wchar_t> W_STR;
+typedef std::basic_string<char>  C_STR;
+
+enum class CameraType
+{
+	ORTHOGONAL =0,
+	PERSPECTIVE
+};
 
 
+static bool GetWtM(const WCHAR* src, char* pDest)
+{
+	// 변형되는 문자열의 크기가 반환된다.
+	int iLength = WideCharToMultiByte(CP_ACP, 0,
+		src, -1, 0, 0, NULL, NULL);
+	int iRet = WideCharToMultiByte(CP_ACP, 0,
+		src, -1,  //  소스
+		pDest, iLength, // 대상
+		NULL, NULL);
+	if (iRet == 0) return false;
+	return true;
+}
 
 #define DX3DError(message) \
 {\

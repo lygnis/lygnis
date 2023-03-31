@@ -10,7 +10,7 @@ public:
 	Display(Game* game);
 	~Display();
 protected:
-	virtual void OnSize();
+	virtual void OnSize(const TMath::Rect& size);
 private:
 	SwapChainPtr swap_chain_;
 	Game* game_ = nullptr;
